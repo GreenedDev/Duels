@@ -26,7 +26,7 @@ public class Duels extends JavaPlugin {
     public static HashMap<UUID, DuelRequest> requests = new HashMap<>();
     public static HashMap<Integer, Integer> tasksToCancel = new HashMap<>();
     public static HashMap<UUID, UUID> SenderToTarget = new HashMap<>();
-    public DuelInventoryHolder inventoryHolder;
+    public int duelInventorySize = 27;
     public File ignoresConfigFile;
     public File arenasFile;
     public File configFile;
@@ -59,6 +59,7 @@ public class Duels extends JavaPlugin {
                 World world = Bukkit.getWorld("world");
                 Location loc1 = new Location(world, 100,70,100,90,0);
                 Location loc2 = new Location(world, 90,70,100,-90,0);
+                arenasConfig = new YamlConfiguration();
                 arenasConfig.set("1.pos1", loc1);
                 arenasConfig.set("1.pos2", loc2);
 
@@ -109,7 +110,6 @@ public class Duels extends JavaPlugin {
     public void onEnable() {
         createConfigs();
         manager = new GUIManager(this);
-        inventoryHolder = new DuelInventoryHolder(this);
         getServer().getPluginManager().registerEvents(new GUI(this), this);
         getServer().getPluginManager().registerEvents(new PvP(this), this);
         getCommand("duel").setExecutor(new DuelCommand(manager, this));

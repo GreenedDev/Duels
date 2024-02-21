@@ -84,8 +84,6 @@ public class PvP implements Listener {
             return;
         }
         UUID winnerUUID = request.getOpponent(deadUUID);
-        System.out.println("number: " + request.getTaskAssignedIDInTheList());
-        System.out.println(Duels.tasksToCancel.get(request.getTaskAssignedIDInTheList()));
         request.endGame(winnerUUID);
     }
     //anti teleport
@@ -131,26 +129,21 @@ public class PvP implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onTotemUse(EntityResurrectEvent event) {
         if (!(event.getEntity() instanceof Player)) {
-            System.out.println("totem 1");
             return;
         }
         Player playerWhoUsedTotem = (Player) event.getEntity();
         UUID playerWhoUsedTotemUUID = playerWhoUsedTotem.getUniqueId();
         if (!playerWhoUsedTotem.getInventory().contains(Material.TOTEM_OF_UNDYING)) {
-            System.out.println("totem 2");
             return;
         }
         if (!Duels.requests.containsKey(playerWhoUsedTotem.getUniqueId())) {
-            System.out.println("totem 3");
             return;
         }
         DuelRequest request = Duels.requests.get(playerWhoUsedTotem.getUniqueId());
         if (!request.getIsInGame()) {
-            System.out.println("totem 4");
             return;
         }
         if (request.getDuelRestrictions().isTotemsAllowed()) {
-            System.out.println("totem 5");
             return;
         }
         UUID winner = request.getOpponent(playerWhoUsedTotemUUID);

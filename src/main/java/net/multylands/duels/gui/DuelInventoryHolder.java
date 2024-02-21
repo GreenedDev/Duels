@@ -18,9 +18,8 @@ public class DuelInventoryHolder implements InventoryHolder {
     private final Inventory inventory;
     public List<String> lore = new ArrayList<>();
 
-    public DuelInventoryHolder(Duels plugin) {
-        // Create an Inventory with 9 slots, `this` here is our InventoryHolder.
-        this.inventory = plugin.getServer().createInventory(this, 9);
+    public DuelInventoryHolder(Duels plugin, int size) {
+        this.inventory = plugin.getServer().createInventory(this, size);
         ItemStack bow = new ItemStack(Material.BOW);
         ItemMeta bowMeta = bow.getItemMeta();
         bow.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
@@ -114,6 +113,7 @@ public class DuelInventoryHolder implements InventoryHolder {
         inventory.setItem(4, potions);
         inventory.setItem(5, shields);
         inventory.setItem(18, cancel);
+
     }
 
     @Override

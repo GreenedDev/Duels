@@ -168,7 +168,7 @@ public class DuelRequest {
             Bukkit.broadcastMessage("&c&lSOMETHING WENT SUPER WRONG!. CONTACT GREENED ERROR TYPE #3");
         }
         if (loser != null) {
-            loser.sendMessage(Chat.Color("&cYou lost the duel. " + winner.getName()));
+            loser.sendMessage(Chat.Color("&cYou lost the duel."));
         }
         winner.sendMessage(Chat.Color("&aYou won the duel! You will be teleported to spawn in 10 seconds. Pick up their items."));
         Duels.scheduler.runTaskLater(plugin, () -> {

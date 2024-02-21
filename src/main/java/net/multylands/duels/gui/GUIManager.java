@@ -20,12 +20,12 @@ public class GUIManager {
         this.plugin = plugin;
     }
     public List<String> lore = new ArrayList<>();
-    public static Inventory inventory;
     public void openInventory(Player player, Player target) {
         player.closeInventory();
 
-        Inventory inv = Bukkit.createInventory(plugin.inventoryHolder, 27, Chat.Color("&8Customize Your Duel Restrictions"));
 
+        DuelInventoryHolder inventoryHolder = new DuelInventoryHolder(plugin, plugin.duelInventorySize);
+        Inventory inventory = inventoryHolder.getInventory();
         ItemStack start = new ItemStack(Material.LIME_DYE);
         ItemMeta startMeta = start.getItemMeta();
         startMeta.setDisplayName(Chat.Color("&aStart"));
@@ -38,16 +38,12 @@ public class GUIManager {
 
         inventory.setItem(26, start);
 
-        player.openInventory(inv);
+        player.openInventory(inventory);
 
         DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, false);
         DuelRequest request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin, player.getUniqueId());
         DuelRequest secondRequest = new DuelRequest(target.getUniqueId(), player.getUniqueId(), restrictions, false, false, plugin, player.getUniqueId());
         secondRequest.storeRequest();
         request.storeRequest();
-        inventory = inv;
-    }
-    public static Inventory getMenu() {
-        return inventory;
     }
 }
