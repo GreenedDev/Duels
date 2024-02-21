@@ -2,6 +2,7 @@ package net.multylands.duels.listeners;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
+import net.multylands.duels.gui.DuelInventoryHolder;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.Duels;
@@ -32,7 +33,10 @@ public class GUI implements Listener {
     @EventHandler
     public void onGuiClose(InventoryCloseEvent event) {
         Inventory inv = event.getInventory();
-        if (!event.getView().getTitle().contains("Customize Your Duel Restrictions")) {
+        if (inv.getLocation() != null) {
+            return;
+        }
+        if (!(inv.getHolder() instanceof DuelInventoryHolder)) {
             return;
         }
         if (acceptedPlayers.contains(event.getPlayer().getUniqueId())) {
@@ -48,7 +52,10 @@ public class GUI implements Listener {
     public void onClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
         Inventory inv = event.getInventory();
-        if (!event.getView().getTitle().contains("Customize Your Duel Restrictions")) {
+        if (inv.getLocation() != null) {
+            return;
+        }
+        if (!(inv.getHolder() instanceof DuelInventoryHolder)) {
             return;
         }
         if (item == null) {

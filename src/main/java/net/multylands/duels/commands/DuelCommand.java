@@ -4,7 +4,7 @@ package net.multylands.duels.commands;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
-import net.multylands.duels.utils.GUIManager;
+import net.multylands.duels.gui.GUIManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

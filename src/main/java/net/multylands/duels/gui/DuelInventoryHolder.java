@@ -1,13 +1,11 @@
-package net.multylands.duels.utils;
+package net.multylands.duels.gui;
 
-import net.multylands.duels.object.DuelRequest;
-import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.Duels;
-import org.bukkit.Bukkit;
+import net.multylands.duels.utils.Chat;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,17 +13,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GUIManager {
-    public Duels plugin;
-    public GUIManager(Duels plugin) {
-        this.plugin = plugin;
-    }
-    public List<String> lore = new ArrayList<>();
-    public static Inventory inventory;
-    public void openInventory(Player player, Player target) {
-        player.closeInventory();
-        Inventory inv = Bukkit.createInventory(null, 27, Chat.Color("&8Customize Your Duel Restrictions"));
+public class DuelInventoryHolder implements InventoryHolder {
 
+    private final Inventory inventory;
+    public List<String> lore = new ArrayList<>();
+
+    public DuelInventoryHolder(Duels plugin) {
+        // Create an Inventory with 9 slots, `this` here is our InventoryHolder.
+        this.inventory = plugin.getServer().createInventory(this, 9);
         ItemStack bow = new ItemStack(Material.BOW);
         ItemMeta bowMeta = bow.getItemMeta();
         bow.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
@@ -111,35 +106,19 @@ public class GUIManager {
         cancel.setItemMeta(cancelMeta);
         lore.clear();
 
-        ItemStack start = new ItemStack(Material.LIME_DYE);
-        ItemMeta startMeta = cancel.getItemMeta();
-        startMeta.setDisplayName(Chat.Color("&aStart"));
-        lore.add(Chat.Color("&7Start duel with &b"+target.getName()+"&7."));
-        lore.add("");
-        lore.add(Chat.Color("&eClick to start!"));
-        startMeta.setLore(lore);
-        start.setItemMeta(startMeta);
-        lore.clear();
 
-        inv.setItem(0, bow);
-        inv.setItem(1, totem);
-        inv.setItem(2, gp);
-        inv.setItem(3, notch);
-        inv.setItem(4, potions);
-        inv.setItem(5, shields);
-        inv.setItem(26, start);
-        inv.setItem(18, cancel);
-
-        player.openInventory(inv);
-
-        DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, false);
-        DuelRequest request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin, player.getUniqueId());
-        DuelRequest secondRequest = new DuelRequest(target.getUniqueId(), player.getUniqueId(), restrictions, false, false, plugin, player.getUniqueId());
-        secondRequest.storeRequest();
-        request.storeRequest();
-        inventory = inv;
+        inventory.setItem(0, bow);
+        inventory.setItem(1, totem);
+        inventory.setItem(2, gp);
+        inventory.setItem(3, notch);
+        inventory.setItem(4, potions);
+        inventory.setItem(5, shields);
+        inventory.setItem(18, cancel);
     }
-    public static Inventory getMenu() {
-        return inventory;
+
+    @Override
+    public Inventory getInventory() {
+        return this.inventory;
     }
+
 }
