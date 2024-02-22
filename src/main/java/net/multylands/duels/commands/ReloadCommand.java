@@ -14,15 +14,16 @@ public class ReloadCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length != 0) {
-            sender.sendMessage(Chat.Color("&cUsage: /"+label));
+            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("command-usage").replace("%command%", label)));
             return false;
         }
         if (!sender.hasPermission("duels.reload")) {
-            sender.sendMessage(Chat.Color("&cYou don't have a permission to execute this command!"));
+            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("no-perm")));
         }
         plugin.reloadArenaConfig();
         plugin.reloadConfig();
-        sender.sendMessage(Chat.Color("&aArenas config has been reloaded!"));
+        plugin.reloadLanguageConfig();
+        sender.sendMessage(Chat.Color(plugin.languageConfig.getString("all-config-reloaded")));
         return false;
     }
 }

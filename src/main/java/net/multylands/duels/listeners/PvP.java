@@ -69,7 +69,7 @@ public class PvP implements Listener {
         if (!request.getIsInGame()) {
             return;
         }
-        player.sendMessage(Chat.Color("&cYou cannot use commands while you are in duel."));
+        player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.no-commands-in-duel")));
         event.setCancelled(true);
     }
     //handling death
@@ -121,7 +121,7 @@ public class PvP implements Listener {
         if (request.getDuelRestrictions().isBowAllowed()) {
             return;
         }
-        shooter.sendMessage(Chat.Color("&cThe use of arrows is not allowed in this duel."));
+        shooter.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.arrows-deny-message")));
         event.setCancelled(true);
     }
 
@@ -173,7 +173,7 @@ public class PvP implements Listener {
         if (request.getDuelRestrictions().isShieldsAllowed()) {
             return;
         }
-        player.sendMessage(Chat.Color("&cThe use of shields is not allowed in this duel."));
+        player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.shields-deny-message")));
         event.setCancelled(true);
     }
 
@@ -193,7 +193,7 @@ public class PvP implements Listener {
         if (request.getDuelRestrictions().isShieldsAllowed()) {
             return;
         }
-        player.sendMessage(Chat.Color("&cThe use of shields is not allowed in this duel."));
+        player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.shields-deny-message")));
         event.setCancelled(true);
     }
 
@@ -217,7 +217,7 @@ public class PvP implements Listener {
         if (request.getDuelRestrictions().isShieldsAllowed()) {
             return;
         }
-        player.sendMessage(Chat.Color("&cThe use of shields is not allowed in this duel."));
+        player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.shields-deny-message")));
         event.setCancelled(true);
     }
 //anti potion
@@ -238,7 +238,7 @@ public class PvP implements Listener {
         if (request.getDuelRestrictions().isPotionsAllowed()) {
             return;
         }
-        player.sendMessage(Chat.Color("&cUsage of potions is disabled in this duel."));
+        player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.potions-deny-message")));
         event.setCancelled(true);
     }
     //anti gp
@@ -259,7 +259,7 @@ public class PvP implements Listener {
         if (request.getDuelRestrictions().isGoldenAppleAllowed()) {
             return;
         }
-        player.sendMessage(Chat.Color("&cUsage of golden apples is disabled in this duel."));
+        player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.golden-apples-deny-message")));
         event.setCancelled(true);
     }
     //anti enchanted gp
@@ -280,7 +280,7 @@ public class PvP implements Listener {
         if (request.getDuelRestrictions().isNotchAllowed()) {
             return;
         }
-        player.sendMessage(Chat.Color("&cUsage of enchanted golden apples is disabled in this duel."));
+        player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.enchanted-golden-apples-deny-message")));
         event.setCancelled(true);
     }
 }

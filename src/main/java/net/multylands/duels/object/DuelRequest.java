@@ -130,14 +130,14 @@ public class DuelRequest {
             }
             countdown.getAndDecrement();
             if (countdown.get() == 0) {
-                target.sendMessage(Chat.Color("&aDuel started. Get ready your weapons and your luck!"));
-                player.sendMessage(Chat.Color("&aDuel started. Get ready your weapons and your luck!"));
+                target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.duel-started")));
+                player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.duel-started")));
                 setIsStartingIn5Seconds(false);
                 secondRequest.setIsStartingIn5Seconds(false);
                 task.cancel();
             } else {
-                player.sendMessage(Chat.Color("&aDuel is starting in "+color+countdown+"s&a."));
-                target.sendMessage(Chat.Color("&aDuel is starting in "+color+countdown+"s&a."));
+                player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color+countdown)));
+                player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color+countdown)));
             }
         }, 0, 20);
         taskId = Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -145,8 +145,8 @@ public class DuelRequest {
             Duels.tasksToCancel.remove(this);
             arena.setAvailable(true);
             removeStoreRequest();
-            target.sendMessage(Chat.Color("&cYou ran out of time so you have teleported to the spawn."));
-            player.sendMessage(Chat.Color("&cYou ran out of time so you have teleported to the spawn."));
+            target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.ran-out-of-time")));
+            player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.ran-out-of-time")));
             Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
             target.teleport(spawnLoc);
             player.teleport(spawnLoc);
@@ -168,9 +168,9 @@ public class DuelRequest {
             Bukkit.broadcastMessage("&c&lSOMETHING WENT SUPER WRONG!. CONTACT GREENED ERROR TYPE #3");
         }
         if (loser != null) {
-            loser.sendMessage(Chat.Color("&cYou lost the duel."));
+            loser.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.lost-duel")));
         }
-        winner.sendMessage(Chat.Color("&aYou won the duel! You will be teleported to spawn in 10 seconds. Pick up their items."));
+        winner.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.won-duel")));
         Duels.scheduler.runTaskLater(plugin, () -> {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "spawn " + winner.getName());
         }, 20 * 10);

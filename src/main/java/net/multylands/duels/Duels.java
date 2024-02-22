@@ -27,49 +27,42 @@ public class Duels extends JavaPlugin {
     public static HashMap<Integer, Integer> tasksToCancel = new HashMap<>();
     public static HashMap<UUID, UUID> SenderToTarget = new HashMap<>();
     public int duelInventorySize = 27;
-    public File ignoresConfigFile;
+    public File ignoresFile;
     public File arenasFile;
     public File configFile;
+    public File languageFile;
     public FileConfiguration ignoresConfig;
     public FileConfiguration arenasConfig;
+    public FileConfiguration languageConfig;
     public static BukkitScheduler scheduler = Bukkit.getScheduler();
     public GUIManager manager;
 
     private void createConfigs() {
         try {
-            ignoresConfigFile = new File(getDataFolder(), "ignores.yml");
+            ignoresFile = new File(getDataFolder(), "ignores.yml");
             arenasFile = new File(getDataFolder(), "arenas.yml");
             configFile = new File(getDataFolder(), "config.yml");
-            if (!ignoresConfigFile.exists()) {
-                ignoresConfigFile.getParentFile().mkdirs();
-                ignoresConfigFile.createNewFile();
+            languageFile = new File(getDataFolder(), "language.yml");
+            if (!ignoresFile.exists()) {
+                saveResource("ignores.yml", false);
+            }
+            if (!languageFile.exists()) {
+                saveResource("language.yml", false);
             }
             if (!configFile.exists()) {
-                configFile.getParentFile().mkdirs();
-                configFile.createNewFile();
-                Location spawnLoc = new Location(Bukkit.getWorld("world"), 0, 0, 0);
-                getConfig().set("spawn_location", spawnLoc);
-                getConfig().set("max_duel_time_minutes", 10);
-                saveConfig();
+                saveDefaultConfig();
 
             }
             if (!arenasFile.exists()) {
-                arenasFile.getParentFile().mkdirs();
-                arenasFile.createNewFile();
-                World world = Bukkit.getWorld("world");
-                Location loc1 = new Location(world, 100,70,100,90,0);
-                Location loc2 = new Location(world, 90,70,100,-90,0);
-                arenasConfig = new YamlConfiguration();
-                arenasConfig.set("1.pos1", loc1);
-                arenasConfig.set("1.pos2", loc2);
-
-                saveArenasConfig();
+                saveResource("arenas.yml", false);
             }
             arenasConfig = new YamlConfiguration();
             ignoresConfig = new YamlConfiguration();
+            languageConfig = new YamlConfiguration();
 
-            ignoresConfig.load(ignoresConfigFile);
-            arenasConfig = YamlConfiguration.loadConfiguration(arenasFile);
+            ignoresConfig.load(ignoresFile);
+            arenasConfig.load(arenasFile);
+            languageConfig.load(languageFile);
             getConfig().load(configFile);
             for (String arenaID : arenasConfig.getKeys(false)) {
                 Location loc1 = arenasConfig.getLocation(arenaID+".pos1");
@@ -83,7 +76,7 @@ public class Duels extends JavaPlugin {
     }
     public void saveIgnoresConfig() {
         try {
-            ignoresConfig.save(ignoresConfigFile);
+            ignoresConfig.save(ignoresFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -106,6 +99,10 @@ public class Duels extends JavaPlugin {
             Arenas.put(arenaID, arena);
         }
     }
+    public void reloadLanguageConfig() {
+        languageFile = new File(getDataFolder(), "language.yml");
+        languageConfig = YamlConfiguration.loadConfiguration(languageFile);
+    }
     @Override
     public void onEnable() {
         createConfigs();
@@ -114,8 +111,8 @@ public class Duels extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PvP(this), this);
         getCommand("duel").setExecutor(new DuelCommand(manager, this));
         getCommand("acceptduel").setExecutor(new AcceptCommand(this));
-        getCommand("cancelduel").setExecutor(new CancelCommand());
-        getCommand("denyduel").setExecutor(new DenyCommand());
+        getCommand("cancelduel").setExecutor(new CancelCommand(this));
+        getCommand("denyduel").setExecutor(new DenyCommand(this));
         getCommand("ignoreduel").setExecutor(new IgnoreDuel(this));
         getCommand("reloadduel").setExecutor(new ReloadCommand(this));
     }

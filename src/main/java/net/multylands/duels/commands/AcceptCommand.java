@@ -20,29 +20,29 @@ public class AcceptCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Chat.Color("&cThis command can be only executed by a player!"));
+            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("only-player-command")));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 1) {
-            sender.sendMessage(Chat.Color("&cUsage: /"+label+" player"));
+            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("command-usage").replace("%command%", label)+" player"));
             return false;
         }
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            sender.sendMessage(Chat.Color("&cGiven player is offline."));
+            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.target-is-offline")));
             return false;
         }
         for (Arena arena : Duels.Arenas.values()) {
             if (!arena.isAvailable) {
                 if (((Player) sender).getUniqueId().equals(arena.getSenderUUID())) {
-                    sender.sendMessage(Chat.Color("&cYou can't accept a duel while playing one."));
+                    sender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.already-in-duel")));
                     return false;
                 }
             }
         }
         if (!Duels.requests.containsKey(target.getUniqueId())) {
-            sender.sendMessage(Chat.Color("&cGiven player haven't sent you any request."));
+            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.target-hasnt-sent-request")));
             return false;
         }
         boolean Available = false;
@@ -55,16 +55,16 @@ public class AcceptCommand implements CommandExecutor {
             }
         }
         if (!Available) {
-            sender.sendMessage(Chat.Color("&cCurrently, there are no arenas available."));
+            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.no-arenas-available")));
             return false;
         }
         DuelRequest request = Duels.requests.get(target.getUniqueId());
         if (!request.getDuelRestrictions().isComplete()) {
-            sender.sendMessage(Chat.Color("&cGiven player haven't sent you any request."));
+            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.target-hasnt-sent-request")));
             return false;
         }
-        sender.sendMessage(Chat.Color("&aYou have accepted a duel request of &b" + target.getDisplayName()));
-        target.sendMessage(Chat.Color( "&b"+ player.getDisplayName() + " &ahas accepted your duel request."));
+        sender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.you-accepted-request").replace("%player%", target.getDisplayName())));
+        target.sendMessage(Chat.Color( plugin.languageConfig.getString("duel.request-accepted")));
         request.startGame(availableArena);
         return false;
     }

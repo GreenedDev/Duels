@@ -6,8 +6,10 @@ import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -26,12 +28,16 @@ public class GUIManager {
 
         DuelInventoryHolder inventoryHolder = new DuelInventoryHolder(plugin, plugin.duelInventorySize);
         Inventory inventory = inventoryHolder.getInventory();
-        ItemStack start = new ItemStack(Material.LIME_DYE);
+        ItemStack start = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.start.item")));
         ItemMeta startMeta = start.getItemMeta();
-        startMeta.setDisplayName(Chat.Color("&aStart"));
-        lore.add(Chat.Color("&7Start duel with &b"+target.getName()+"&7."));
-        lore.add("");
-        lore.add(Chat.Color("&eClick to start!"));
+        startMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.start.display-name")));
+        for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.start.lore")) {
+            lore.add(Chat.Color(loreLine.replace("%player%", target.getName())));
+        }
+        if (plugin.languageConfig.getBoolean("duel-GUI.start.glowing")) {
+            start.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
+            startMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
         startMeta.setLore(lore);
         start.setItemMeta(startMeta);
         lore.clear();

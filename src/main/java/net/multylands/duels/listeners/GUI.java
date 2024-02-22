@@ -75,60 +75,60 @@ public class GUI implements Listener {
             case 0:
                 isBowEnabled = !isBowEnabled;
                 if (isBowEnabled) {
-                    meta.setDisplayName(Chat.Color("&aToggle Bow &a(Enabled)"));
+                    meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-bow.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                     item.setItemMeta(meta);
                 } else {
-                    meta.setDisplayName(Chat.Color("&aToggle Bow &c(Disabled)"));
+                    meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-bow.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                     item.setItemMeta(meta);
                 }
                 break;
             case 1:
                 isTotemEnabled = !isTotemEnabled;
                 if (isTotemEnabled) {
-                    meta.setDisplayName(Chat.Color("&aToggle Totem &a(Enabled)"));
+                    meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-totem.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                     item.setItemMeta(meta);
                 } else {
-                    meta.setDisplayName(Chat.Color("&aToggle Totem &c(Disabled)"));
+                    meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-totem.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                     item.setItemMeta(meta);
                 }
                 break;
             case 2:
                 isGPEnabled = !isGPEnabled;
                 if (isGPEnabled) {
-                    meta.setDisplayName(Chat.Color("&aToggle Golden Apple &a(Enabled)"));
+                    meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                     item.setItemMeta(meta);
                 } else {
-                    meta.setDisplayName(Chat.Color("&aToggle Golden Apple &c(Disabled)"));
+                    meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                     item.setItemMeta(meta);
                 }
                 break;
             case 3:
                 isNotchEnabled = !isNotchEnabled;
                 if (isNotchEnabled) {
-                    meta.setDisplayName(Chat.Color("&6Toggle Enchanted Golden Apple &a(Enabled)"));
+                    meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-enchanted-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                     item.setItemMeta(meta);
                 } else {
-                    meta.setDisplayName(Chat.Color("&6Toggle Enchanted Golden Apple &c(Disabled)"));
+                    meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-enchanted-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                     item.setItemMeta(meta);
                 }
                 break;
             case 4:
                 isPotionsEnabled = !isPotionsEnabled;
                 if (isPotionsEnabled) {
-                    meta.setDisplayName(Chat.Color("&bToggle Potions Usage &a(Enabled)"));
+                    meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-potions.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                     item.setItemMeta(meta);
                 } else {
-                    meta.setDisplayName(Chat.Color("&bToggle Potions Usage &c(Disabled)"));
+                    meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-potions.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                     item.setItemMeta(meta);
                 }
                 break;
             case 5:
                 isShieldsEnabled = !isShieldsEnabled;
                 if (isShieldsEnabled) {
-                    meta.setDisplayName(Chat.Color("&bToggle Shields Usage &a(Enabled)"));
+                    meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-shields.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                     item.setItemMeta(meta);
                 } else {
-                    meta.setDisplayName(Chat.Color("&bToggle Shields Usage &c(Disabled)"));
+                    meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-shields.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                     item.setItemMeta(meta);
                 }
                 break;
@@ -136,16 +136,16 @@ public class GUI implements Listener {
                 DuelRestrictions restrictions = new DuelRestrictions(isBowEnabled, isNotchEnabled, isPotionsEnabled, isGPEnabled, isShieldsEnabled, isTotemEnabled, true);
                 DuelRequest request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin, player.getUniqueId());
                 request.storeRequest();
-                player.sendMessage(Chat.Color("&aYou have sent duel request to &b" + target.getName() + "&a!"));
-                target.sendMessage(Chat.Color("&b" + player.getName() + " &ais sending you a duel request."));
-                target.sendMessage(Chat.Color("&6Restrictions:"));
+                player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.request-sent").replace("%player%", target.getName())));
+                target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.request-received").replace("%player%", player.getName())));
+                target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.restrictions")));
                 if (request.getEnabled() != null) {
-                    target.sendMessage(Chat.Color(" &aEnabled: &b"+request.getEnabled()));
+                    target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.enabled-restrictions")+request.getEnabled()));
                 }
                 if (request.getDisabled() != null) {
-                    target.sendMessage(Chat.Color(" &aDisabled: &b" + request.getDisabled()));
+                    target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.disabled-restrictions") + request.getDisabled()));
                 }
-                TextComponent confirm = new TextComponent("ACCEPT");
+                TextComponent confirm = new TextComponent(plugin.languageConfig.getString("duel.accept-button"));
                 confirm.setColor(net.md_5.bungee.api.ChatColor.GREEN);
                 confirm.setBold(true);
                 confirm.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/acceptduel " + player.getName()));
@@ -153,16 +153,16 @@ public class GUI implements Listener {
                         new ComponentBuilder("").append("Click to accept this request!")
                                 .color(ChatColor.GREEN).create()));
 
-                TextComponent deny = new TextComponent("DENY");
+                TextComponent deny = new TextComponent(plugin.languageConfig.getString("duel.deny-button"));
                 deny.setColor(net.md_5.bungee.api.ChatColor.RED);
                 deny.setBold(true);
                 deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/denyduel " + player.getName()));
                 deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                        new ComponentBuilder("").append("Click to deny this request!")
+                        new ComponentBuilder("").append(plugin.languageConfig.getString("duel.deny-hover"))
                                 .color(ChatColor.RED).create()));
 
                 ComponentBuilder builder = new ComponentBuilder("");
-                builder.append("Click").color(ChatColor.GREEN);
+                builder.append(plugin.languageConfig.getString("duel.click")).color(ChatColor.GREEN);
                 builder.append(" ");
                 builder.append(deny);
                 builder.append("/").color(ChatColor.WHITE).bold(false);

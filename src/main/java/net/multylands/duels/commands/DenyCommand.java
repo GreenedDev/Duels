@@ -10,33 +10,37 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class DenyCommand implements CommandExecutor {
+    Duels plugin;
+    public DenyCommand(Duels plugin) {
+        this.plugin = plugin;
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Chat.Color("&cThis command can be only executed by a player!"));
+            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("only-player-command")));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 1) {
-            sender.sendMessage(Chat.Color("&cUsage: /"+label+" player"));
+            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("command-usage").replace("%command%", label)+" player"));
             return false;
         }
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            sender.sendMessage(Chat.Color("&cGiven player is offline."));
+            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.target-is-offline")));
             return false;
         }
         if (!Duels.requests.containsKey(target.getUniqueId())) {
-            sender.sendMessage(Chat.Color("&cGiven player haven't sent you any request."));
+            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.target-hasnt-sent-request")));
             return false;
         }
         DuelRequest request = Duels.requests.get(target.getUniqueId());
         if (request.getOriginalSender() == player.getUniqueId()) {
-            sender.sendMessage(Chat.Color("&cYou are using wrong command. use /cancelduel"));
+            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("command-usage").replace("%command%", label)));
             return false;
         }
-        sender.sendMessage(Chat.Color("&aYou have denied duel request of &b" + target.getDisplayName()));
-        target.sendMessage(Chat.Color("&b" + player.getDisplayName() + " &chas denied your duel request."));
+        sender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.you-denied-request").replace("%player%", target.getDisplayName())));
+        target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.someone-denied-your-request").replace("%player%", player.getDisplayName())));
         DuelRequest secondRequest = Duels.requests.get(request.getTarget());
         secondRequest.removeStoreRequest();
         request.removeStoreRequest();

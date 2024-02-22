@@ -15,92 +15,106 @@ import java.util.List;
 
 public class DuelInventoryHolder implements InventoryHolder {
 
-    private final Inventory inventory;
+    private Inventory inventory;
     public List<String> lore = new ArrayList<>();
+    Duels plugin;
+    public DuelInventoryHolder(Duels plugin) {
+        this.plugin = plugin;
+    }
 
     public DuelInventoryHolder(Duels plugin, int size) {
         this.inventory = plugin.getServer().createInventory(this, size);
-        ItemStack bow = new ItemStack(Material.BOW);
+        ItemStack bow = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.toggle-bow.item")));
         ItemMeta bowMeta = bow.getItemMeta();
-        bow.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
-        bowMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        bowMeta.setDisplayName(Chat.Color("&aToggle Bow &a(Enabled)"));
-        lore.add(Chat.Color("&7Toggle bow usage on the duel. by"));
-        lore.add(Chat.Color("&7disabling this bot sides will be"));
-        lore.add(Chat.Color("&7unable to use items that shot arrows."));
-        lore.add(Chat.Color(""));
-        lore.add(Chat.Color("&eClick to toggle!"));
+        if (plugin.languageConfig.getBoolean("duel-GUI.toggle-bow.glowing")) {
+            bow.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
+            bowMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+        bowMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-bow.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+        for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.toggle-bow.lore")) {
+            lore.add(Chat.Color(loreLine));
+        }
         bowMeta.setLore(lore);
         bow.setItemMeta(bowMeta);
         lore.clear();
 
-        ItemStack totem = new ItemStack(Material.TOTEM_OF_UNDYING);
+        ItemStack totem = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.toggle-totem.item")));
         ItemMeta totemMeta = totem.getItemMeta();
-        totemMeta.setDisplayName(Chat.Color("&aToggle Totem &a(Enabled)"));
-        lore.add(Chat.Color("&7Toggle totem usage in the duel."));
-        lore.add(Chat.Color("&7Disabling this will prevent both"));
-        lore.add(Chat.Color("&7players from be unable to use totem."));
-        lore.add(Chat.Color(""));
-        lore.add(Chat.Color("&eClick to toggle!"));
+        totemMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-totem.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+        if (plugin.languageConfig.getBoolean("duel-GUI.toggle-totem.glowing")) {
+            totem.addEnchantment(Enchantment.LUCK, 1);
+            totemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+        for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.toggle-totem.lore")) {
+            lore.add(Chat.Color(loreLine));
+        }
         totemMeta.setLore(lore);
         totem.setItemMeta(totemMeta);
         lore.clear();
 
-        ItemStack gp = new ItemStack(Material.GOLDEN_APPLE);
+        ItemStack gp = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.toggle-golden-apple.item")));
         ItemMeta gpMeta = gp.getItemMeta();
-        gpMeta.setDisplayName(Chat.Color("&aToggle Golden Apple &a(Enabled)"));
-        lore.add(Chat.Color("&7Toggle golden apple usage in duel."));
-        lore.add(Chat.Color("&7Disabling this will prevent both players"));
-        lore.add(Chat.Color("&7from using the golden apple."));
-        lore.add("");
-        lore.add(Chat.Color("&eClick to toggle!"));
+        if (plugin.languageConfig.getBoolean("duel-GUI.toggle-golden-apple.glowing")) {
+            gp.addEnchantment(Enchantment.LUCK, 1);
+            gpMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+        gpMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+        for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.toggle-golden-apple.lore")) {
+            lore.add(Chat.Color(loreLine));
+        }
         gpMeta.setLore(lore);
         gp.setItemMeta(gpMeta);
         lore.clear();
 
-        ItemStack notch = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE);
+        ItemStack notch = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.toggle-enchanted-golden-apple.item")));
         ItemMeta notchMeta = notch.getItemMeta();
-        notchMeta.setDisplayName(Chat.Color("&6Toggle Enchanted Golden Apple &a(Enabled)"));
-        lore.add(Chat.Color("&7Toggle enchanted golden apple usage in duel."));
-        lore.add(Chat.Color("&7Disabling this will prevent both players"));
-        lore.add(Chat.Color("&7from using the enchanted golden apple."));
-        lore.add("");
-        lore.add(Chat.Color("&eClick to toggle!"));
+        notchMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-enchanted-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+        for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.toggle-enchanted-golden-apple.lore")) {
+            lore.add(Chat.Color(loreLine));
+        }
         notchMeta.setLore(lore);
         notch.setItemMeta(notchMeta);
         lore.clear();
 
-        ItemStack potions = new ItemStack(Material.POTION);
+        ItemStack potions = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.toggle-potions.item")));
         ItemMeta potionsMeta = potions.getItemMeta();
-        potionsMeta.setDisplayName(Chat.Color("&bToggle Potions Usage &a(Enabled)"));
+        potionsMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-potions.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
         potionsMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        lore.add(Chat.Color("&7Toggle Potions usage in duel."));
-        lore.add(Chat.Color("&7Disabling this will prevent both players"));
-        lore.add(Chat.Color("&7from using the Potions."));
-        lore.add("");
-        lore.add(Chat.Color("&eClick to toggle!"));
+        if (plugin.languageConfig.getBoolean("duel-GUI.toggle-potions.glowing")) {
+            potions.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
+            potionsMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+        for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.toggle-potions.lore")) {
+            lore.add(Chat.Color(loreLine));
+        }
         potionsMeta.setLore(lore);
         potions.setItemMeta(potionsMeta);
         lore.clear();
 
-        ItemStack shields = new ItemStack(Material.SHIELD);
+        ItemStack shields = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.toggle-shields.item")));
         ItemMeta shieldsMeta = shields.getItemMeta();
-        shieldsMeta.setDisplayName(Chat.Color("&bToggle Shields Usage &a(Enabled)"));
-        lore.add(Chat.Color("&7Toggle Shields usage in duel."));
-        lore.add(Chat.Color("&7Disabling this will prevent both players"));
-        lore.add(Chat.Color("&7from using the Shields."));
-        lore.add("");
-        lore.add(Chat.Color("&eClick to toggle!"));
+        shieldsMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-shields.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+        for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.toggle-shields.lore")) {
+            lore.add(Chat.Color(loreLine));
+        }
+        if (plugin.languageConfig.getBoolean("duel-GUI.toggle-shields.glowing")) {
+            shields.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
+            shieldsMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
         shieldsMeta.setLore(lore);
         shields.setItemMeta(shieldsMeta);
         lore.clear();
 
-        ItemStack cancel = new ItemStack(Material.BARRIER);
+        ItemStack cancel = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.cancel.item")));
         ItemMeta cancelMeta = cancel.getItemMeta();
-        cancelMeta.setDisplayName(Chat.Color("&cCancel"));
-        lore.add(Chat.Color("&7Cancel duel request."));
-        lore.add("");
-        lore.add(Chat.Color("&eClick to cancel!"));
+        cancelMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.cancel.display-name")));
+        for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.cancel.lore")) {
+            lore.add(Chat.Color(loreLine));
+        }
+        if (plugin.languageConfig.getBoolean("duel-GUI.cancel.glowing")) {
+            cancel.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
+            cancelMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
         cancelMeta.setLore(lore);
         cancel.setItemMeta(cancelMeta);
         lore.clear();
