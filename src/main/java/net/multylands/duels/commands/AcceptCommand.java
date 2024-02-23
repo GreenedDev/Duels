@@ -64,7 +64,7 @@ public class AcceptCommand implements CommandExecutor {
             return false;
         }
         sender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.you-accepted-request").replace("%player%", target.getDisplayName())));
-        target.sendMessage(Chat.Color( plugin.languageConfig.getString("duel.request-accepted")));
+        target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.request-accepted").replace("%player%", player.getDisplayName())));
         request.startGame(availableArena);
         return false;
     }

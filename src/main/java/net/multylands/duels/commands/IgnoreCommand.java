@@ -12,9 +12,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class IgnoreDuel implements CommandExecutor {
+public class IgnoreCommand implements CommandExecutor {
     public Duels plugin;
-    public IgnoreDuel(Duels plugin) {
+    public IgnoreCommand(Duels plugin) {
         this.plugin = plugin;
     }
     @Override

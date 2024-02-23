@@ -98,8 +98,6 @@ public class DuelRequest {
 
         Location targetLoc = plugin.arenasConfig.getLocation(arena.getID()+".pos1");
         Location playerLoc = plugin.arenasConfig.getLocation(arena.getID()+".pos2");
-        plugin.getLogger().log(Level.INFO, arena.getID());
-        plugin.getLogger().log(Level.INFO, "x: " + plugin.arenasConfig.getInt(arena.getID() + ".pos1.x"));
         if (targetLoc == null) {
             plugin.getLogger().log(Level.INFO, "targetLoc is null in the DuelRequest startGame void");
         }
@@ -137,12 +135,14 @@ public class DuelRequest {
                 task.cancel();
             } else {
                 player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color+countdown)));
-                player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color+countdown)));
+                target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color+countdown)));
             }
         }, 0, 20);
+        Random random = new Random();
+        taskAssignedIDInTheList = random.nextInt(999999);
         taskId = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             //don't put endgame here because it will cancel this task
-            Duels.tasksToCancel.remove(this);
+            Duels.tasksToCancel.remove(taskAssignedIDInTheList);
             arena.setAvailable(true);
             removeStoreRequest();
             target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.ran-out-of-time")));
@@ -151,13 +151,10 @@ public class DuelRequest {
             target.teleport(spawnLoc);
             player.teleport(spawnLoc);
         }, 20L * 60 * plugin.getConfig().getInt("max_duel_time_minutes")).getTaskId();
-        Random random = new Random();
-        taskAssignedIDInTheList = random.nextInt(999999);
         Duels.tasksToCancel.put(taskAssignedIDInTheList, taskId);
         storeRequest();
     }
     public void endGame(UUID winnerUUID) {
-        System.out.println(taskAssignedIDInTheList);
         Bukkit.getScheduler().cancelTask(Duels.tasksToCancel.get(taskAssignedIDInTheList));
         Duels.tasksToCancel.remove(taskAssignedIDInTheList);
         arena.setAvailable(true);
@@ -172,7 +169,8 @@ public class DuelRequest {
         }
         winner.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.won-duel")));
         Duels.scheduler.runTaskLater(plugin, () -> {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "spawn " + winner.getName());
+            Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
+            winner.teleport(spawnLoc);
         }, 20 * 10);
     }
     public UUID getOpponent(UUID someone) {

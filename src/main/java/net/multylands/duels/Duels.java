@@ -1,7 +1,6 @@
 package net.multylands.duels;
 
 import net.multylands.duels.commands.*;
-import net.multylands.duels.gui.DuelInventoryHolder;
 import net.multylands.duels.listeners.GUI;
 import net.multylands.duels.listeners.PvP;
 import net.multylands.duels.object.Arena;
@@ -9,7 +8,6 @@ import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.gui.GUIManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -113,8 +111,10 @@ public class Duels extends JavaPlugin {
         getCommand("acceptduel").setExecutor(new AcceptCommand(this));
         getCommand("cancelduel").setExecutor(new CancelCommand(this));
         getCommand("denyduel").setExecutor(new DenyCommand(this));
-        getCommand("ignoreduel").setExecutor(new IgnoreDuel(this));
+        getCommand("ignoreduel").setExecutor(new IgnoreCommand(this));
         getCommand("reloadduel").setExecutor(new ReloadCommand(this));
+        getCommand("setarenapos").setExecutor(new SetPosCommand(this));
+        getCommand("createduelarena").setExecutor(new CreateArenaCommand(this));
     }
 
     @Override
