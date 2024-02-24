@@ -1,4 +1,4 @@
-Duels is a restrictions orientated plugin that i created for my server to fulfill my players needs. What i mean is some players wanted a private 1v1 fight and wanted to restrict each other to use some of advantages for example: Totem, Golden apple, Bows etc. To do this they asked moderators for help. of course this created bunch of other problems so i created this plugin to solve that issue.
+Duels is a restrictions orientated plugin. I developed the this plugin for my Minecraft server to address a player request for controlled, one-on-one battles. Players were looking for a way to duel each other without specific advantages, like using totems, golden apples, bows, shields, potions and etc. Previously, they had to rely on moderators to enforce these restrictions, which caused additional issues, so I created this plugin to solve that issue.
 
 
 /duel <player> opens the GUI below. You can toggle some of restrictions by clicking on them. When you are done click Start and duel request with the same Restriction properties will be sent to the target.
