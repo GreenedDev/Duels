@@ -55,6 +55,8 @@ duel:
 
   create-arena-already-exists: "&cThe arena with that name already exists. If you want to modify it's positions type &6/setarenapos&c. If you want to create new arena type &6/createduelarena <name>&c."
   create-arena-success: "&aArena &b%arena%&a has been successfully created! To set it's positions try &6/setarenapos"
+
+  spawn-set-success: "&aSpawn location has been set successfully!"
 duel-GUI:
   restriction-enabled: "&a(Enabled)"
   restriction-disabled: "&c(Disabled)"

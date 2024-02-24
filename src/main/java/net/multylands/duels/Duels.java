@@ -115,6 +115,7 @@ public class Duels extends JavaPlugin {
         getCommand("reloadduel").setExecutor(new ReloadCommand(this));
         getCommand("setarenapos").setExecutor(new SetPosCommand(this));
         getCommand("createduelarena").setExecutor(new CreateArenaCommand(this));
+        getCommand("setduelspawn").setExecutor(new SetSpawnCommand(this));
     }
 
     @Override

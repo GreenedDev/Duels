@@ -1,7 +1,7 @@
 name: Duels
 version: '${project.version}'
 main: net.multylands.duels.Duels
-api-version: 1.16
+api-version: 1.20
 authors: [ GreenedDev ]
 softdepend:
   - Multiverse-Core
@@ -12,7 +12,8 @@ commands:
   duel:
     aliases:
       - pri
-    description: simply invite player to a duel with restrictions
+      - 1v1
+    description: Simply invite player to a duel with restrictions
   cancelduel:
     aliases:
       - duelcancel
@@ -21,7 +22,7 @@ commands:
       - pricancel
       - removepri
       - priremove
-    description: cancel your duel request
+    description: Cancel your duel request
   acceptduel:
     aliases:
       - duelaccept
@@ -30,7 +31,7 @@ commands:
       - priaccept
       - confirmpri
       - priconfirm
-    description: accept someone's duel request. Requires player argument
+    description: Accept someone's duel request. Requires player argument
   ignoreduel:
     aliases:
       - ignoreduels
@@ -40,7 +41,7 @@ commands:
       - ignorepri
       - prisignore
       - priignore
-    description: ignore someone's duel requests
+    description: Ignore someone's duel requests
   denyduel:
     aliases:
       - dueldeny
@@ -49,20 +50,24 @@ commands:
       - prino
       - nopri
       - denypri
-    description: deny someone's duel request
+    description: Deny someone's duel request
   reloadduel:
     aliases:
       - duelreload
       - reloadarenas
-    description: reload arena's config
+    description: Reload arena's config
   setarenapos:
     aliases:
       - setduelarenapos
       - setarenaspos
       - posarena
-    description: set position of any arena
+    description: Set position of any arena
   createduelarena:
     aliases:
       - createarenaduel
       - createduelsarena
-    description: create arena for the duels
+    description: Create arena for the duels
+  setduelspawn:
+    aliases:
+      - setspawnduel
+    description: Set spawn (the location players get teleported to after duel ends) location.
