@@ -167,11 +167,11 @@ public class DuelRequest {
         if (loser != null) {
             loser.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.lost-duel")));
         }
-        winner.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.won-duel")));
+        winner.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.won-duel").replace("%number%", plugin.getConfig().getInt("time_to_pick_up_items") + "")));
         Duels.scheduler.runTaskLater(plugin, () -> {
             Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
             winner.teleport(spawnLoc);
-        }, 20 * 10);
+        }, 20L * plugin.getConfig().getInt("time_to_pick_up_items"));
     }
     public UUID getOpponent(UUID someone) {
         if (someone == playerUUID) {

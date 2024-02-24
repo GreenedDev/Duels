@@ -40,7 +40,7 @@ duel:
 
   ran-out-of-time: "&cYou ran out of time so you have teleported to the spawn."
 
-  won-duel: "&aYou won the duel! You will be teleported to spawn in 10 seconds. Pick up their items."
+  won-duel: "&aYou won the duel! You will be teleported to spawn in &b%number% &aseconds. Pick up their items."
   lost-duel: "&cYou lost the duel."
 
   click: "Click"
