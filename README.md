@@ -1,4 +1,4 @@
-Spigot: https://www.spigotmc.org/resources/duels-player-vs-player-with-restrictions-1-20-perfect-for-pvp-servers.114685/
+Spigot: https://www.spigotmc.org/resources/114685/
 
 Discord support: https://discord.gg/2zZChX9AEN
 
