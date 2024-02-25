@@ -57,6 +57,9 @@ duel:
   create-arena-success: "&aArena &b%arena%&a has been successfully created! To set it's positions try &6/setarenapos"
 
   spawn-set-success: "&aSpawn location has been set successfully!"
+
+  spectate-is-not-in-duel: "&b%player% &cis not in duel!"
+  spectate-success: "&6Spectating &b%player%"
 duel-GUI:
   restriction-enabled: "&a(Enabled)"
   restriction-disabled: "&c(Disabled)"

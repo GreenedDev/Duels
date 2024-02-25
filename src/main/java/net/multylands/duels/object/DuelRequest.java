@@ -1,12 +1,13 @@
 package net.multylands.duels.object;
 
 import net.multylands.duels.Duels;
-import net.multylands.duels.utils.ArenaList;
 import net.multylands.duels.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -96,8 +97,8 @@ public class DuelRequest {
         Player target = Bukkit.getPlayer(targetUUID);
         DuelRequest secondRequest = Duels.requests.get(targetUUID);
 
-        Location targetLoc = plugin.arenasConfig.getLocation(arena.getID()+".pos1");
-        Location playerLoc = plugin.arenasConfig.getLocation(arena.getID()+".pos2");
+        Location targetLoc = arena.getFirstLocation();
+        Location playerLoc = arena.getSecondLocation();
         if (targetLoc == null) {
             plugin.getLogger().log(Level.INFO, "targetLoc is null in the DuelRequest startGame void");
         }

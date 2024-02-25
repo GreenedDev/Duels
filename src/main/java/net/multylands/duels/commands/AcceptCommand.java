@@ -35,7 +35,7 @@ public class AcceptCommand implements CommandExecutor {
         }
         for (Arena arena : Duels.Arenas.values()) {
             if (!arena.isAvailable) {
-                if (((Player) sender).getUniqueId().equals(arena.getSenderUUID())) {
+                if (player.getUniqueId().equals(arena.getSenderUUID()) || player.getUniqueId().equals(arena.getTargetUUID())) {
                     sender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.already-in-duel")));
                     return false;
                 }
