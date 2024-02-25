@@ -1,3 +1,7 @@
+Spigot: https://www.spigotmc.org/resources/114685/
+
+Discord support: https://discord.gg/2zZChX9AEN
+
 Duels is a restrictions orientated plugin. I developed the this plugin for my Minecraft server to address a player request for controlled, one-on-one battles. Players were looking for a way to duel each other without specific advantages, like using totems, golden apples, bows, shields, potions and etc. Previously, they had to rely on moderators to enforce these restrictions, which caused additional issues, so I created this plugin to solve that issue.
 
 
@@ -25,8 +29,3 @@ After one of the player is dead:
 
 
 How do we teleport players to spawn? By executing command "/spawn <player>" from console.
-
-
-
-That's it. Please use discord link below to get support.
-https://discord.gg/2zZChX9AEN
