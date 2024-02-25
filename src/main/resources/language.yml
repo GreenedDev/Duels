@@ -60,7 +60,13 @@ duel:
 
   spectate-is-not-in-duel: "&b%player% &cis not in duel!"
   spectate-success: "&6Spectating &b%player%"
+  cant-use-that-command-in-spectator: "&cYou cannot use that command in the Spectating mode!"
+  already-spectating: "&cYou are already in spectator mode. Please leave the spectating mode first with /endspectating"
+  not-in-spectator: "&cYou are not in the spectator mode."
+  spectate-end-success: "&aYou have left the spectator mode."
+  cannot-damage-in-duel: "&cYou cannot damage players when they are in duel."
 duel-GUI:
+  size: 27
   restriction-enabled: "&a(Enabled)"
   restriction-disabled: "&c(Disabled)"
   toggle-bow:

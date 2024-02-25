@@ -3,7 +3,6 @@ package net.multylands.duels.listeners;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
@@ -11,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -44,19 +44,18 @@ public class PvP implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         Player playerWhoLeft = event.getPlayer();
         UUID playerWhoLeftUUID = playerWhoLeft.getUniqueId();
-        UUID uuid = playerWhoLeft.getUniqueId();
-        if (!Duels.requests.containsKey(uuid)) {
+        if (!Duels.requests.containsKey(playerWhoLeftUUID)) {
             return;
         }
-        DuelRequest request = Duels.requests.get(uuid);
+        DuelRequest request = Duels.requests.get(playerWhoLeftUUID);
         if (!request.getIsInGame()) {
             return;
         }
         UUID winner = request.getOpponent(playerWhoLeftUUID);
-        playerWhoLeft.setHealth(0);
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         playerWhoLeft.teleport(spawnLoc);
         request.endGame(winner);
+        playerWhoLeft.setHealth(0);
     }
     //anti command
     @EventHandler(ignoreCancelled = true)
@@ -85,6 +84,31 @@ public class PvP implements Listener {
         }
         UUID winnerUUID = request.getOpponent(deadUUID);
         request.endGame(winnerUUID);
+    }
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerDamage(EntityDamageByEntityEvent event) {
+        Entity entity = event.getEntity();
+        if (!(entity instanceof Player)) {
+            return;
+        }
+        Player damagedPlayer = ((Player) entity).getPlayer();
+        Entity damagerEntity = event.getDamager();
+        if (!(damagerEntity instanceof Player)) {
+            return;
+        }
+        Player damager = ((Player) damagerEntity).getPlayer();
+        if (!Duels.requests.containsKey(damagedPlayer.getUniqueId())) {
+            return;
+        }
+        DuelRequest request = Duels.requests.get(damagedPlayer.getUniqueId());
+        if (!request.getIsInGame()) {
+            return;
+        }
+        if (request.getOpponent(damagedPlayer.getUniqueId()) == damager.getUniqueId()) {
+            return;
+        }
+        damager.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.cannot-damage-in-duel")));
+        event.setCancelled(true);
     }
     //anti teleport
     @EventHandler(ignoreCancelled = true)

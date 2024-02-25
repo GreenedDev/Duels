@@ -1,11 +1,13 @@
 package net.multylands.duels.object;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -21,6 +23,7 @@ public class DuelRequest {
     int taskAssignedIDInTheList;
     UUID senderUUID;
     Duels plugin;
+    List<UUID> spectators = new ArrayList<>();
     boolean isStartingIn5Seconds;
     Arena arena;
     int taskId = 0;
@@ -90,6 +93,12 @@ public class DuelRequest {
         Duels.SenderToTarget.remove(playerUUID);
         Duels.SenderToTarget.remove(targetUUID);
     }
+    public void addSpectator(UUID uuid) {
+        spectators.add(uuid);
+    }
+    public void removeSpectator(UUID uuid) {
+        spectators.remove(uuid);
+    }
     public void startGame(Arena arena) {
         this.arena = arena;
         arena.setAvailable(false);
@@ -154,8 +163,14 @@ public class DuelRequest {
         }, 20L * 60 * plugin.getConfig().getInt("max_duel_time_minutes")).getTaskId();
         Duels.tasksToCancel.put(taskAssignedIDInTheList, taskId);
         storeRequest();
+        System.out.println(taskAssignedIDInTheList + "."+ taskId);
     }
     public void endGame(UUID winnerUUID) {
+        for (UUID spectatorUUID : spectators) {
+            Spectating.endSpectatingForEndGame(Bukkit.getPlayer(spectatorUUID), plugin);
+        }
+        spectators.clear();
+        System.out.println(taskAssignedIDInTheList);
         Bukkit.getScheduler().cancelTask(Duels.tasksToCancel.get(taskAssignedIDInTheList));
         Duels.tasksToCancel.remove(taskAssignedIDInTheList);
         arena.setAvailable(true);
@@ -244,5 +259,8 @@ public class DuelRequest {
         } else {
             return null;
         }
+    }
+    public Arena getArena() {
+        return arena;
     }
 }

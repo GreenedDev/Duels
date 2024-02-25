@@ -11,3 +11,9 @@ max_duel_time_minutes: 10
 #After the duel ends how many seconds should we give the
 #winner to pick up the loser's item before teleporting them to the spawn
 time_to_pick_up_items: 10
+
+#commands allowed when you are spectating the duel
+spectator_whitelist_mode: true
+commands_blacklisted_or_whitelisted_in_spectator:
+  - spawn
+  - leavespectator

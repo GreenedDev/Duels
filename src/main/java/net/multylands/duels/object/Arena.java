@@ -2,9 +2,6 @@ package net.multylands.duels.object;
 
 import net.multylands.duels.utils.ArenaList;
 import org.bukkit.Location;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class Arena {

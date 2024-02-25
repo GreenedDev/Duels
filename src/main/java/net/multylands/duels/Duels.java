@@ -3,6 +3,7 @@ package net.multylands.duels;
 import net.multylands.duels.commands.*;
 import net.multylands.duels.listeners.GUI;
 import net.multylands.duels.listeners.PvP;
+import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.gui.GUIManager;
@@ -23,8 +24,9 @@ public class Duels extends JavaPlugin {
 
     public static HashMap<UUID, DuelRequest> requests = new HashMap<>();
     public static HashMap<Integer, Integer> tasksToCancel = new HashMap<>();
+    public static HashMap<UUID, UUID> spectators = new HashMap<>();
     public static HashMap<UUID, UUID> SenderToTarget = new HashMap<>();
-    public int duelInventorySize = 27;
+    public int duelInventorySize;
     public File ignoresFile;
     public File arenasFile;
     public File configFile;
@@ -68,6 +70,7 @@ public class Duels extends JavaPlugin {
                 Arena arena = new Arena(loc1, loc2, null, null, arenaID);
                 Arenas.put(arenaID, arena);
             }
+            duelInventorySize = languageConfig.getInt("duel-GUI.size");
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
@@ -107,6 +110,7 @@ public class Duels extends JavaPlugin {
         manager = new GUIManager(this);
         getServer().getPluginManager().registerEvents(new GUI(this), this);
         getServer().getPluginManager().registerEvents(new PvP(this), this);
+        getServer().getPluginManager().registerEvents(new Spectating(this), this);
         getCommand("duel").setExecutor(new DuelCommand(manager, this));
         getCommand("acceptduel").setExecutor(new AcceptCommand(this));
         getCommand("cancelduel").setExecutor(new CancelCommand(this));
@@ -116,6 +120,8 @@ public class Duels extends JavaPlugin {
         getCommand("setarenapos").setExecutor(new SetPosCommand(this));
         getCommand("createduelarena").setExecutor(new CreateArenaCommand(this));
         getCommand("setduelspawn").setExecutor(new SetSpawnCommand(this));
+        getCommand("spectate").setExecutor(new SpectateCommand(this));
+        getCommand("stopspectate").setExecutor(new StopSpectateCommand(this));
     }
 
     @Override

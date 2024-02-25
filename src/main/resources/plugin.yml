@@ -71,3 +71,20 @@ commands:
     aliases:
       - setspawnduel
     description: Set spawn (the location players get teleported to after duel ends) location.
+  spectate:
+    aliases:
+      - watchduel
+      - duelwatch
+      - spectateduel
+      - duelspectate
+    description: Spectate someone's Duel match
+  stopspectate:
+    aliases:
+      - stopwatchduel
+      - stopwatchingduel
+      - duelwatchstop
+      - duelspectatestop
+      - endspectate
+      - spectateend
+      - spectatestop
+    description: Stop spectate mode.
