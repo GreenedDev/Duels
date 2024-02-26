@@ -27,5 +27,9 @@ After one of the player is dead:
 
 ![image](https://github.com/GreenedDev/Duels/assets/108997309/be49914f-7c81-44fd-b639-58d69f91c26f)
 
+This plugin also has spectating system. Just do /spectate player.
+
+You can use MiniMessage format messages in the language config.
+
 
 How do we teleport players to spawn? By executing command "/spawn <player>" from console.
