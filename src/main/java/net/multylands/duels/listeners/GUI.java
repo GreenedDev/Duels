@@ -136,40 +136,16 @@ public class GUI implements Listener {
                 DuelRestrictions restrictions = new DuelRestrictions(isBowEnabled, isNotchEnabled, isPotionsEnabled, isGPEnabled, isShieldsEnabled, isTotemEnabled, true);
                 DuelRequest request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin, player.getUniqueId());
                 request.storeRequest();
-                player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.request-sent").replace("%player%", target.getName())));
-                target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.request-received").replace("%player%", player.getName())));
-                target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.restrictions")));
+                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.request-sent").replace("%player%", target.getName()));
+                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.request-received").replace("%player%", player.getName()));
+                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.restrictions"));
                 if (request.getEnabled() != null) {
-                    target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.enabled-restrictions")+request.getEnabled()));
+                    Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.enabled-restrictions")+request.getEnabled());
                 }
                 if (request.getDisabled() != null) {
-                    target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.disabled-restrictions") + request.getDisabled()));
+                    Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.disabled-restrictions") + request.getDisabled());
                 }
-                TextComponent confirm = new TextComponent(plugin.languageConfig.getString("duel.accept-button"));
-                confirm.setColor(net.md_5.bungee.api.ChatColor.GREEN);
-                confirm.setBold(true);
-                confirm.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/acceptduel " + player.getName()));
-                confirm.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                        new ComponentBuilder("").append("Click to accept this request!")
-                                .color(ChatColor.GREEN).create()));
-
-                TextComponent deny = new TextComponent(plugin.languageConfig.getString("duel.deny-button"));
-                deny.setColor(net.md_5.bungee.api.ChatColor.RED);
-                deny.setBold(true);
-                deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/denyduel " + player.getName()));
-                deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                        new ComponentBuilder("").append(plugin.languageConfig.getString("duel.deny-hover"))
-                                .color(ChatColor.RED).create()));
-
-                ComponentBuilder builder = new ComponentBuilder("");
-                builder.append(plugin.languageConfig.getString("duel.click")).color(ChatColor.GREEN);
-                builder.append(" ");
-                builder.append(deny);
-                builder.append("/").color(ChatColor.WHITE).bold(false);
-                builder.append(confirm);
-                BaseComponent[] finalMessage = builder.create();
-
-                target.spigot().sendMessage(finalMessage);
+                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.click").replace("%player%", target.getName()));
                 acceptedPlayers.add(player.getUniqueId());
                 player.closeInventory();
                 break;

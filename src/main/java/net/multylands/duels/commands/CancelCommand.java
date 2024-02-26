@@ -16,19 +16,19 @@ public class CancelCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("only-player-command")));
+            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 0) {
-            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("command-usage").replace("%command%", label)));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label));
             return false;
         }
         if (!Duels.requests.containsKey(player.getUniqueId())) {
-            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.no-request-sent")));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.no-request-sent"));
             return false;
         }
-        sender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.request-cancelled")));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.request-cancelled"));
         DuelRequest request = Duels.requests.get(player.getUniqueId());
         DuelRequest secondRequest = Duels.requests.get(request.getTarget());
         request.removeStoreRequest();

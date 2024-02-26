@@ -73,7 +73,7 @@ public class Spectating implements Listener {
             if (ifMatchesAny) {
                 return;
             }
-            commandSender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.cant-use-that-command-in-spectator")));
+            Chat.sendMessage(plugin, commandSender, plugin.languageConfig.getString("duel.cant-use-that-command-in-spectator"));
             event.setCancelled(true);
             return;
         }
@@ -81,7 +81,7 @@ public class Spectating implements Listener {
         if (!ifMatchesAny) {
             return;
         }
-        commandSender.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.cant-use-that-command-in-spectator")));
+        Chat.sendMessage(plugin, commandSender, plugin.languageConfig.getString("duel.cant-use-that-command-in-spectator"));
         event.setCancelled(true);
     }
 

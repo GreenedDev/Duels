@@ -43,11 +43,7 @@ duel:
   won-duel: "&aYou won the duel! You will be teleported to spawn in &b%number% &aseconds. Pick up their items."
   lost-duel: "&cYou lost the duel."
 
-  click: "Click"
-  accept-button: "ACCEPT"
-  accept-hover: "Click to accept this request!"
-  deny-button: "DENY"
-  deny-hover: "Click to deny this request!"
+  click: "$<green>Click</green> <red><b><hover:show_text:'<red>Click to deny this request!</red>'><click:run_command:'/denyduel %player%'>DENY</click></hover></b></red>/<green><b><hover:show_text:'<green>Click to accept this request!</green>'><click:run_command:'/acceptduel %player%'>ACCEPT</click></hover></b></green>"
 
   pos-set-successfully: "&b%pos% &asuccessfully set! If you are done with both positions, type &6/reloadduel &ato load new arenas."
   pos-no-arena: "&cThe arena with that name doesn't exist. Please create one with &6/createduelarena <name>"
@@ -60,6 +56,7 @@ duel:
 
   spectate-is-not-in-duel: "&b%player% &cis not in duel!"
   spectate-success: "&6Spectating &b%player%"
+  is-spectating: "&b%player% &6is now spectating."
   cant-use-that-command-in-spectator: "&cYou cannot use that command in the Spectating mode!"
   already-spectating: "&cYou are already in spectator mode. Please leave the spectating mode first with /endspectating"
   not-in-spectator: "&cYou are not in the spectator mode."

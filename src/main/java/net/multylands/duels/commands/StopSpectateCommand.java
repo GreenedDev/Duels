@@ -20,20 +20,20 @@ public class StopSpectateCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("only-player-command")));
+            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 0) {
-            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("command-usage").replace("%command%", label)));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label));
             return false;
         }
         if (!Duels.spectators.containsKey(player.getUniqueId())) {
-            player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.not-in-spectator")));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.not-in-spectator"));
             return false;
         }
         Spectating.endSpectating(player, plugin);
-        player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.spectate-end-success")));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.spectate-end-success"));
         return false;
     }
 }

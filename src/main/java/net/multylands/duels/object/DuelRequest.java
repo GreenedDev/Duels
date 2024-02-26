@@ -138,14 +138,14 @@ public class DuelRequest {
             }
             countdown.getAndDecrement();
             if (countdown.get() == 0) {
-                target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.duel-started")));
-                player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.duel-started")));
+                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.duel-started"));
+                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.duel-started"));
                 setIsStartingIn5Seconds(false);
                 secondRequest.setIsStartingIn5Seconds(false);
                 task.cancel();
             } else {
-                player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color+countdown)));
-                target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color+countdown)));
+                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color+countdown));
+                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color+countdown));
             }
         }, 0, 20);
         Random random = new Random();
@@ -155,8 +155,8 @@ public class DuelRequest {
             Duels.tasksToCancel.remove(taskAssignedIDInTheList);
             arena.setAvailable(true);
             removeStoreRequest();
-            target.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.ran-out-of-time")));
-            player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.ran-out-of-time")));
+            Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.ran-out-of-time"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ran-out-of-time"));
             Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
             target.teleport(spawnLoc);
             player.teleport(spawnLoc);
@@ -181,9 +181,9 @@ public class DuelRequest {
             Bukkit.broadcastMessage("&c&lSOMETHING WENT SUPER WRONG!. CONTACT GREENED ERROR TYPE #3");
         }
         if (loser != null) {
-            loser.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.lost-duel")));
+            Chat.sendMessage(plugin, loser, plugin.languageConfig.getString("duel.lost-duel"));
         }
-        winner.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.won-duel").replace("%number%", plugin.getConfig().getInt("time_to_pick_up_items") + "")));
+        Chat.sendMessage(plugin, winner, plugin.languageConfig.getString("duel.won-duel").replace("%number%", plugin.getConfig().getInt("time_to_pick_up_items") + ""));
         Duels.scheduler.runTaskLater(plugin, () -> {
             Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
             winner.teleport(spawnLoc);

@@ -1,5 +1,8 @@
 package net.multylands.duels;
 
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.multylands.duels.commands.*;
 import net.multylands.duels.listeners.GUI;
 import net.multylands.duels.listeners.PvP;
@@ -7,11 +10,13 @@ import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.gui.GUIManager;
+import net.multylands.duels.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -31,12 +36,25 @@ public class Duels extends JavaPlugin {
     public File arenasFile;
     public File configFile;
     public File languageFile;
+    MiniMessage miniMessage;
     public FileConfiguration ignoresConfig;
     public FileConfiguration arenasConfig;
     public FileConfiguration languageConfig;
     public static BukkitScheduler scheduler = Bukkit.getScheduler();
     public GUIManager manager;
-
+    private BukkitAudiences adventure;
+    public MiniMessage miniMessage() {
+        if(this.miniMessage == null) {
+            throw new IllegalStateException("miniMessage is null when getting it from the main class");
+        }
+        return this.miniMessage;
+    }
+    public  BukkitAudiences adventure() {
+        if(this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return this.adventure;
+    }
     private void createConfigs() {
         try {
             ignoresFile = new File(getDataFolder(), "ignores.yml");
@@ -106,6 +124,8 @@ public class Duels extends JavaPlugin {
     }
     @Override
     public void onEnable() {
+        this.adventure = BukkitAudiences.create(this);
+        miniMessage = MiniMessage.miniMessage();
         createConfigs();
         manager = new GUIManager(this);
         getServer().getPluginManager().registerEvents(new GUI(this), this);
@@ -129,5 +149,9 @@ public class Duels extends JavaPlugin {
         requests.clear();
         SenderToTarget.clear();
         Arenas.clear();
+        if(this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
     }
 }

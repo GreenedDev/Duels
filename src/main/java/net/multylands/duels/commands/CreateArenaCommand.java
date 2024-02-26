@@ -17,26 +17,26 @@ public class CreateArenaCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("only-player-command")));
+            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
         if (!player.hasPermission("duels.createarena")) {
-            player.sendMessage(Chat.Color(plugin.languageConfig.getString("no-perm")));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("no-perm"));
             return false;
         }
         if (args.length != 1) {
-            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("command-usage").replace("%command%", label) + " arenaName"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " arenaName");
             return false;
         }
         String arenaName = args[0];
         if (plugin.arenasConfig.contains(arenaName)) {
-            player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.create-arena-already-exists")));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.create-arena-already-exists"));
             return false;
         }
         plugin.arenasConfig.set(arenaName + ".pos1", player.getLocation());
         plugin.saveArenasConfig();
-        player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.create-arena-success").replace("%arena%", arenaName)));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.create-arena-success").replace("%arena%", arenaName));
         return false;
     }
 }

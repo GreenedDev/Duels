@@ -21,37 +21,36 @@ public class SpectateCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("only-player-command")));
+            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 1) {
-            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
             return false;
         }
         String toSpectateName = args[0];
         Player toSpectate = Bukkit.getPlayer(toSpectateName);
         if (toSpectate == null) {
-            player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.target-is-offline")));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-is-offline"));
             return false;
         }
         if (!Duels.requests.containsKey(toSpectate.getUniqueId())) {
-            player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.spectate-is-not-in-duel").replace("%player%", toSpectateName)));
-
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.spectate-is-not-in-duel").replace("%player%", toSpectateName));
             return false;
         }
         DuelRequest request = Duels.requests.get(toSpectate.getUniqueId());
         if (!request.getIsInGame()) {
-            player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.spectate-is-not-in-duel").replace("%player%", toSpectateName)));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.spectate-is-not-in-duel").replace("%player%", toSpectateName));
             return false;
         }
         if (Duels.spectators.containsKey(player.getUniqueId())) {
-            player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.already-spectating")));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.already-spectating"));
             return false;
         }
-        Player opponent = Bukkit.getPlayer(request.getOpponent(toSpectate.getUniqueId()));
         Spectating.startSpectating(player, toSpectate, plugin);
-        player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.spectate-success").replace("%player%", toSpectateName)));
+        Chat.sendMessage(plugin, toSpectate, plugin.languageConfig.getString("duel.is-spectating").replace("%player%", player.getName()));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.spectate-success").replace("%player%", toSpectateName));
         return false;
     }
 }

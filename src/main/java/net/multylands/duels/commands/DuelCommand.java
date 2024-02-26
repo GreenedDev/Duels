@@ -26,35 +26,35 @@ public class DuelCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Chat.Color(plugin.languageConfig.getString("only-player-command")));
+            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
         Player player = (Player) sender;
         if (args.length != 1) {
-            player.sendMessage(Chat.Color(plugin.languageConfig.getString("command-usage").replace("%command%", label)+ " player"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label)+ " player");
             return false;
         }
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.target-is-offline")));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-is-offline"));
             return false;
         }
         if (player.equals(target)) {
-            player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.cant-duel-yourself")));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.cant-duel-yourself"));
             return false;
         }
         if (Duels.requests.containsKey(player.getUniqueId())) {
             DuelRequest request = Duels.requests.get(player.getUniqueId());
             UUID requestsTarget = request.getTarget();
             if (requestsTarget.equals(target.getUniqueId())) {
-                player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.request-already-sent").replace("%player%", target.getDisplayName())));
+                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.request-already-sent").replace("%player%", target.getDisplayName()));
                 return false;
             }
         }
         if (plugin.ignoresConfig.contains("Ignores." + target.getUniqueId())) {
             for (String loopUUID : plugin.ignoresConfig.getStringList("Ignores." + target.getUniqueId())) {
                 if (Objects.equals(loopUUID, player.getUniqueId().toString())) {
-                    player.sendMessage(Chat.Color(plugin.languageConfig.getString("duel.player-is-ignoring-requests")));
+                    Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.player-is-ignoring-requests"));
                     return false;
                 }
             }
