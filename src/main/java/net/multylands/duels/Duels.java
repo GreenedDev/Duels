@@ -64,10 +64,20 @@ public class Duels extends JavaPlugin {
             arenasFile = new File(getDataFolder(), "arenas.yml");
             configFile = new File(getDataFolder(), "config.yml");
             languageFile = new File(getDataFolder(), "language.yml");
-            saveResource("ignores.yml", false);
-            saveResource("language.yml", false);
-            saveDefaultConfig();
-            saveResource("arenas.yml", false);
+            //we are checking if files exist to avoid console spamming. try it and see :)
+            if (!ignoresFile.exists()) {
+                saveResource("ignores.yml", false);
+            }
+            if (!languageFile.exists()) {
+                saveResource("language.yml", false);
+            }
+            if (!configFile.exists()) {
+                saveDefaultConfig();
+
+            }
+            if (!arenasFile.exists()) {
+                saveResource("arenas.yml", false);
+            }
             arenasConfig = new YamlConfiguration();
             ignoresConfig = new YamlConfiguration();
             languageConfig = new YamlConfiguration();
