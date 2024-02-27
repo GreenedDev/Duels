@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +30,7 @@ public class GUI implements Listener {
         this.plugin = plugin;
     }
 
-    public static List<UUID> PlayersWhoSentRequest = new ArrayList<>();
+    public static HashSet<UUID> PlayersWhoSentRequest = new HashSet<>();
 
     @EventHandler
     public void onGuiClose(InventoryCloseEvent event) {
