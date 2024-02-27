@@ -5,9 +5,11 @@ import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -37,6 +39,7 @@ public class DuelRequest {
         this.plugin = plugin;
         this.senderUUID = sender;
     }
+
     public int getTaskAssignedIDInTheList() {
         return taskAssignedIDInTheList;
     }
@@ -44,6 +47,7 @@ public class DuelRequest {
     public UUID getPlayer() {
         return playerUUID;
     }
+
     public UUID getOriginalSender() {
         return senderUUID;
     }
@@ -51,15 +55,19 @@ public class DuelRequest {
     public UUID getTarget() {
         return targetUUID;
     }
+
     public boolean getIsInGame() {
         return isInGame;
     }
+
     public boolean getIsStartingIn5Seconds() {
         return isStartingIn5Seconds;
     }
+
     public void setOriginalSender(UUID sender) {
         senderUUID = sender;
     }
+
     public DuelRestrictions getDuelRestrictions() {
         return duelRestrictions;
     }
@@ -67,6 +75,7 @@ public class DuelRequest {
     public void setPlayer(UUID player) {
         this.playerUUID = player;
     }
+
     public void setIsInGame(boolean isInGame) {
         this.isInGame = isInGame;
     }
@@ -74,6 +83,7 @@ public class DuelRequest {
     public void setTarget(UUID target) {
         this.targetUUID = target;
     }
+
     public void setIsStartingIn5Seconds(boolean YesOrNot) {
         this.isStartingIn5Seconds = YesOrNot;
     }
@@ -81,24 +91,29 @@ public class DuelRequest {
     public void setDuelRestrictions(DuelRestrictions duelRestrictions) {
         this.duelRestrictions = duelRestrictions;
     }
+
     public void storeRequest() {
         Duels.requests.put(playerUUID, this);
         Duels.requests.put(targetUUID, this);
         Duels.SenderToTarget.put(playerUUID, targetUUID);
         Duels.SenderToTarget.put(targetUUID, playerUUID);
     }
+
     public void removeStoreRequest() {
         Duels.requests.remove(playerUUID);
         Duels.requests.remove(targetUUID);
         Duels.SenderToTarget.remove(playerUUID);
         Duels.SenderToTarget.remove(targetUUID);
     }
+
     public void addSpectator(UUID uuid) {
         spectators.add(uuid);
     }
+
     public void removeSpectator(UUID uuid) {
         spectators.remove(uuid);
     }
+
     public void startGame(Arena arena) {
         this.arena = arena;
         arena.setAvailable(false);
@@ -122,6 +137,36 @@ public class DuelRequest {
         secondRequest.setIsStartingIn5Seconds(true);
         Duels.requests.put(targetUUID, secondRequest);
         Duels.requests.put(playerUUID, this);
+        player.setFlying(false);
+        target.setAllowFlight(false);
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
+        }
+        target.setFlying(false);
+        target.setAllowFlight(false);
+        for (PotionEffect effect : target.getActivePotionEffects()) {
+            target.removePotionEffect(effect.getType());
+        }
+        if (!duelRestrictions.isShieldsAllowed()) {
+            ItemStack playerOffHand = player.getInventory().getItemInOffHand();
+            ItemStack playerMainHand = player.getInventory().getItemInMainHand();
+            ItemStack targetOffHand = target.getInventory().getItemInOffHand();
+            ItemStack targetMainHand = target.getInventory().getItemInMainHand();
+            plugin.getLogger().log(Level.INFO, playerOffHand.toString());
+            plugin.getLogger().log(Level.INFO, targetOffHand.toString());
+            if (playerOffHand.getType() == Material.SHIELD) {
+                player.getInventory().setItemInOffHand(null);
+            }
+            if (playerMainHand.getType() == Material.SHIELD) {
+                player.getInventory().remove(playerMainHand);
+            }
+            if (targetOffHand.getType() == Material.SHIELD) {
+                target.getInventory().setItemInOffHand(null);
+            }
+            if (targetMainHand.getType() == Material.SHIELD) {
+                target.getInventory().remove(targetMainHand);
+            }
+        }
         AtomicInteger countdown = new AtomicInteger(6);
         Duels.scheduler.runTaskTimer(plugin, task -> {
             String color = "";
@@ -144,8 +189,8 @@ public class DuelRequest {
                 secondRequest.setIsStartingIn5Seconds(false);
                 task.cancel();
             } else {
-                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color+countdown));
-                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color+countdown));
+                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color + countdown));
+                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color + countdown));
             }
         }, 0, 20);
         Random random = new Random();
@@ -163,14 +208,13 @@ public class DuelRequest {
         }, 20L * 60 * plugin.getConfig().getInt("max_duel_time_minutes")).getTaskId();
         Duels.tasksToCancel.put(taskAssignedIDInTheList, taskId);
         storeRequest();
-        System.out.println(taskAssignedIDInTheList + "."+ taskId);
     }
+
     public void endGame(UUID winnerUUID) {
         for (UUID spectatorUUID : spectators) {
             Spectating.endSpectatingForEndGame(Bukkit.getPlayer(spectatorUUID), plugin);
         }
         spectators.clear();
-        System.out.println(taskAssignedIDInTheList);
         Bukkit.getScheduler().cancelTask(Duels.tasksToCancel.get(taskAssignedIDInTheList));
         Duels.tasksToCancel.remove(taskAssignedIDInTheList);
         arena.setAvailable(true);
@@ -189,6 +233,7 @@ public class DuelRequest {
             winner.teleport(spawnLoc);
         }, 20L * plugin.getConfig().getInt("time_to_pick_up_items"));
     }
+
     public UUID getOpponent(UUID someone) {
         if (someone == playerUUID) {
             return targetUUID;
@@ -196,6 +241,7 @@ public class DuelRequest {
             return playerUUID;
         }
     }
+
     public String getEnabled() {
         StringBuilder builder = new StringBuilder();
         DuelRestrictions restrictions = getDuelRestrictions();
@@ -221,13 +267,14 @@ public class DuelRequest {
         if (finalString.isEmpty()) {
             return null;
         }
-        String end = finalString.replace(finalString.substring(0, finalString.length()-1), "");
+        String end = finalString.replace(finalString.substring(0, finalString.length() - 1), "");
         if (end.equals(",")) {
-            return finalString.substring(0, finalString.length()-1)+".";
+            return finalString.substring(0, finalString.length() - 1) + ".";
         } else {
             return null;
         }
     }
+
     public String getDisabled() {
         StringBuilder builder = new StringBuilder();
         DuelRestrictions restrictions = getDuelRestrictions();
@@ -253,13 +300,14 @@ public class DuelRequest {
         if (finalString.isEmpty()) {
             return null;
         }
-        String end = finalString.replace(finalString.substring(0, finalString.length()-1), "");
+        String end = finalString.replace(finalString.substring(0, finalString.length() - 1), "");
         if (end.equals(",")) {
-            return finalString.substring(0, finalString.length()-1)+".";
+            return finalString.substring(0, finalString.length() - 1) + ".";
         } else {
             return null;
         }
     }
+
     public Arena getArena() {
         return arena;
     }

@@ -13,10 +13,9 @@ public class Chat {
     public static void sendMessage(Duels plugin, Player player, String message) {
         if (message.startsWith("$")) {
             Component parsed = plugin.miniMessage().deserialize(message.substring(1));
-            System.out.println(parsed);
             plugin.adventure().player(player).sendMessage(parsed);
         } else {
-            player.sendMessage(Chat.Color(message));
+            player.sendMessage(Color(message));
         }
     }
     public static void sendMessageSender(Duels plugin, CommandSender sender, String message) {
@@ -24,7 +23,7 @@ public class Chat {
             Component parsed = plugin.miniMessage().deserialize(message.substring(1));
             plugin.adventure().sender(sender).sendMessage(parsed);
         } else {
-            sender.sendMessage(Chat.Color(message));
+            sender.sendMessage(Color(message));
         }
     }
 }

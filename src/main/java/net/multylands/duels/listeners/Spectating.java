@@ -104,7 +104,6 @@ public class Spectating implements Listener {
             return;
         }
         endSpectating(player, plugin);
-        System.out.println(player.getUniqueId());
     }
     public static void endSpectating(Player player, Duels plugin) {
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
