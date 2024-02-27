@@ -64,7 +64,7 @@ public class GUI implements Listener {
             return;
         }
         event.setCancelled(true);
-        Player player = Bukkit.getPlayer(event.getView().getPlayer().getUniqueId());
+        Player player = (Player) event.getWhoClicked();
         //always!!! get this request from the GUI clicker. or if someone does /duel onthesameplayer then this will break
         DuelRequest request = Duels.requests.get(player.getUniqueId());
         Player target = Bukkit.getPlayer(request.getOpponent(player.getUniqueId()));
