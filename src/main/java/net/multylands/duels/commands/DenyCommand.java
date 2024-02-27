@@ -35,15 +35,14 @@ public class DenyCommand implements CommandExecutor {
             return false;
         }
         DuelRequest request = Duels.requests.get(target.getUniqueId());
-        if (request.getOriginalSender() == player.getUniqueId()) {
+        //request.getPlayer is always sender
+        if (request.getPlayer() == player.getUniqueId()) {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label));
             return false;
         }
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.you-denied-request").replace("%player%", target.getDisplayName()));
         Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.someone-denied-your-request").replace("%player%", player.getDisplayName()));
-        DuelRequest secondRequest = Duels.requests.get(request.getTarget());
-        secondRequest.removeStoreRequest();
-        request.removeStoreRequest();
+        request.removeStoreRequest(false);
         return false;
     }
 }

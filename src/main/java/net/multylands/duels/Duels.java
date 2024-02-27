@@ -28,9 +28,9 @@ public class Duels extends JavaPlugin {
     public static HashMap<String, Arena> Arenas = new HashMap<>();
 
     public static HashMap<UUID, DuelRequest> requests = new HashMap<>();
+    public static HashMap<UUID, UUID> playerToOpponentInGame = new HashMap<>();
     public static HashMap<Integer, Integer> tasksToCancel = new HashMap<>();
     public static HashMap<UUID, UUID> spectators = new HashMap<>();
-    public static HashMap<UUID, UUID> SenderToTarget = new HashMap<>();
     public int duelInventorySize;
     public File ignoresFile;
     public File arenasFile;
@@ -43,37 +43,31 @@ public class Duels extends JavaPlugin {
     public static BukkitScheduler scheduler = Bukkit.getScheduler();
     public GUIManager manager;
     private BukkitAudiences adventure;
+
     public MiniMessage miniMessage() {
-        if(this.miniMessage == null) {
+        if (this.miniMessage == null) {
             throw new IllegalStateException("miniMessage is null when getting it from the main class");
         }
         return this.miniMessage;
     }
-    public  BukkitAudiences adventure() {
-        if(this.adventure == null) {
+
+    public BukkitAudiences adventure() {
+        if (this.adventure == null) {
             throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
         }
         return this.adventure;
     }
+
     private void createConfigs() {
         try {
             ignoresFile = new File(getDataFolder(), "ignores.yml");
             arenasFile = new File(getDataFolder(), "arenas.yml");
             configFile = new File(getDataFolder(), "config.yml");
             languageFile = new File(getDataFolder(), "language.yml");
-            if (!ignoresFile.exists()) {
-                saveResource("ignores.yml", false);
-            }
-            if (!languageFile.exists()) {
-                saveResource("language.yml", false);
-            }
-            if (!configFile.exists()) {
-                saveDefaultConfig();
-
-            }
-            if (!arenasFile.exists()) {
-                saveResource("arenas.yml", false);
-            }
+            saveResource("ignores.yml", false);
+            saveResource("language.yml", false);
+            saveDefaultConfig();
+            saveResource("arenas.yml", false);
             arenasConfig = new YamlConfiguration();
             ignoresConfig = new YamlConfiguration();
             languageConfig = new YamlConfiguration();
@@ -83,8 +77,8 @@ public class Duels extends JavaPlugin {
             languageConfig.load(languageFile);
             getConfig().load(configFile);
             for (String arenaID : arenasConfig.getKeys(false)) {
-                Location loc1 = arenasConfig.getLocation(arenaID+".pos1");
-                Location loc2 = arenasConfig.getLocation(arenaID+".pos2");
+                Location loc1 = arenasConfig.getLocation(arenaID + ".pos1");
+                Location loc2 = arenasConfig.getLocation(arenaID + ".pos2");
                 Arena arena = new Arena(loc1, loc2, null, null, arenaID);
                 Arenas.put(arenaID, arena);
             }
@@ -93,6 +87,7 @@ public class Duels extends JavaPlugin {
             e.printStackTrace();
         }
     }
+
     public void saveIgnoresConfig() {
         try {
             ignoresConfig.save(ignoresFile);
@@ -100,6 +95,7 @@ public class Duels extends JavaPlugin {
             throw new RuntimeException(e);
         }
     }
+
     public void saveArenasConfig() {
         try {
             arenasConfig.save(arenasFile);
@@ -107,21 +103,24 @@ public class Duels extends JavaPlugin {
             throw new RuntimeException(e);
         }
     }
+
     public void reloadArenaConfig() {
         arenasFile = new File(getDataFolder(), "arenas.yml");
         arenasConfig = YamlConfiguration.loadConfiguration(arenasFile);
         Arenas.clear();
         for (String arenaID : arenasConfig.getKeys(false)) {
-            Location loc1 = arenasConfig.getLocation(arenaID+".pos1");
-            Location loc2 = arenasConfig.getLocation(arenaID+".pos2");
+            Location loc1 = arenasConfig.getLocation(arenaID + ".pos1");
+            Location loc2 = arenasConfig.getLocation(arenaID + ".pos2");
             Arena arena = new Arena(loc1, loc2, null, null, arenaID);
             Arenas.put(arenaID, arena);
         }
     }
+
     public void reloadLanguageConfig() {
         languageFile = new File(getDataFolder(), "language.yml");
         languageConfig = YamlConfiguration.loadConfiguration(languageFile);
     }
+
     @Override
     public void onEnable() {
         this.adventure = BukkitAudiences.create(this);
@@ -147,9 +146,8 @@ public class Duels extends JavaPlugin {
     @Override
     public void onDisable() {
         requests.clear();
-        SenderToTarget.clear();
         Arenas.clear();
-        if(this.adventure != null) {
+        if (this.adventure != null) {
             this.adventure.close();
             this.adventure = null;
         }

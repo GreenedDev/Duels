@@ -121,7 +121,7 @@ public class Spectating implements Listener {
             firstPlayer.showPlayer(plugin, player);
         }
         request.removeSpectator(player.getUniqueId());
-        request.storeRequest();
+        request.storeRequest(false);
     }
     public static void endSpectatingForEndGame(Player player, Duels plugin) {
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
@@ -149,6 +149,6 @@ public class Spectating implements Listener {
         toSpectate.hidePlayer(plugin, player);
         opponent.hidePlayer(plugin, player);
         request.addSpectator(player.getUniqueId());
-        request.storeRequest();
+        request.storeRequest(false);
     }
 }

@@ -30,9 +30,7 @@ public class CancelCommand implements CommandExecutor {
         }
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.request-cancelled"));
         DuelRequest request = Duels.requests.get(player.getUniqueId());
-        DuelRequest secondRequest = Duels.requests.get(request.getTarget());
-        request.removeStoreRequest();
-        secondRequest.removeStoreRequest();
+        request.removeStoreRequest(false);
         return false;
     }
 }

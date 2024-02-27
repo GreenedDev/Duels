@@ -51,6 +51,13 @@ public class DuelCommand implements CommandExecutor {
                 return false;
             }
         }
+        if (Duels.requests.containsKey(target.getUniqueId())) {
+            DuelRequest request = Duels.requests.get(target.getUniqueId());
+            if (request.getIsInGame()) {
+                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-already-in-duel").replace("%player%", target.getDisplayName()));
+                return false;
+            }
+        }
         if (plugin.ignoresConfig.contains("Ignores." + target.getUniqueId())) {
             for (String loopUUID : plugin.ignoresConfig.getStringList("Ignores." + target.getUniqueId())) {
                 if (Objects.equals(loopUUID, player.getUniqueId().toString())) {

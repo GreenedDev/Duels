@@ -23,21 +23,19 @@ public class DuelRequest {
     DuelRestrictions duelRestrictions;
     boolean isInGame;
     int taskAssignedIDInTheList;
-    UUID senderUUID;
     Duels plugin;
     List<UUID> spectators = new ArrayList<>();
     boolean isStartingIn5Seconds;
     Arena arena;
     int taskId = 0;
 
-    public DuelRequest(UUID player, UUID target, DuelRestrictions duelRestrictions, boolean isInGame, boolean isStartingIn5Seconds, Duels plugin, UUID sender) {
+    public DuelRequest(UUID player, UUID target, DuelRestrictions duelRestrictions, boolean isInGame, boolean isStartingIn5Seconds, Duels plugin) {
         this.playerUUID = player;
         this.targetUUID = target;
         this.isStartingIn5Seconds = isStartingIn5Seconds;
         this.duelRestrictions = duelRestrictions;
         this.isInGame = isInGame;
         this.plugin = plugin;
-        this.senderUUID = sender;
     }
 
     public int getTaskAssignedIDInTheList() {
@@ -46,10 +44,6 @@ public class DuelRequest {
 
     public UUID getPlayer() {
         return playerUUID;
-    }
-
-    public UUID getOriginalSender() {
-        return senderUUID;
     }
 
     public UUID getTarget() {
@@ -64,9 +58,6 @@ public class DuelRequest {
         return isStartingIn5Seconds;
     }
 
-    public void setOriginalSender(UUID sender) {
-        senderUUID = sender;
-    }
 
     public DuelRestrictions getDuelRestrictions() {
         return duelRestrictions;
@@ -92,18 +83,20 @@ public class DuelRequest {
         this.duelRestrictions = duelRestrictions;
     }
 
-    public void storeRequest() {
+    public void storeRequest(boolean justStarted) {
         Duels.requests.put(playerUUID, this);
-        Duels.requests.put(targetUUID, this);
-        Duels.SenderToTarget.put(playerUUID, targetUUID);
-        Duels.SenderToTarget.put(targetUUID, playerUUID);
+        if (justStarted) {
+            Duels.playerToOpponentInGame.put(playerUUID, targetUUID);
+            Duels.playerToOpponentInGame.put(targetUUID, playerUUID);
+        }
     }
 
-    public void removeStoreRequest() {
+    public void removeStoreRequest(boolean justEnded) {
         Duels.requests.remove(playerUUID);
-        Duels.requests.remove(targetUUID);
-        Duels.SenderToTarget.remove(playerUUID);
-        Duels.SenderToTarget.remove(targetUUID);
+        if (justEnded) {
+            Duels.playerToOpponentInGame.remove(playerUUID);
+            Duels.playerToOpponentInGame.remove(targetUUID);
+        }
     }
 
     public void addSpectator(UUID uuid) {
@@ -119,7 +112,6 @@ public class DuelRequest {
         arena.setAvailable(false);
         Player player = Bukkit.getPlayer(playerUUID);
         Player target = Bukkit.getPlayer(targetUUID);
-        DuelRequest secondRequest = Duels.requests.get(targetUUID);
 
         Location targetLoc = arena.getFirstLocation();
         Location playerLoc = arena.getSecondLocation();
@@ -133,9 +125,6 @@ public class DuelRequest {
         player.teleport(playerLoc);
         setIsInGame(true);
         setIsStartingIn5Seconds(true);
-        secondRequest.setIsInGame(true);
-        secondRequest.setIsStartingIn5Seconds(true);
-        Duels.requests.put(targetUUID, secondRequest);
         Duels.requests.put(playerUUID, this);
         player.setFlying(false);
         target.setAllowFlight(false);
@@ -186,7 +175,6 @@ public class DuelRequest {
                 Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.duel-started"));
                 Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.duel-started"));
                 setIsStartingIn5Seconds(false);
-                secondRequest.setIsStartingIn5Seconds(false);
                 task.cancel();
             } else {
                 Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color + countdown));
@@ -199,7 +187,7 @@ public class DuelRequest {
             //don't put endgame here because it will cancel this task
             Duels.tasksToCancel.remove(taskAssignedIDInTheList);
             arena.setAvailable(true);
-            removeStoreRequest();
+            removeStoreRequest(true);
             Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.ran-out-of-time"));
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ran-out-of-time"));
             Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
@@ -207,7 +195,7 @@ public class DuelRequest {
             player.teleport(spawnLoc);
         }, 20L * 60 * plugin.getConfig().getInt("max_duel_time_minutes")).getTaskId();
         Duels.tasksToCancel.put(taskAssignedIDInTheList, taskId);
-        storeRequest();
+        storeRequest(true);
     }
 
     public void endGame(UUID winnerUUID) {
@@ -218,7 +206,7 @@ public class DuelRequest {
         Bukkit.getScheduler().cancelTask(Duels.tasksToCancel.get(taskAssignedIDInTheList));
         Duels.tasksToCancel.remove(taskAssignedIDInTheList);
         arena.setAvailable(true);
-        removeStoreRequest();
+        removeStoreRequest(true);
         Player winner = Bukkit.getPlayer(winnerUUID);
         Player loser = Bukkit.getPlayer(getOpponent(winnerUUID));
         if (winner == null) {
@@ -295,6 +283,12 @@ public class DuelRequest {
         }
         if (!restrictions.isBowAllowed) {
             builder.append("Bow,");
+        }
+        if (!restrictions.isElytraAllowed) {
+            builder.append("Elytra,");
+        }
+        if (!restrictions.isEnderPearlAllowed) {
+            builder.append("Ender Pearl,");
         }
         String finalString = builder.toString();
         if (finalString.isEmpty()) {

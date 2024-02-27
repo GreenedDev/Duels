@@ -8,8 +8,10 @@ public class DuelRestrictions {
     boolean isGoldenAppleAllowed;
     boolean isShieldsAllowed;
     boolean isTotemsAllowed;
+    boolean isElytraAllowed;
+    boolean isEnderPearlAllowed;
 
-    public DuelRestrictions(boolean bowAllowed, boolean notchAllowed, boolean potionsAllowed, boolean goldenAppleAllowed, boolean shieldsAllowed, boolean totemsAllowed, boolean isComplete) {
+    public DuelRestrictions(boolean bowAllowed, boolean notchAllowed, boolean potionsAllowed, boolean goldenAppleAllowed, boolean shieldsAllowed, boolean totemsAllowed, boolean isElytraAllowed, boolean isEnderPearlAllowed, boolean isComplete) {
         this.isBowAllowed = bowAllowed;
         this.isComplete = isComplete;
         this.isNotchAllowed = notchAllowed;
@@ -17,10 +19,18 @@ public class DuelRestrictions {
         this.isPotionsAllowed = potionsAllowed;
         this.isShieldsAllowed = shieldsAllowed;
         this.isTotemsAllowed = totemsAllowed;
+        this.isElytraAllowed = isElytraAllowed;
+        this.isEnderPearlAllowed = isEnderPearlAllowed;
     }
 
     public boolean isBowAllowed() {
         return isBowAllowed;
+    }
+    public boolean isElytraAllowed() {
+        return isElytraAllowed;
+    }
+    public boolean isEnderPearlAllowed() {
+        return isEnderPearlAllowed;
     }
 
     public boolean isNotchAllowed() {
@@ -65,4 +75,10 @@ public class DuelRestrictions {
         isShieldsAllowed = yesOrNot;
     }
     public void setTotemsAllowed(boolean yesOrNot){isTotemsAllowed = yesOrNot;}
+    public void setElytraAllowed(boolean yesOrNot) {
+        isElytraAllowed = yesOrNot;
+    }
+    public void setEnderPearlAllowed(boolean yesOrNot) {
+        isEnderPearlAllowed = yesOrNot;
+    }
 }

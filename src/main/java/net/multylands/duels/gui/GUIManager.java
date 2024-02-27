@@ -21,9 +21,8 @@ public class GUIManager {
         this.plugin = plugin;
     }
     public List<String> lore = new ArrayList<>();
-    public void openInventory(Player player, Player target) {
-        player.closeInventory();
-
+    public void openInventory(Player sender, Player target) {
+        sender.closeInventory();
 
         DuelInventoryHolder inventoryHolder = new DuelInventoryHolder(plugin, plugin.duelInventorySize);
         Inventory inventory = inventoryHolder.getInventory();
@@ -40,15 +39,13 @@ public class GUIManager {
         startMeta.setLore(lore);
         start.setItemMeta(startMeta);
         lore.clear();
+        int startSlot = plugin.languageConfig.getInt("duel-GUI.start.slot");
+        inventory.setItem(startSlot, start);
 
-        inventory.setItem(26, start);
+        sender.openInventory(inventory);
 
-        player.openInventory(inventory);
-
-        DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, false);
-        DuelRequest request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin, player.getUniqueId());
-        DuelRequest secondRequest = new DuelRequest(target.getUniqueId(), player.getUniqueId(), restrictions, false, false, plugin, player.getUniqueId());
-        secondRequest.storeRequest();
-        request.storeRequest();
+        DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, false);
+        DuelRequest request = new DuelRequest(sender.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin);
+        request.storeRequest(false);
     }
 }
