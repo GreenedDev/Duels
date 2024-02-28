@@ -40,7 +40,6 @@ public class Spectating implements Listener {
         playerWhoMoved.teleport(loc1);
         event.setCancelled(true);
     }
-
     //quit spectating & tp player to spawn after he quits
     @EventHandler(ignoreCancelled = true)
     public void onQuit(PlayerQuitEvent event) {

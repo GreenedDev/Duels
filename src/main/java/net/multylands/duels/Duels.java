@@ -1,7 +1,6 @@
 package net.multylands.duels;
 
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.multylands.duels.commands.*;
 import net.multylands.duels.listeners.GUI;
@@ -10,13 +9,11 @@ import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.gui.GUIManager;
-import net.multylands.duels.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -26,10 +23,9 @@ import java.util.*;
 
 public class Duels extends JavaPlugin {
     public static HashMap<String, Arena> Arenas = new HashMap<>();
-
     public static HashMap<UUID, DuelRequest> requests = new HashMap<>();
     public static HashMap<UUID, UUID> playerToOpponentInGame = new HashMap<>();
-    public static HashMap<Integer, Integer> tasksToCancel = new HashMap<>();
+    public static HashMap<UUID, Integer> tasksToCancel = new HashMap<>();
     public static HashMap<UUID, UUID> spectators = new HashMap<>();
     public int duelInventorySize;
     public File ignoresFile;

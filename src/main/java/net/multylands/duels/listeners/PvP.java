@@ -55,7 +55,7 @@ public class PvP implements Listener {
         UUID winner = request.getOpponent(playerWhoLeftUUID);
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         playerWhoLeft.teleport(spawnLoc);
-        request.endGame(winner);
+        request.endGame(winner, false);
         playerWhoLeft.setHealth(0);
     }
 
@@ -81,7 +81,7 @@ public class PvP implements Listener {
             return;
         }
         UUID winnerUUID = request.getOpponent(deadUUID);
-        request.endGame(winnerUUID);
+        request.endGame(winnerUUID, false);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -160,7 +160,7 @@ public class PvP implements Listener {
         }
         UUID winner = request.getOpponent(playerWhoUsedTotemUUID);
         event.setCancelled(true);
-        request.endGame(winner);
+        request.endGame(winner, false);
     }
 
     //TODO: other restrictions.

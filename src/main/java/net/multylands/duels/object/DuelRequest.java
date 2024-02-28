@@ -116,10 +116,10 @@ public class DuelRequest {
         Location targetLoc = arena.getFirstLocation();
         Location playerLoc = arena.getSecondLocation();
         if (targetLoc == null) {
-            plugin.getLogger().log(Level.INFO, "targetLoc is null in the DuelRequest startGame void");
+            plugin.getLogger().log(Level.INFO, "DUELS targetLoc is null in the DuelRequest startGame void");
         }
         if (playerLoc == null) {
-            plugin.getLogger().log(Level.INFO, "playerLoc is null in the DuelRequest startGame void");
+            plugin.getLogger().log(Level.INFO, "DUELS playerLoc is null in the DuelRequest startGame void");
         }
         target.teleport(targetLoc);
         player.teleport(playerLoc);
@@ -184,40 +184,43 @@ public class DuelRequest {
         Random random = new Random();
         taskAssignedIDInTheList = random.nextInt(999999);
         taskId = Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            //don't put endgame here because it will cancel this task
-            Duels.tasksToCancel.remove(taskAssignedIDInTheList);
-            arena.setAvailable(true);
-            removeStoreRequest(true);
-            Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.ran-out-of-time"));
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ran-out-of-time"));
-            Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
-            target.teleport(spawnLoc);
-            player.teleport(spawnLoc);
+            //just provide random uuid here it doesn't really matter.
+            endGame(playerUUID, true);
         }, 20L * 60 * plugin.getConfig().getInt("max_duel_time_minutes")).getTaskId();
-        Duels.tasksToCancel.put(taskAssignedIDInTheList, taskId);
+        Duels.tasksToCancel.put(playerUUID, taskId);
         storeRequest(true);
     }
 
-    public void endGame(UUID winnerUUID) {
+    public void endGame(UUID winnerUUID, boolean isByTask) {
+        arena.setAvailable(true);
+        removeStoreRequest(true);
+        Duels.tasksToCancel.remove(taskAssignedIDInTheList);
+        Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         for (UUID spectatorUUID : spectators) {
             Spectating.endSpectatingForEndGame(Bukkit.getPlayer(spectatorUUID), plugin);
         }
         spectators.clear();
-        Bukkit.getScheduler().cancelTask(Duels.tasksToCancel.get(taskAssignedIDInTheList));
-        Duels.tasksToCancel.remove(taskAssignedIDInTheList);
-        arena.setAvailable(true);
-        removeStoreRequest(true);
+        if (isByTask) {
+            Player player = Bukkit.getPlayer(playerUUID);
+            Player target = Bukkit.getPlayer(targetUUID);
+            Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.ran-out-of-time"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ran-out-of-time"));
+            target.teleport(spawnLoc);
+            player.teleport(spawnLoc);
+            return;
+        }
+        Bukkit.getScheduler().cancelTask(Duels.tasksToCancel.get(playerUUID));
+
         Player winner = Bukkit.getPlayer(winnerUUID);
         Player loser = Bukkit.getPlayer(getOpponent(winnerUUID));
         if (winner == null) {
-            Bukkit.broadcastMessage("&c&lSOMETHING WENT SUPER WRONG!. CONTACT GREENED ERROR TYPE #3");
+            Bukkit.broadcastMessage("&c&lDUELS SOMETHING WENT SUPER WRONG!. CONTACT GREENED ERROR TYPE #3");
         }
         if (loser != null) {
             Chat.sendMessage(plugin, loser, plugin.languageConfig.getString("duel.lost-duel"));
         }
         Chat.sendMessage(plugin, winner, plugin.languageConfig.getString("duel.won-duel").replace("%number%", plugin.getConfig().getInt("time_to_pick_up_items") + ""));
         Duels.scheduler.runTaskLater(plugin, () -> {
-            Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
             winner.teleport(spawnLoc);
         }, 20L * plugin.getConfig().getInt("time_to_pick_up_items"));
     }
