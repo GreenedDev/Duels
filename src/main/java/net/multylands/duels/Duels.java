@@ -23,9 +23,14 @@ import java.util.*;
 
 public class Duels extends JavaPlugin {
     public static HashMap<String, Arena> Arenas = new HashMap<>();
+    //storing only sender: requestthatcontainstargetname
     public static HashMap<UUID, DuelRequest> requests = new HashMap<>();
+    //storing sender: player
+    //and player: sender
     public static HashMap<UUID, UUID> playerToOpponentInGame = new HashMap<>();
+    //storing uuid: taskID
     public static HashMap<UUID, Integer> tasksToCancel = new HashMap<>();
+    //storing spectator: toSpectate
     public static HashMap<UUID, UUID> spectators = new HashMap<>();
     public int duelInventorySize;
     public File ignoresFile;

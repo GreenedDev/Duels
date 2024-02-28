@@ -68,6 +68,12 @@ public class GUI implements Listener {
         //always!!! get this request from the GUI clicker. or if someone does /duel onthesameplayer then this will break
         DuelRequest request = Duels.requests.get(player.getUniqueId());
         Player target = Bukkit.getPlayer(request.getOpponent(player.getUniqueId()));
+        if (target == null) {
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-is-offline"));
+            player.closeInventory();
+            request.removeStoreRequest(false);
+            return;
+        }
 
         DuelRestrictions restrictions = request.getDuelRestrictions();
         boolean isBowEnabled = restrictions.isBowAllowed();

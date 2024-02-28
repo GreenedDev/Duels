@@ -26,14 +26,10 @@ public class PvP implements Listener {
     public PvP(Duels plugin) {
         this.plugin = plugin;
     }
-
     @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        UUID playerUUID = player.getUniqueId();
-        
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
-        
         if (!RequestUtils.isInGame(request)) {
             return;
         }
