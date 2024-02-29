@@ -1,13 +1,10 @@
 package net.multylands.duels.listeners;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.*;
 import net.multylands.duels.gui.DuelInventoryHolder;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
-import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,9 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.UUID;
 
 public class GUI implements Listener {
@@ -63,8 +58,9 @@ public class GUI implements Listener {
         if (item == null) {
             return;
         }
-        event.setCancelled(true);
         Player player = (Player) event.getWhoClicked();
+
+        event.setCancelled(true);
         //always!!! get this request from the GUI clicker. or if someone does /duel onthesameplayer then this will break
         DuelRequest request = Duels.requests.get(player.getUniqueId());
         Player target = Bukkit.getPlayer(request.getOpponent(player.getUniqueId()));
@@ -74,8 +70,8 @@ public class GUI implements Listener {
             request.removeStoreRequest(false);
             return;
         }
-
-        DuelRestrictions restrictions = request.getDuelRestrictions();
+        DuelInventoryHolder invHolder = ((DuelInventoryHolder) inv.getHolder());
+        DuelRestrictions restrictions = invHolder.getRestrictions();
         boolean isBowEnabled = restrictions.isBowAllowed();
         boolean isTotemEnabled = restrictions.isTotemsAllowed();
         boolean isGPEnabled = restrictions.isGoldenAppleAllowed();
@@ -100,7 +96,6 @@ public class GUI implements Listener {
         if (slot == bowSlot) {
             isBowEnabled = !isBowEnabled;
             restrictions.setBowAllowed(isBowEnabled);
-            saveRestriction(request, restrictions);
             if (isBowEnabled) {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-bow.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
@@ -112,7 +107,6 @@ public class GUI implements Listener {
         if (slot == totemSlot) {
             isTotemEnabled = !isTotemEnabled;
             restrictions.setTotemsAllowed(isTotemEnabled);
-            saveRestriction(request, restrictions);
             if (isTotemEnabled) {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-totem.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
@@ -124,7 +118,6 @@ public class GUI implements Listener {
         if (slot == GPSlot) {
             isGPEnabled = !isGPEnabled;
             restrictions.setGoldenAppleAllowed(isGPEnabled);
-            saveRestriction(request, restrictions);
             if (isGPEnabled) {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
@@ -136,7 +129,6 @@ public class GUI implements Listener {
         if (slot == NotchSlot) {
             isNotchEnabled = !isNotchEnabled;
             restrictions.setNotchAllowed(isNotchEnabled);
-            saveRestriction(request, restrictions);
             if (isNotchEnabled) {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-enchanted-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
@@ -148,7 +140,6 @@ public class GUI implements Listener {
         if (slot == potionsSlot) {
             isPotionsEnabled = !isPotionsEnabled;
             restrictions.setPotionsAllowed(isPotionsEnabled);
-            saveRestriction(request, restrictions);
             if (isPotionsEnabled) {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-potions.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
@@ -160,7 +151,6 @@ public class GUI implements Listener {
         if (slot == shieldsSlot) {
             isShieldsEnabled = !isShieldsEnabled;
             restrictions.setShieldsAllowed(isShieldsEnabled);
-            saveRestriction(request, restrictions);
             if (isShieldsEnabled) {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-shields.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
@@ -172,7 +162,6 @@ public class GUI implements Listener {
         if (slot == elytraSlot) {
             isElytraEnabled = !isElytraEnabled;
             restrictions.setElytraAllowed(isElytraEnabled);
-            saveRestriction(request, restrictions);
             if (isElytraEnabled) {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-elytra.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
@@ -184,7 +173,6 @@ public class GUI implements Listener {
         if (slot == enderpearlSlot) {
             isEnderPearlEnabled = !isEnderPearlEnabled;
             restrictions.setEnderPearlAllowed(isEnderPearlEnabled);
-            saveRestriction(request, restrictions);
             if (isEnderPearlEnabled) {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-ender-pearl.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);

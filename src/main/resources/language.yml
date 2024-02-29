@@ -67,6 +67,7 @@ duel:
   cannot-damage-in-duel: "&cYou can't damage players when they are in duel."
 duel-GUI:
   size: 27
+  title: "&8Customize Your Duel Restrictions"
   restriction-enabled: "&a(Enabled)"
   restriction-disabled: "&c(Disabled)"
   toggle-bow:

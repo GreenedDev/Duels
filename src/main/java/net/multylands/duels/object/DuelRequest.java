@@ -141,8 +141,6 @@ public class DuelRequest {
             ItemStack playerMainHand = player.getInventory().getItemInMainHand();
             ItemStack targetOffHand = target.getInventory().getItemInOffHand();
             ItemStack targetMainHand = target.getInventory().getItemInMainHand();
-            plugin.getLogger().log(Level.INFO, playerOffHand.toString());
-            plugin.getLogger().log(Level.INFO, targetOffHand.toString());
             if (playerOffHand.getType() == Material.SHIELD) {
                 player.getInventory().setItemInOffHand(null);
             }
