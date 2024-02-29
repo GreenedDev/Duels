@@ -61,17 +61,17 @@ public class GUI implements Listener {
         Player player = (Player) event.getWhoClicked();
 
         event.setCancelled(true);
-        //always!!! get this request from the GUI clicker. or if someone does /duel onthesameplayer then this will break
-        DuelRequest request = Duels.requests.get(player.getUniqueId());
+        DuelInventoryHolder invHolder = ((DuelInventoryHolder) inv.getHolder());
+        //always!!! get this request from the GUI clicker. because we are storing only sender: request in the requests map.
+        DuelRequest request = invHolder.getRequest();
         Player target = Bukkit.getPlayer(request.getOpponent(player.getUniqueId()));
         if (target == null) {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-is-offline"));
-            player.closeInventory();
             request.removeStoreRequest(false);
+            player.closeInventory();
             return;
         }
-        DuelInventoryHolder invHolder = ((DuelInventoryHolder) inv.getHolder());
-        DuelRestrictions restrictions = invHolder.getRestrictions();
+        DuelRestrictions restrictions = request.getDuelRestrictions();
         boolean isBowEnabled = restrictions.isBowAllowed();
         boolean isTotemEnabled = restrictions.isTotemsAllowed();
         boolean isGPEnabled = restrictions.isGoldenAppleAllowed();
@@ -103,8 +103,7 @@ public class GUI implements Listener {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-bow.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
-        }
-        if (slot == totemSlot) {
+        } else if (slot == totemSlot) {
             isTotemEnabled = !isTotemEnabled;
             restrictions.setTotemsAllowed(isTotemEnabled);
             if (isTotemEnabled) {
@@ -114,8 +113,7 @@ public class GUI implements Listener {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-totem.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
-        }
-        if (slot == GPSlot) {
+        } else if (slot == GPSlot) {
             isGPEnabled = !isGPEnabled;
             restrictions.setGoldenAppleAllowed(isGPEnabled);
             if (isGPEnabled) {
@@ -125,8 +123,7 @@ public class GUI implements Listener {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
-        }
-        if (slot == NotchSlot) {
+        } else if (slot == NotchSlot) {
             isNotchEnabled = !isNotchEnabled;
             restrictions.setNotchAllowed(isNotchEnabled);
             if (isNotchEnabled) {
@@ -136,8 +133,7 @@ public class GUI implements Listener {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-enchanted-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
-        }
-        if (slot == potionsSlot) {
+        } else if (slot == potionsSlot) {
             isPotionsEnabled = !isPotionsEnabled;
             restrictions.setPotionsAllowed(isPotionsEnabled);
             if (isPotionsEnabled) {
@@ -147,8 +143,7 @@ public class GUI implements Listener {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-potions.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
-        }
-        if (slot == shieldsSlot) {
+        } else if (slot == shieldsSlot) {
             isShieldsEnabled = !isShieldsEnabled;
             restrictions.setShieldsAllowed(isShieldsEnabled);
             if (isShieldsEnabled) {
@@ -158,8 +153,7 @@ public class GUI implements Listener {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-shields.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
-        }
-        if (slot == elytraSlot) {
+        } else if (slot == elytraSlot) {
             isElytraEnabled = !isElytraEnabled;
             restrictions.setElytraAllowed(isElytraEnabled);
             if (isElytraEnabled) {
@@ -169,8 +163,7 @@ public class GUI implements Listener {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-elytra.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
-        }
-        if (slot == enderpearlSlot) {
+        } else if (slot == enderpearlSlot) {
             isEnderPearlEnabled = !isEnderPearlEnabled;
             restrictions.setEnderPearlAllowed(isEnderPearlEnabled);
             if (isEnderPearlEnabled) {
@@ -180,8 +173,7 @@ public class GUI implements Listener {
                 meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-ender-pearl.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
-        }
-        if (slot == startSlot) {
+        } else if (slot == startSlot) {
             restrictions = new DuelRestrictions(isBowEnabled, isNotchEnabled, isPotionsEnabled, isGPEnabled, isShieldsEnabled, isTotemEnabled, isElytraEnabled, isEnderPearlEnabled, true);
             //dont change position of player and target below
             request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin);
@@ -200,8 +192,7 @@ public class GUI implements Listener {
             Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.click").replace("%player%", player.getName()));
             PlayersWhoSentRequest.add(player.getUniqueId());
             player.closeInventory();
-        }
-        if (slot == cancelSlot) {
+        } else if (slot == cancelSlot) {
             player.closeInventory();
             request.removeStoreRequest(false);
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.request-cancelled"));

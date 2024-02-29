@@ -1,6 +1,7 @@
 package net.multylands.duels.gui;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.utils.Chat;
 import org.bukkit.ChatColor;
@@ -19,13 +20,11 @@ public class DuelInventoryHolder implements InventoryHolder {
 
     private Inventory inventory;
     public List<String> lore = new ArrayList<>();
-    public DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, false);
+    public DuelRequest request;
     Duels plugin;
-    public DuelInventoryHolder(Duels plugin) {
+    public DuelInventoryHolder(Duels plugin, int size, DuelRequest request) {
         this.plugin = plugin;
-    }
-
-    public DuelInventoryHolder(Duels plugin, int size) {
+        this.request = request;
         this.inventory = plugin.getServer().createInventory(this, size, Chat.Color(plugin.languageConfig.getString("duel-GUI.title")));
         ItemStack bow = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.toggle-bow.item")));
         ItemMeta bowMeta = bow.getItemMeta();
@@ -169,11 +168,12 @@ public class DuelInventoryHolder implements InventoryHolder {
         inventory.setItem(enderpearlSlot, enderPearl);
         inventory.setItem(cancelSlot, cancel);
     }
-    public void setRestrictions(DuelRestrictions restrictions) {
-        this.restrictions = restrictions;
+
+    public void setRequest(DuelRequest request) {
+        this.request = request;
     }
-    public DuelRestrictions getRestrictions() {
-        return restrictions;
+    public DuelRequest getRequest() {
+        return this.request;
     }
     @Override
     public Inventory getInventory() {
