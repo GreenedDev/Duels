@@ -174,7 +174,7 @@ public class GUI implements Listener {
                 item.setItemMeta(meta);
             }
         } else if (slot == startSlot) {
-            restrictions = new DuelRestrictions(isBowEnabled, isNotchEnabled, isPotionsEnabled, isGPEnabled, isShieldsEnabled, isTotemEnabled, isElytraEnabled, isEnderPearlEnabled, true);
+            restrictions.setComplete(true);
             //dont change position of player and target below
             request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin);
 
