@@ -2,7 +2,7 @@ Spigot: https://www.spigotmc.org/resources/114685/
 
 Discord support: https://discord.gg/2zZChX9AEN
 
-Duels is a restrictions orientated plugin. I developed the this plugin for my Minecraft server to address a player request for controlled, one-on-one battles. Players were looking for a way to duel each other without specific advantages, like using totems, golden apples, bows, shields, potions and etc. Previously, they had to rely on moderators to enforce these restrictions, which caused additional issues, so I created this plugin to solve that issue.
+Duels is a restrictions orientated plugin. I developed this plugin for my Minecraft server to address a player request for controlled, one-on-one battles. Players were looking for a way to duel each other without specific advantages, like using totems, golden apples, bows, shields, potions, ender pearls, elytras and etc. Previously, they had to rely on moderators to enforce these restrictions, which caused additional issues, so I created this plugin to solve that issue.
 
 
 /duel <player> opens the GUI below. You can toggle some of restrictions by clicking on them. When you are done click Start and duel request with the same Restriction properties will be sent to the target.
@@ -33,4 +33,4 @@ This plugin also has spectating system. Just do /spectate player.
 You can use MiniMessage format messages in the language config.
 
 
-How do we teleport players to spawn? By executing command "/spawn <player>" from console.
+How do we teleport players to spawn? You have to set spawn's location using /setduelspawn.
