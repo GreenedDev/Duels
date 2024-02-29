@@ -40,8 +40,9 @@ public class GUI implements Listener {
             PlayersWhoSentRequest.remove(event.getPlayer().getUniqueId());
             return;
         }
+        DuelInventoryHolder invHolder = ((DuelInventoryHolder) inv.getHolder());
         Player player = (Player) event.getPlayer();
-        DuelRequest request = Duels.requests.get(player.getUniqueId());
+        DuelRequest request = invHolder.getRequest();
         request.removeStoreRequest(false);
     }
 
