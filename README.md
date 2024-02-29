@@ -7,7 +7,8 @@ Duels is a restrictions orientated plugin. I developed the this plugin for my Mi
 
 /duel <player> opens the GUI below. You can toggle some of restrictions by clicking on them. When you are done click Start and duel request with the same Restriction properties will be sent to the target.
 
-![image](https://github.com/GreenedDev/Duels/assets/108997309/13686e85-0c0b-4dd5-b9b3-15aa5d21987b)
+![image](https://github.com/GreenedDev/Duels/assets/108997309/329dadf5-6a2d-40f5-a950-c2b7e16eeb06)
+
 
 ![image](https://github.com/GreenedDev/Duels/assets/108997309/0801b5a5-6f15-4d53-9f99-605d51321d9d)
 
