@@ -79,7 +79,7 @@ public class PvP implements Listener {
         UUID winnerUUID = request.getOpponent(deadUUID);
         request.endGame(winnerUUID, false, false);
     }
-
+    //antidamage for spectators
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
@@ -159,8 +159,7 @@ public class PvP implements Listener {
         request.endGame(winner, false, false);
     }
 
-    //TODO: other restrictions.
-    //anti shields
+    //antishield
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
@@ -239,6 +238,7 @@ public class PvP implements Listener {
         Chat.sendMessage(plugin, shooter, (plugin.languageConfig.getString("duel.ender-pearl-deny-message")));
         event.setCancelled(true);
     }
+    //antishield
     @EventHandler(ignoreCancelled = true)
     public void onShieldClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
@@ -291,6 +291,7 @@ public class PvP implements Listener {
         if (request.getDuelRestrictions().isPotionsAllowed()) {
             return;
         }
+        player.getWorld().dropItem(player.getLocation(), event.getPotion().getItem());
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.potions-deny-message"));
         event.setCancelled(true);
     }

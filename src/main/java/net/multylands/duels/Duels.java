@@ -130,7 +130,7 @@ public class Duels extends JavaPlugin {
         new UpdateChecker(this, 114685).getVersion(version -> {
             if (!this.getDescription().getVersion().equals(version)) {
                 newVersion = version;
-                Chat.sendMessageSender(this, Bukkit.getConsoleSender(),  languageConfig.getString("update-available").replace("%newversion%", version));
+                Chat.sendMessageSender(this, Bukkit.getConsoleSender(), languageConfig.getString("update-available").replace("%newversion%", version));
             }
         });
     }
