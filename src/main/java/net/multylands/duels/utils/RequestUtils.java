@@ -12,7 +12,6 @@ public class RequestUtils {
         if (!Duels.playerToOpponentInGame.containsKey(playerUUID)) {
             return null;
         }
-        //bruh playertoopponent replaces
         UUID opponentUUID = Duels.playerToOpponentInGame.get(playerUUID);
         if (!Duels.requests.containsKey(playerUUID) && !Duels.requests.containsKey(opponentUUID)) {
             return null;
