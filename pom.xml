@@ -6,12 +6,12 @@
 
     <groupId>Duels</groupId>
     <artifactId>Duels</artifactId>
-    <version>1.21</version>
+    <version>v1.23</version>
     <packaging>jar</packaging>
 
     <name>Duels</name>
 
-    <description>this is duels plugin created for minecraft server multylands. it was created due to the fact that
+    <description>this is duels plugin created for minecraft server Multylands. it was created due to the fact that
         managing duels required a lot of work. for example: server helper needed to moderate 1v1 players to not use
         restricted PvP abilities.
     </description>
@@ -20,11 +20,33 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <url>https://multylands.net/</url>
+    <url>https://www.spigotmc.org/resources/114685/</url>
 
     <build>
         <directory>C:\Users\green\Desktop\exported jars</directory>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <!-- Replace this with your package! -->
+                            <shadedPattern>net.multylands.duels</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -79,6 +101,12 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>3.0.2</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-text-minimessage</artifactId>

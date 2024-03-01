@@ -6,6 +6,8 @@ no-perm: "&cYou don't have a permission to execute this command!"
 
 all-config-reloaded: "&aArenas, Language and default config has been reloaded!"
 
+update-available: "&6[Duels] &aAn update &6%newversion% &afor the Duels plugin is now available. Download it from &bhttps://www.spigotmc.org/resources/114685/"
+
 duel:
   target-is-offline: "&cGiven player is offline."
   already-in-duel: "&cYou can't accept a duel while playing one."

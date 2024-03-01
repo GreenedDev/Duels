@@ -51,7 +51,7 @@ public class PvP implements Listener {
         UUID winner = request.getOpponent(playerWhoLeftUUID);
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         playerWhoLeft.teleport(spawnLoc);
-        request.endGame(winner, false);
+        request.endGame(winner, false, false);
         playerWhoLeft.setHealth(0);
     }
 
@@ -77,7 +77,7 @@ public class PvP implements Listener {
             return;
         }
         UUID winnerUUID = request.getOpponent(deadUUID);
-        request.endGame(winnerUUID, false);
+        request.endGame(winnerUUID, false, false);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -156,7 +156,7 @@ public class PvP implements Listener {
         }
         UUID winner = request.getOpponent(playerWhoUsedTotemUUID);
         event.setCancelled(true);
-        request.endGame(winner, false);
+        request.endGame(winner, false, false);
     }
 
     //TODO: other restrictions.
@@ -267,8 +267,24 @@ public class PvP implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        UUID playerUUID = player.getUniqueId();
-        DuelRequest request = Duels.requests.get(playerUUID);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
+        if (!RequestUtils.isInGame(request)) {
+            return;
+        }
+        if (request.getDuelRestrictions().isPotionsAllowed()) {
+            return;
+        }
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.potions-deny-message"));
+        event.setCancelled(true);
+    }
+    //fix dis
+    @EventHandler(ignoreCancelled = true)
+    public void onPotionSplash(PotionSplashEvent event) {
+        if (!(event.getEntity().getShooter() instanceof Player)) {
+            return;
+        }
+        Player player = (Player) event.getEntity().getShooter();
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -286,8 +302,7 @@ public class PvP implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        UUID playerUUID = player.getUniqueId();
-        DuelRequest request = Duels.requests.get(playerUUID);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -305,8 +320,7 @@ public class PvP implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        UUID playerUUID = player.getUniqueId();
-        DuelRequest request = Duels.requests.get(playerUUID);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -316,5 +330,4 @@ public class PvP implements Listener {
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.enchanted-golden-apples-deny-message"));
         event.setCancelled(true);
     }
-    
 }

@@ -26,4 +26,8 @@ public class Chat {
             sender.sendMessage(Color(message));
         }
     }
+    public static void messagePlayers(Duels plugin, Player player, Player target, String message) {
+        Chat.sendMessage(plugin, player, message);
+        Chat.sendMessage(plugin, target, message);
+    }
 }

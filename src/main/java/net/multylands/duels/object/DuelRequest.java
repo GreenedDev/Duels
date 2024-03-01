@@ -126,93 +126,55 @@ public class DuelRequest {
         setIsInGame(true);
         setIsStartingIn5Seconds(true);
         Duels.requests.put(playerUUID, this);
-        player.setFlying(false);
-        target.setAllowFlight(false);
-        for (PotionEffect effect : player.getActivePotionEffects()) {
-            player.removePotionEffect(effect.getType());
-        }
-        target.setFlying(false);
-        target.setAllowFlight(false);
-        for (PotionEffect effect : target.getActivePotionEffects()) {
-            target.removePotionEffect(effect.getType());
-        }
-        if (!duelRestrictions.isShieldsAllowed()) {
-            ItemStack playerOffHand = player.getInventory().getItemInOffHand();
-            ItemStack playerMainHand = player.getInventory().getItemInMainHand();
-            ItemStack targetOffHand = target.getInventory().getItemInOffHand();
-            ItemStack targetMainHand = target.getInventory().getItemInMainHand();
-            if (playerOffHand.getType() == Material.SHIELD) {
-                player.getInventory().setItemInOffHand(null);
-            }
-            if (playerMainHand.getType() == Material.SHIELD) {
-                player.getInventory().remove(playerMainHand);
-            }
-            if (targetOffHand.getType() == Material.SHIELD) {
-                target.getInventory().setItemInOffHand(null);
-            }
-            if (targetMainHand.getType() == Material.SHIELD) {
-                target.getInventory().remove(targetMainHand);
-            }
-        }
+        disableFlying(player, target);
+        removeAppliedEffectsIfDisabled(player, target);
+        removeShieldsIfDisabled(player, target);
         AtomicInteger countdown = new AtomicInteger(6);
         Duels.scheduler.runTaskTimer(plugin, task -> {
-            String color = "";
-            if (countdown.get() == 5) {
-                color = "&4";
-            } else if (countdown.get() == 4) {
-                color = "&c";
-            } else if (countdown.get() == 3) {
-                color = "&6";
-            } else if (countdown.get() == 2) {
-                color = "&2";
-            } else if (countdown.get() == 1) {
-                color = "&a";
-            }
+            String color = getColorForNumber(countdown);
             countdown.getAndDecrement();
             if (countdown.get() == 0) {
-                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.duel-started"));
-                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.duel-started"));
+                Chat.messagePlayers(plugin, player, target, plugin.languageConfig.getString("duel.duel-started"));
                 setIsStartingIn5Seconds(false);
                 task.cancel();
             } else {
-                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color + countdown));
-                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color + countdown));
+                Chat.messagePlayers(plugin, player, target, plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color + countdown));
             }
         }, 0, 20);
-        Random random = new Random();
-        taskAssignedIDInTheList = random.nextInt(999999);
-        taskId = Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            //just provide random uuid here it doesn't really matter.
-            endGame(playerUUID, true);
-        }, 20L * 60 * plugin.getConfig().getInt("max_duel_time_minutes")).getTaskId();
-        Duels.tasksToCancel.put(playerUUID, taskId);
+        saveRanOutOfTimeTask();
         storeRequest(true);
     }
 
-    public void endGame(UUID winnerUUID, boolean isByTask) {
+    public void endGame(UUID winnerUUID, boolean ranOutOfTime, boolean endedByServerRestart) {
         arena.setAvailable(true);
         removeStoreRequest(true);
-        Duels.tasksToCancel.remove(taskAssignedIDInTheList);
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         for (UUID spectatorUUID : spectators) {
             Spectating.endSpectatingForEndGame(Bukkit.getPlayer(spectatorUUID), plugin);
         }
         spectators.clear();
-        if (isByTask) {
+        if (ranOutOfTime) {
             Player player = Bukkit.getPlayer(playerUUID);
             Player target = Bukkit.getPlayer(targetUUID);
-            Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.ran-out-of-time"));
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ran-out-of-time"));
+            Chat.messagePlayers(plugin, player, target, plugin.languageConfig.getString("duel.ran-out-of-time"));
             target.teleport(spawnLoc);
             player.teleport(spawnLoc);
             return;
         }
+        //dont move these two lines below to above because they will cancel the ranoutoftime task and code in it will never be executed
         Bukkit.getScheduler().cancelTask(Duels.tasksToCancel.get(playerUUID));
-
+        Duels.tasksToCancel.remove(playerUUID);
+        if (endedByServerRestart) {
+            Player player = Bukkit.getPlayer(playerUUID);
+            Player target = Bukkit.getPlayer(targetUUID);
+            target.teleport(spawnLoc);
+            player.teleport(spawnLoc);
+            return;
+        }
         Player winner = Bukkit.getPlayer(winnerUUID);
         Player loser = Bukkit.getPlayer(getOpponent(winnerUUID));
         if (winner == null) {
-            Bukkit.broadcastMessage("&c&lDUELS SOMETHING WENT SUPER WRONG!. CONTACT GREENED ERROR TYPE #3");
+            plugin.getLogger().log(Level.INFO, "&c&lDUELS SOMETHING WENT SUPER WRONG!. CONTACT GREENED ERROR TYPE #3");
         }
         if (loser != null) {
             Chat.sendMessage(plugin, loser, plugin.languageConfig.getString("duel.lost-duel"));
@@ -251,6 +213,12 @@ public class DuelRequest {
         }
         if (restrictions.isBowAllowed) {
             builder.append("Bow,");
+        }
+        if (restrictions.isElytraAllowed) {
+            builder.append("Elytra,");
+        }
+        if (restrictions.isEnderPearlAllowed) {
+            builder.append("Ender Pearl,");
         }
         String finalString = builder.toString();
         if (finalString.isEmpty()) {
@@ -303,7 +271,71 @@ public class DuelRequest {
         }
     }
 
+    public String getColorForNumber(AtomicInteger countdown) {
+        if (countdown.get() == 5) {
+            return "&4";
+        } else if (countdown.get() == 4) {
+            return "&c";
+        } else if (countdown.get() == 3) {
+            return "&6";
+        } else if (countdown.get() == 2) {
+            return "&2";
+        } else if (countdown.get() == 1) {
+            return "&a";
+        }
+        return "";
+    }
+
     public Arena getArena() {
         return arena;
+    }
+
+    public void saveRanOutOfTimeTask() {
+        Random random = new Random();
+        taskAssignedIDInTheList = random.nextInt(999999);
+        taskId = Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            //just provide random uuid here it doesn't really matter.
+            endGame(playerUUID, true, false);
+        }, 20L * 60 * plugin.getConfig().getInt("max_duel_time_minutes")).getTaskId();
+        Duels.tasksToCancel.put(playerUUID, taskId);
+    }
+
+    public void removeShieldsIfDisabled(Player player, Player target) {
+        if (!duelRestrictions.isShieldsAllowed()) {
+            ItemStack playerOffHand = player.getInventory().getItemInOffHand();
+            ItemStack playerMainHand = player.getInventory().getItemInMainHand();
+            ItemStack targetOffHand = target.getInventory().getItemInOffHand();
+            ItemStack targetMainHand = target.getInventory().getItemInMainHand();
+            if (playerOffHand.getType() == Material.SHIELD) {
+                player.getInventory().setItemInOffHand(null);
+            }
+            if (playerMainHand.getType() == Material.SHIELD) {
+                player.getInventory().remove(playerMainHand);
+            }
+            if (targetOffHand.getType() == Material.SHIELD) {
+                target.getInventory().setItemInOffHand(null);
+            }
+            if (targetMainHand.getType() == Material.SHIELD) {
+                target.getInventory().remove(targetMainHand);
+            }
+        }
+    }
+
+    public void removeAppliedEffectsIfDisabled(Player player, Player target) {
+        if (!duelRestrictions.isPotionsAllowed()) {
+            for (PotionEffect effect : player.getActivePotionEffects()) {
+                player.removePotionEffect(effect.getType());
+            }
+            for (PotionEffect effect : target.getActivePotionEffects()) {
+                target.removePotionEffect(effect.getType());
+            }
+        }
+    }
+
+    public void disableFlying(Player player, Player target) {
+        player.setFlying(false);
+        player.setAllowFlight(false);
+        target.setFlying(false);
+        target.setAllowFlight(false);
     }
 }
