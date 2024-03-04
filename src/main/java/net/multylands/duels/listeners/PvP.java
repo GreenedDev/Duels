@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
@@ -103,12 +104,19 @@ public class PvP implements Listener {
         event.setCancelled(true);
     }
 
-    //anti teleport
+    //anti teleport & ender pearl fix
     @EventHandler(ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
         if (!RequestUtils.isInGame(request)) {
+            return;
+        }
+        if (event.getCause() != PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
+            event.setCancelled(true);
+            return;
+        }
+        if (request.getDuelRestrictions().isEnderPearlAllowed()) {
             return;
         }
         event.setCancelled(true);
@@ -235,7 +243,7 @@ public class PvP implements Listener {
         if (request.getDuelRestrictions().isEnderPearlAllowed()) {
             return;
         }
-        Chat.sendMessage(plugin, shooter, (plugin.languageConfig.getString("duel.ender-pearl-deny-message")));
+        Chat.sendMessage(plugin, shooter, plugin.languageConfig.getString("duel.ender-pearl-deny-message"));
         event.setCancelled(true);
     }
     //antishield
@@ -245,8 +253,19 @@ public class PvP implements Listener {
         if (item == null) {
             return;
         }
-        if (event.getCurrentItem().getType() != Material.SHIELD) {
-            return;
+        if (item.getType() != Material.SHIELD) {
+            //so then this isnt a number key action
+            if (event.getHotbarButton() == -1) {
+                return;
+            }
+            ItemStack hotBarItem = event.getView().getBottomInventory().getItem(event.getHotbarButton());
+            //if it is air
+            if (hotBarItem == null) {
+                return;
+            }
+            if (hotBarItem.getType() != Material.SHIELD) {
+                return;
+            }
         }
         Player player = (Player) event.getWhoClicked();
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);

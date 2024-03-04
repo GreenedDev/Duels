@@ -307,19 +307,19 @@ public class DuelRequest {
             ItemStack targetOffHand = target.getInventory().getItemInOffHand();
             ItemStack targetMainHand = target.getInventory().getItemInMainHand();
             if (playerOffHand.getType() == Material.SHIELD) {
-                player.getWorld().dropItem(player.getLocation(), playerOffHand);
+                //player.getWorld().dropItem(player.getLocation(), playerOffHand);
                 player.getInventory().setItemInOffHand(null);
             }
             if (playerMainHand.getType() == Material.SHIELD) {
-                player.getWorld().dropItem(player.getLocation(), playerMainHand);
+                //player.getWorld().dropItem(player.getLocation(), playerMainHand);
                 player.getInventory().remove(playerMainHand);
             }
             if (targetOffHand.getType() == Material.SHIELD) {
-                target.getWorld().dropItem(target.getLocation(), targetOffHand);
+                //target.getWorld().dropItem(target.getLocation(), targetOffHand);
                 target.getInventory().setItemInOffHand(null);
             }
             if (targetMainHand.getType() == Material.SHIELD) {
-                target.getWorld().dropItem(target.getLocation(), targetMainHand);
+                //target.getWorld().dropItem(target.getLocation(), targetMainHand);
                 target.getInventory().remove(targetMainHand);
             }
         }
