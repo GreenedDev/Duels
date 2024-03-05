@@ -166,7 +166,6 @@ public class PvP implements Listener {
         event.setCancelled(true);
         request.endGame(winner, false, false);
     }
-
     //antishield
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerItemHeldEvent event) {

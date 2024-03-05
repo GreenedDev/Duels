@@ -1,5 +1,5 @@
 name: Duels
-version: '${version}'
+version: 'v1.26'
 main: net.multylands.duels.Duels
 api-version: 1.20
 authors: [ GreenedDev ]
