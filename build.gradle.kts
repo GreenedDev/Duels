@@ -9,6 +9,7 @@ plugins {
     `java-library`
     `maven-publish`
     id ("com.github.johnrengelman.shadow") version "8.1.1"
+    id("xyz.jpenilla.run-paper") version "2.2.3"
 }
 
 repositories {
@@ -65,10 +66,13 @@ tasks.processResources {
     }
 }
 tasks {
-    register<Copy>("copyToServer") {
-        dependsOn(shadowJar)
-        from(shadowJar)
-        into("C:/Users/green/Desktop/Test Server/plugins")
-        this@register.rename("-all", "")
+    runServer {
+        downloadPlugins {
+            modrinth("simple-fly", "nIB1yFFr")
+        }
+        // Configure the Minecraft version for our task.
+        // This is the only required configuration besides applying the plugin.
+        // Your plugin's jar (or shadowJar if present) will be used automatically.
+        minecraftVersion("1.20.4")
     }
 }
