@@ -44,6 +44,7 @@ public class Duels extends JavaPlugin {
     public File configFile;
     public File languageFile;
     MiniMessage miniMessage;
+    public boolean isServerPaper = true;
     public FileConfiguration ignoresConfig;
     public FileConfiguration arenasConfig;
     public FileConfiguration languageConfig;
@@ -144,6 +145,18 @@ public class Duels extends JavaPlugin {
             Arenas.put(arenaID, arena);
         }
     }
+    public void checkPaper() {
+        boolean isPaper = false;
+        try {
+            // Any other works, just the shortest I could find.
+            Class.forName("com.destroystokyo.paper.ParticleBuilder");
+            isPaper = true;
+        } catch (ClassNotFoundException ignored) {}
+        if (!isPaper) {
+            getLogger().info("Server isn't running the PAPER software that means i cant use it's API to deal with shield restrictions. Please switch to paper otherwise Shield restriction will be disabled.");
+        }
+        isServerPaper = isPaper;
+    }
 
     public void reloadLanguageConfig() {
         languageFile = new File(getDataFolder(), "language.yml");
@@ -154,6 +167,7 @@ public class Duels extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PvP(this), this);
         getServer().getPluginManager().registerEvents(new Spectating(this), this);
         getServer().getPluginManager().registerEvents(new UpdateListener(this), this);
+        checkPaper();
         getCommand("duel").setExecutor(new DuelCommand(manager, this));
         getCommand("acceptduel").setExecutor(new AcceptCommand(this));
         getCommand("cancelduel").setExecutor(new CancelCommand(this));

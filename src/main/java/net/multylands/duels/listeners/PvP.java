@@ -166,46 +166,6 @@ public class PvP implements Listener {
         event.setCancelled(true);
         request.endGame(winner, false, false);
     }
-    //antishield
-    @EventHandler(ignoreCancelled = true)
-    public void onPlayerInteract(PlayerItemHeldEvent event) {
-        Player player = event.getPlayer();
-        Inventory inv = player.getInventory();
-        if (inv.getItem(event.getNewSlot()) == null) {
-            return;
-        }
-        if (inv.getItem(event.getNewSlot()).getType() != Material.SHIELD) {
-            return;
-        }
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
-        if (!RequestUtils.isInGame(request)) {
-            return;
-        }
-        if (request.getDuelRestrictions().isShieldsAllowed()) {
-            return;
-        }
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.shields-deny-message"));
-        event.setCancelled(true);
-    }
-
-    //antishield
-    @EventHandler(ignoreCancelled = true)
-    public void onItemSwap(PlayerSwapHandItemsEvent event) {
-        if (!(event.getMainHandItem().getType() == Material.SHIELD || event.getOffHandItem().getType() == Material.SHIELD)) {
-            return;
-        }
-        Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
-        if (!RequestUtils.isInGame(request)) {
-            return;
-        }
-        if (request.getDuelRestrictions().isShieldsAllowed()) {
-            return;
-        }
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.shields-deny-message"));
-        event.setCancelled(true);
-    }
-
     //antielytra
     @EventHandler(ignoreCancelled = true)
     public void onGliding(EntityToggleGlideEvent event) {
@@ -245,39 +205,6 @@ public class PvP implements Listener {
         Chat.sendMessage(plugin, shooter, plugin.languageConfig.getString("duel.ender-pearl-deny-message"));
         event.setCancelled(true);
     }
-    //antishield
-    @EventHandler(ignoreCancelled = true)
-    public void onShieldClick(InventoryClickEvent event) {
-        ItemStack item = event.getCurrentItem();
-        if (item == null) {
-            return;
-        }
-        if (item.getType() != Material.SHIELD) {
-            //so then this isnt a number key action
-            if (event.getHotbarButton() == -1) {
-                return;
-            }
-            ItemStack hotBarItem = event.getView().getBottomInventory().getItem(event.getHotbarButton());
-            //if it is air
-            if (hotBarItem == null) {
-                return;
-            }
-            if (hotBarItem.getType() != Material.SHIELD) {
-                return;
-            }
-        }
-        Player player = (Player) event.getWhoClicked();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
-        if (!RequestUtils.isInGame(request)) {
-            return;
-        }
-        if (request.getDuelRestrictions().isShieldsAllowed()) {
-            return;
-        }
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.shields-deny-message"));
-        event.setCancelled(true);
-    }
-
     //anti potion
     @EventHandler(ignoreCancelled = true)
     public void onPotionDrink(PlayerItemConsumeEvent event) {

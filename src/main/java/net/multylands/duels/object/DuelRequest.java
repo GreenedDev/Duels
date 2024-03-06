@@ -302,26 +302,9 @@ public class DuelRequest {
 
     public void removeShieldsIfDisabled(Player player, Player target) {
         if (!duelRestrictions.isShieldsAllowed()) {
-            ItemStack playerOffHand = player.getInventory().getItemInOffHand();
-            ItemStack playerMainHand = player.getInventory().getItemInMainHand();
-            ItemStack targetOffHand = target.getInventory().getItemInOffHand();
-            ItemStack targetMainHand = target.getInventory().getItemInMainHand();
-            if (playerOffHand.getType() == Material.SHIELD) {
-                //player.getWorld().dropItem(player.getLocation(), playerOffHand);
-                player.getInventory().setItemInOffHand(null);
-            }
-            if (playerMainHand.getType() == Material.SHIELD) {
-                //player.getWorld().dropItem(player.getLocation(), playerMainHand);
-                player.getInventory().remove(playerMainHand);
-            }
-            if (targetOffHand.getType() == Material.SHIELD) {
-                //target.getWorld().dropItem(target.getLocation(), targetOffHand);
-                target.getInventory().setItemInOffHand(null);
-            }
-            if (targetMainHand.getType() == Material.SHIELD) {
-                //target.getWorld().dropItem(target.getLocation(), targetMainHand);
-                target.getInventory().remove(targetMainHand);
-            }
+            int maxDuelTimeInTicks = plugin.getConfig().getInt("max_duel_time_minutes") * 60 * 20;
+            player.setShieldBlockingDelay(maxDuelTimeInTicks);
+            target.setShieldBlockingDelay(maxDuelTimeInTicks);
         }
     }
 
