@@ -92,20 +92,23 @@ public class DuelInventoryHolder implements InventoryHolder {
         potionsMeta.setLore(lore);
         potions.setItemMeta(potionsMeta);
         lore.clear();
-
-        ItemStack shields = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.toggle-shields.item")));
-        ItemMeta shieldsMeta = shields.getItemMeta();
-        shieldsMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-shields.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
-        for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.toggle-shields.lore")) {
-            lore.add(Chat.Color(loreLine));
+        if (plugin.isServerPaper) {
+            ItemStack shields = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.toggle-shields.item")));
+            ItemMeta shieldsMeta = shields.getItemMeta();
+            shieldsMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-shields.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+            for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.toggle-shields.lore")) {
+                lore.add(Chat.Color(loreLine));
+            }
+            if (plugin.languageConfig.getBoolean("duel-GUI.toggle-shields.glowing")) {
+                shieldsMeta.addEnchant(Enchantment.LURE, 1,  true);
+                shieldsMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            }
+            shieldsMeta.setLore(lore);
+            shields.setItemMeta(shieldsMeta);
+            lore.clear();
+            int shieldsSlot = plugin.languageConfig.getInt("duel-GUI.toggle-shields.slot");
+            inventory.setItem(shieldsSlot, shields);
         }
-        if (plugin.languageConfig.getBoolean("duel-GUI.toggle-shields.glowing")) {
-            shieldsMeta.addEnchant(Enchantment.LURE, 1,  true);
-            shieldsMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        }
-        shieldsMeta.setLore(lore);
-        shields.setItemMeta(shieldsMeta);
-        lore.clear();
 
         ItemStack elytra = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.toggle-elytra.item")));
         ItemMeta elytraMeta = elytra.getItemMeta();
@@ -154,7 +157,6 @@ public class DuelInventoryHolder implements InventoryHolder {
         int GPSlot = plugin.languageConfig.getInt("duel-GUI.toggle-golden-apple.slot");
         int NotchSlot = plugin.languageConfig.getInt("duel-GUI.toggle-enchanted-golden-apple.slot");
         int potionsSlot = plugin.languageConfig.getInt("duel-GUI.toggle-potions.slot");
-        int shieldsSlot = plugin.languageConfig.getInt("duel-GUI.toggle-shields.slot");
         int elytraSlot = plugin.languageConfig.getInt("duel-GUI.toggle-elytra.slot");
         int enderpearlSlot = plugin.languageConfig.getInt("duel-GUI.toggle-ender-pearl.slot");
         int cancelSlot = plugin.languageConfig.getInt("duel-GUI.cancel.slot");
@@ -163,7 +165,6 @@ public class DuelInventoryHolder implements InventoryHolder {
         inventory.setItem(GPSlot, gp);
         inventory.setItem(NotchSlot, notch);
         inventory.setItem(potionsSlot, potions);
-        inventory.setItem(shieldsSlot, shields);
         inventory.setItem(elytraSlot, elytra);
         inventory.setItem(enderpearlSlot, enderPearl);
         inventory.setItem(cancelSlot, cancel);

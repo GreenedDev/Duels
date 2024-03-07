@@ -11,19 +11,20 @@ import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.ConfigUtils;
 import net.multylands.duels.utils.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Duels extends JavaPlugin {
@@ -40,9 +41,13 @@ public class Duels extends JavaPlugin {
     public String newVersion = null;
     public int duelInventorySize;
     public File ignoresFile;
+    public String ignoresFileName = "ignores.yml";
     public File arenasFile;
+    public String arenasFileName = "arenas.yml";
     public File configFile;
+    public String configFileName = "config.yml";
     public File languageFile;
+    public String languageFileName = "language.yml";
     MiniMessage miniMessage;
     public boolean isServerPaper = true;
     public FileConfiguration ignoresConfig;
@@ -73,23 +78,23 @@ public class Duels extends JavaPlugin {
     }
     private void createConfigs() {
         try {
-            ignoresFile = new File(getDataFolder(), "ignores.yml");
-            arenasFile = new File(getDataFolder(), "arenas.yml");
-            configFile = new File(getDataFolder(), "config.yml");
-            languageFile = new File(getDataFolder(), "language.yml");
+            ConfigUtils configUtils = new ConfigUtils(this);
+            ignoresFile = new File(getDataFolder(), ignoresFileName);
+            arenasFile = new File(getDataFolder(), arenasFileName);
+            configFile = new File(getDataFolder(), configFileName);
+            languageFile = new File(getDataFolder(), languageFileName);
             //we are checking if files exist to avoid console spamming. try it and see :)
             if (!ignoresFile.exists()) {
-                saveResource("ignores.yml", false);
+                saveResource(ignoresFileName, false);
             }
             if (!languageFile.exists()) {
-                saveResource("language.yml", false);
+                saveResource(languageFileName, false);
             }
             if (!configFile.exists()) {
                 saveDefaultConfig();
-
             }
             if (!arenasFile.exists()) {
-                saveResource("arenas.yml", false);
+                saveResource(arenasFileName, false);
             }
             arenasConfig = new YamlConfiguration();
             ignoresConfig = new YamlConfiguration();
@@ -99,6 +104,10 @@ public class Duels extends JavaPlugin {
             arenasConfig.load(arenasFile);
             languageConfig.load(languageFile);
             getConfig().load(configFile);
+            configUtils.addMissingKeysAndValues(getConfig(), configFileName);
+            configUtils.addMissingKeysAndValues(ignoresConfig, ignoresFileName);
+            configUtils.addMissingKeysAndValues(arenasConfig, arenasFileName);
+            configUtils.addMissingKeysAndValues(languageConfig, languageFileName);
             for (String arenaID : arenasConfig.getKeys(false)) {
                 Location loc1 = arenasConfig.getLocation(arenaID + ".pos1");
                 Location loc2 = arenasConfig.getLocation(arenaID + ".pos2");
@@ -118,7 +127,6 @@ public class Duels extends JavaPlugin {
             throw new RuntimeException(e);
         }
     }
-
     public void saveArenasConfig() {
         try {
             arenasConfig.save(arenasFile);
@@ -167,7 +175,6 @@ public class Duels extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PvP(this), this);
         getServer().getPluginManager().registerEvents(new Spectating(this), this);
         getServer().getPluginManager().registerEvents(new UpdateListener(this), this);
-        checkPaper();
         getCommand("duel").setExecutor(new DuelCommand(manager, this));
         getCommand("acceptduel").setExecutor(new AcceptCommand(this));
         getCommand("cancelduel").setExecutor(new CancelCommand(this));
@@ -185,6 +192,7 @@ public class Duels extends JavaPlugin {
     public void onEnable() {
         this.adventure = BukkitAudiences.create(this);
         miniMessage = MiniMessage.miniMessage();
+        checkPaper();
         createConfigs();
         implementBStats();
         checkForUpdates();
@@ -206,5 +214,14 @@ public class Duels extends JavaPlugin {
             this.adventure.close();
             this.adventure = null;
         }
+    }
+    public FileConfiguration getConfigFromResource(String resourceName) throws IOException, InvalidConfigurationException {
+        YamlConfiguration config = new YamlConfiguration();
+        InputStream stream = getResource(resourceName);
+        Reader reader = new InputStreamReader(stream);
+        config.load(reader);
+        reader.close();
+        stream.close();
+        return config;
     }
 }

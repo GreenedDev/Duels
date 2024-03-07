@@ -153,9 +153,15 @@ public class DuelRequest {
             Spectating.endSpectatingForEndGame(Bukkit.getPlayer(spectatorUUID), plugin);
         }
         spectators.clear();
+        Player player = Bukkit.getPlayer(playerUUID);
+        Player target = Bukkit.getPlayer(getOpponent(targetUUID));
+        if (target != null) {
+            undoShields(player);
+        }
+        if (player != null) {
+            undoShields(target);
+        }
         if (ranOutOfTime) {
-            Player player = Bukkit.getPlayer(playerUUID);
-            Player target = Bukkit.getPlayer(targetUUID);
             Chat.messagePlayers(plugin, player, target, plugin.languageConfig.getString("duel.ran-out-of-time"));
             target.teleport(spawnLoc);
             player.teleport(spawnLoc);
@@ -165,8 +171,6 @@ public class DuelRequest {
         Bukkit.getScheduler().cancelTask(Duels.tasksToCancel.get(playerUUID));
         Duels.tasksToCancel.remove(playerUUID);
         if (endedByServerRestart) {
-            Player player = Bukkit.getPlayer(playerUUID);
-            Player target = Bukkit.getPlayer(targetUUID);
             target.teleport(spawnLoc);
             player.teleport(spawnLoc);
             return;
@@ -305,6 +309,11 @@ public class DuelRequest {
             int maxDuelTimeInTicks = plugin.getConfig().getInt("max_duel_time_minutes") * 60 * 20;
             player.setShieldBlockingDelay(maxDuelTimeInTicks);
             target.setShieldBlockingDelay(maxDuelTimeInTicks);
+        }
+    }
+    public void undoShields(Player player) {
+        if (!duelRestrictions.isShieldsAllowed()) {
+            player.setShieldBlockingDelay(plugin.getConfig().getInt("default-shield-blocking-delay"));
         }
     }
 
