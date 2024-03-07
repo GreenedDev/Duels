@@ -34,7 +34,7 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 group = "net.multylands.duels"
-version = "v1.26"
+version = "v1.27"
 description = "Duels"
 
 publishing {

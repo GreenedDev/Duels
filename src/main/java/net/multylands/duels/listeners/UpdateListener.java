@@ -12,7 +12,6 @@ public class UpdateListener implements Listener {
     public UpdateListener(Duels plugin) {
         this.plugin = plugin;
     }
-
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
