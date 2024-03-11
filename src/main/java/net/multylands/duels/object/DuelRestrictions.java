@@ -10,8 +10,12 @@ public class DuelRestrictions {
     boolean isTotemsAllowed;
     boolean isElytraAllowed;
     boolean isEnderPearlAllowed;
+    boolean isKeepInventoryEnabled;
 
-    public DuelRestrictions(boolean bowAllowed, boolean notchAllowed, boolean potionsAllowed, boolean goldenAppleAllowed, boolean shieldsAllowed, boolean totemsAllowed, boolean isElytraAllowed, boolean isEnderPearlAllowed, boolean isComplete) {
+    public DuelRestrictions(boolean bowAllowed, boolean notchAllowed,
+                            boolean potionsAllowed, boolean goldenAppleAllowed,
+                            boolean shieldsAllowed, boolean totemsAllowed, boolean isElytraAllowed,
+                            boolean isEnderPearlAllowed, boolean isComplete, boolean isKeepInventoryEnabled) {
         this.isBowAllowed = bowAllowed;
         this.isComplete = isComplete;
         this.isNotchAllowed = notchAllowed;
@@ -21,24 +25,33 @@ public class DuelRestrictions {
         this.isTotemsAllowed = totemsAllowed;
         this.isElytraAllowed = isElytraAllowed;
         this.isEnderPearlAllowed = isEnderPearlAllowed;
+        this.isKeepInventoryEnabled = isKeepInventoryEnabled;
     }
 
     public boolean isBowAllowed() {
         return isBowAllowed;
     }
+
     public boolean isElytraAllowed() {
         return isElytraAllowed;
     }
+
     public boolean isEnderPearlAllowed() {
         return isEnderPearlAllowed;
+    }
+
+    public boolean isKeepInventoryAllowed() {
+        return isKeepInventoryEnabled;
     }
 
     public boolean isNotchAllowed() {
         return isNotchAllowed;
     }
+
     public boolean isComplete() {
         return isComplete;
     }
+
     public boolean isPotionsAllowed() {
         return isPotionsAllowed;
     }
@@ -50,7 +63,10 @@ public class DuelRestrictions {
     public boolean isShieldsAllowed() {
         return isShieldsAllowed;
     }
-    public boolean isTotemsAllowed() {return isTotemsAllowed;}
+
+    public boolean isTotemsAllowed() {
+        return isTotemsAllowed;
+    }
 
     public void setBowAllowed(boolean yesOrNot) {
         isBowAllowed = yesOrNot;
@@ -63,6 +79,7 @@ public class DuelRestrictions {
     public void setPotionsAllowed(boolean yesOrNot) {
         isPotionsAllowed = yesOrNot;
     }
+
     public void setComplete(boolean yesOrNot) {
         isComplete = yesOrNot;
     }
@@ -74,10 +91,18 @@ public class DuelRestrictions {
     public void setShieldsAllowed(boolean yesOrNot) {
         isShieldsAllowed = yesOrNot;
     }
-    public void setTotemsAllowed(boolean yesOrNot){isTotemsAllowed = yesOrNot;}
+
+    public void setTotemsAllowed(boolean yesOrNot) {
+        isTotemsAllowed = yesOrNot;
+    }
+
     public void setElytraAllowed(boolean yesOrNot) {
         isElytraAllowed = yesOrNot;
     }
+    public void setKeepInventoryAllowed(boolean yesOrNot) {
+        isKeepInventoryEnabled = yesOrNot;
+    }
+
     public void setEnderPearlAllowed(boolean yesOrNot) {
         isEnderPearlAllowed = yesOrNot;
     }

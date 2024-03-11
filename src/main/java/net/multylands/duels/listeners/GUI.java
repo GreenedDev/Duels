@@ -41,7 +41,6 @@ public class GUI implements Listener {
             return;
         }
         DuelInventoryHolder invHolder = ((DuelInventoryHolder) inv.getHolder());
-        Player player = (Player) event.getPlayer();
         DuelRequest request = invHolder.getRequest();
         request.removeStoreRequest(false);
     }
@@ -81,6 +80,7 @@ public class GUI implements Listener {
         boolean isShieldsEnabled = restrictions.isShieldsAllowed();
         boolean isElytraEnabled = restrictions.isElytraAllowed();
         boolean isEnderPearlEnabled = restrictions.isEnderPearlAllowed();
+        boolean isKeepInventoryEnabled = restrictions.isKeepInventoryAllowed();
         int bowSlot = plugin.languageConfig.getInt("duel-GUI.toggle-bow.slot");
         int totemSlot = plugin.languageConfig.getInt("duel-GUI.toggle-totem.slot");
         int GPSlot = plugin.languageConfig.getInt("duel-GUI.toggle-golden-apple.slot");
@@ -89,6 +89,7 @@ public class GUI implements Listener {
         int shieldsSlot = plugin.languageConfig.getInt("duel-GUI.toggle-shields.slot");
         int elytraSlot = plugin.languageConfig.getInt("duel-GUI.toggle-elytra.slot");
         int enderpearlSlot = plugin.languageConfig.getInt("duel-GUI.toggle-ender-pearl.slot");
+        int keepInventorySlot = plugin.languageConfig.getInt("duel-GUI.toggle-keep-inventory.slot");
         int startSlot = plugin.languageConfig.getInt("duel-GUI.start.slot");
         int cancelSlot = plugin.languageConfig.getInt("duel-GUI.cancel.slot");
         ItemMeta meta = item.getItemMeta();
@@ -197,10 +198,16 @@ public class GUI implements Listener {
             player.closeInventory();
             request.removeStoreRequest(false);
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.request-cancelled"));
+        } else if (keepInventorySlot == slot) {
+            isKeepInventoryEnabled = !isKeepInventoryEnabled;
+            restrictions.setKeepInventoryAllowed(isKeepInventoryEnabled);
+            if (isKeepInventoryEnabled) {
+                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-keep-inventory.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                item.setItemMeta(meta);
+            } else {
+                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-keep-inventory.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                item.setItemMeta(meta);
+            }
         }
-    }
-    public void saveRestriction(DuelRequest request, DuelRestrictions restrictions) {
-        request.setDuelRestrictions(restrictions);
-        request.storeRequest(false);
     }
 }

@@ -72,6 +72,7 @@ duel-GUI:
   title: "&8Customize Your Duel Restrictions"
   restriction-enabled: "&a(Enabled)"
   restriction-disabled: "&c(Disabled)"
+
   toggle-bow:
     item: BOW
     slot: 0
@@ -157,6 +158,17 @@ duel-GUI:
       - "&7Toggle Ender Pearl usage in the duel."
       - "&7Disabling this will prevent both"
       - "&7players from using Ender Pearl."
+      - ""
+      - "&eClick to toggle!"
+  toggle-keep-inventory:
+    slot: 25
+    item: ENDER_CHEST
+    glowing: false
+    display-name: "&6Keep Inventory & EXP %toggled%"
+    lore:
+      - "&7Toggle Keep Inventory in the duel."
+      - "&7Enabling this will prevent both"
+      - "&7players from losing their items."
       - ""
       - "&eClick to toggle!"
   cancel:

@@ -127,8 +127,8 @@ public class DuelRequest {
         setIsStartingIn5Seconds(true);
         Duels.requests.put(playerUUID, this);
         disableFlying(player, target);
-        removeAppliedEffectsIfDisabled(player, target);
-        removeShieldsIfDisabled(player, target);
+        handleEffects(player, target);
+        handleShields(player, target);
         AtomicInteger countdown = new AtomicInteger(6);
         Duels.scheduler.runTaskTimer(plugin, task -> {
             String color = getColorForNumber(countdown);
@@ -146,8 +146,8 @@ public class DuelRequest {
     }
 
     public void endGame(UUID winnerUUID, boolean ranOutOfTime, boolean endedByServerRestart) {
-        arena.setAvailable(true);
-        removeStoreRequest(true);
+        setIsInGame(false);
+        storeRequest(false);
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         for (UUID spectatorUUID : spectators) {
             Spectating.endSpectatingForEndGame(Bukkit.getPlayer(spectatorUUID), plugin);
@@ -186,6 +186,8 @@ public class DuelRequest {
         Chat.sendMessage(plugin, winner, plugin.languageConfig.getString("duel.won-duel").replace("%number%", plugin.getConfig().getInt("time_to_pick_up_items") + ""));
         Duels.scheduler.runTaskLater(plugin, () -> {
             winner.teleport(spawnLoc);
+            arena.setAvailable(true);
+            removeStoreRequest(true);
         }, 20L * plugin.getConfig().getInt("time_to_pick_up_items"));
     }
 
@@ -304,7 +306,7 @@ public class DuelRequest {
         Duels.tasksToCancel.put(playerUUID, taskId);
     }
 
-    public void removeShieldsIfDisabled(Player player, Player target) {
+    public void handleShields(Player player, Player target) {
         if (!duelRestrictions.isShieldsAllowed()) {
             int maxDuelTimeInTicks = plugin.getConfig().getInt("max_duel_time_minutes") * 60 * 20;
             player.setShieldBlockingDelay(maxDuelTimeInTicks);
@@ -317,7 +319,7 @@ public class DuelRequest {
         }
     }
 
-    public void removeAppliedEffectsIfDisabled(Player player, Player target) {
+    public void handleEffects(Player player, Player target) {
         if (!duelRestrictions.isPotionsAllowed()) {
             for (PotionEffect effect : player.getActivePotionEffects()) {
                 player.removePotionEffect(effect.getType());

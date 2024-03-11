@@ -60,8 +60,7 @@ public class PvP implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
-        if (!RequestUtils.isInGame(request)) {
+        if (!Duels.playerToOpponentInGame.containsKey(player.getUniqueId())) {
             return;
         }
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.no-commands-in-duel"));
@@ -76,6 +75,12 @@ public class PvP implements Listener {
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(dead);
         if (!RequestUtils.isInGame(request)) {
             return;
+        }
+        if (request.getDuelRestrictions().isKeepInventoryAllowed()) {
+            event.setKeepInventory(true);
+            event.getDrops().clear();
+            event.setKeepLevel(true);
+            event.setDroppedExp(0);
         }
         UUID winnerUUID = request.getOpponent(deadUUID);
         request.endGame(winnerUUID, false, false);
