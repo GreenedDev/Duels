@@ -8,9 +8,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 public class IgnoreCommand implements CommandExecutor {
     public Duels plugin;
@@ -34,24 +34,24 @@ public class IgnoreCommand implements CommandExecutor {
             return false;
         }
         if (plugin.ignoresConfig.getList("Ignores") == null || !plugin.ignoresConfig.getList("Ignores").contains(player.getUniqueId())) {
-            List<UUID> uuids = new java.util.ArrayList<>(Collections.emptyList());
+            List<String> uuids = new ArrayList<>(Collections.emptyList());
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ignoring-on-player-enable").replace("%player%", target.getDisplayName()));
-            uuids.add(target.getUniqueId());
+            uuids.add(target.getUniqueId().toString());
             plugin.ignoresConfig.set("Ignores." + player.getUniqueId(), uuids);
             plugin.saveIgnoresConfig();
             return false;
         }
-        List<UUID> uuids = (List<UUID>) plugin.ignoresConfig.getList("Ignores." + player.getUniqueId());
-        if (uuids.contains(target.getUniqueId())) {
+        List<String> uuids = plugin.ignoresConfig.getStringList("Ignores." + player.getUniqueId());
+        if (uuids.contains(target.getUniqueId().toString())) {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ignoring-on-player-disable").replace("%player%", target.getDisplayName()));
-            uuids.remove(target.getUniqueId());
+            uuids.remove(target.getUniqueId().toString());
             plugin.ignoresConfig.set("Ignores." + player.getUniqueId(), null);
             plugin.saveIgnoresConfig();
             return false;
         }
         if (!uuids.contains(target.getUniqueId())) {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ignoring-on-player-enable").replace("%player%", target.getDisplayName()));
-            uuids.add(target.getUniqueId());
+            uuids.add(target.getUniqueId().toString());
             plugin.ignoresConfig.set("Ignores." + player.getUniqueId(), uuids);
             plugin.saveIgnoresConfig();
             return false;
