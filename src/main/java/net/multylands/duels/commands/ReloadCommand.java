@@ -19,6 +19,7 @@ public class ReloadCommand implements CommandExecutor {
         }
         if (!sender.hasPermission("duels.reload")) {
             Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("no-perm"));
+            return false;
         }
         plugin.reloadArenaConfig();
         plugin.reloadConfig();

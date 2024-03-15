@@ -19,8 +19,6 @@ public class ConfigUtils {
 
     public void addMissingKeysAndValues(FileConfiguration config, String fileName) {
         List<String> KeysAndValues = getKeysAndValues(fileName);
-        if (KeysAndValues.isEmpty()) {
-        }
         for (String key : config.getKeys(true)) {
             KeysAndValues.remove(key);
         }
@@ -41,17 +39,12 @@ public class ConfigUtils {
     }
 
     public List<String> getKeysAndValues(String resourceName) {
-        List<String> keys = new ArrayList<>();
         FileConfiguration config = new YamlConfiguration();
         try {
             config = plugin.getConfigFromResource(resourceName);
         } catch (InvalidConfigurationException | IOException e) {
             System.out.println(e);
         }
-        for (String key : config.getKeys(true)) {
-            keys.add(key);
-        }
-        return keys;
+        return new ArrayList<>(config.getKeys(true));
     }
-
 }

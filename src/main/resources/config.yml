@@ -20,3 +20,15 @@ spectator_whitelist_mode: true
 commands_blacklisted_or_whitelisted_in_spectator:
   - spawn
   - leavespectator
+#here you can toggle which modules will be enabled/disabled in the server. if you turn off any, it will not show up in the
+#duels GUI, so players won't be able to turn on/off that restriction.
+restriction-modules:
+  bow: true
+  totem: true
+  golden-apple: true
+  enchanted-golden-apple: true
+  potions: true
+  shields: true
+  elytra: true
+  ender-pearl: true
+  keep-inventory: true
