@@ -16,7 +16,7 @@ duel:
   no-arenas-available: "&cCurrently, there are no arenas available."
   you-accepted-request: "&aYou have accepted a duel request of &b%player%"
   request-accepted: "&b%player% &ahas accepted your duel request."
-  no-request-sent: "&cYou haven't sent any duel requests."
+  no-request-sent: "&cYou haven't sent duel request to &b%player%."
   request-cancelled: "&aYour duel request has been cancelled."
   you-denied-request: "&aYou have denied duel request of &b%player%"
   someone-denied-your-request: "&b%player% &chas denied your duel request."

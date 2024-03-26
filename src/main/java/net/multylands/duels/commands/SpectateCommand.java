@@ -38,8 +38,7 @@ public class SpectateCommand implements CommandExecutor {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-is-offline"));
             return false;
         }
-        boolean isInList = false;
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectate);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectate.getUniqueId());
         //will return null if player is not in game because in the getRequestOfTheDuelPlayerIsIn method we are checking if toSpectate player is in the list of players that are in game.
         if (!RequestUtils.isInGame(request)) {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.spectate-is-not-in-duel").replace("%player%", toSpectateName));

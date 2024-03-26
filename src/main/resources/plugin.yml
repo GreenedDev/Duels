@@ -1,4 +1,4 @@
-name: Duels
+name: Duel
 version: '${version}'
 main: net.multylands.duels.Duels
 api-version: '1.20'

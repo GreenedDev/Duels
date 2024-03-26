@@ -6,6 +6,7 @@ import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -43,7 +44,9 @@ public class AcceptCommand implements CommandExecutor {
                 }
             }
         }
-        if (!Duels.requests.containsKey(target.getUniqueId())) {
+        DuelRequest request = RequestUtils.getRequestForCommands(player.getUniqueId(), target.getUniqueId());
+
+        if (request == null) {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-hasnt-sent-request"));
             return false;
         }
@@ -60,7 +63,6 @@ public class AcceptCommand implements CommandExecutor {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.no-arenas-available"));
             return false;
         }
-        DuelRequest request = Duels.requests.get(target.getUniqueId());
         if (!request.getDuelRestrictions().isComplete()) {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-hasnt-sent-request"));
             return false;

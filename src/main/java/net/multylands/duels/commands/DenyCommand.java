@@ -3,6 +3,7 @@ package net.multylands.duels.commands;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -30,14 +31,9 @@ public class DenyCommand implements CommandExecutor {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-is-offline"));
             return false;
         }
-        if (!Duels.requests.containsKey(target.getUniqueId())) {
+        DuelRequest request = RequestUtils.getRequestForCommands(player.getUniqueId(), target.getUniqueId());
+        if (request == null) {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-hasnt-sent-request"));
-            return false;
-        }
-        DuelRequest request = Duels.requests.get(target.getUniqueId());
-        //request.getPlayer is always sender
-        if (request.getPlayer() == player.getUniqueId()) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label));
             return false;
         }
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.you-denied-request").replace("%player%", target.getDisplayName()));
