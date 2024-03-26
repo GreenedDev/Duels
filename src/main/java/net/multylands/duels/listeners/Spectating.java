@@ -3,11 +3,14 @@ package net.multylands.duels.listeners;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
 
@@ -27,7 +30,7 @@ public class Spectating implements Listener {
         if (!Duels.spectators.containsKey(uuid)) {
             return;
         }
-        DuelRequest request = Duels.requests.get(Duels.spectators.get(uuid));
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(Duels.spectators.get(uuid));
         Location loc1 = request.getArena().getFirstLocation();
         if (playerWhoMoved.getLocation().distance(loc1) < 50) {
             return;
@@ -40,6 +43,30 @@ public class Spectating implements Listener {
         playerWhoMoved.teleport(loc1);
         event.setCancelled(true);
     }
+    //antidamage for spectators
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerDamage(EntityDamageByEntityEvent event) {
+        Entity entity = event.getEntity();
+        if (!(entity instanceof Player)) {
+            return;
+        }
+        Player damagedPlayer = ((Player) entity).getPlayer();
+        Entity damagerEntity = event.getDamager();
+        if (!(damagerEntity instanceof Player)) {
+            return;
+        }
+        Player damager = ((Player) damagerEntity).getPlayer();
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(damagedPlayer.getUniqueId());
+        if (!RequestUtils.isInGame(request)) {
+            return;
+        }
+        if (request.getOpponent(damagedPlayer.getUniqueId()) == damager.getUniqueId()) {
+            return;
+        }
+        Chat.sendMessage(plugin, damager, plugin.languageConfig.getString("duel.cannot-damage-in-duel"));
+        event.setCancelled(true);
+    }
+
     //quit spectating & tp player to spawn after he quits
     @EventHandler(ignoreCancelled = true)
     public void onQuit(PlayerQuitEvent event) {
@@ -84,7 +111,7 @@ public class Spectating implements Listener {
         event.setCancelled(true);
     }
 
-    //handling death
+    //preventing death
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageEvent event) {
         UUID damagedUUID = event.getEntity().getUniqueId();
@@ -107,10 +134,10 @@ public class Spectating implements Listener {
     public static void endSpectating(Player player, Duels plugin) {
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         UUID toSpectateUUID = Duels.spectators.get(player.getUniqueId());
-        DuelRequest request = Duels.requests.get(toSpectateUUID);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectateUUID);
         Duels.spectators.remove(player.getUniqueId());
         Player firstPlayer = Bukkit.getPlayer(request.getTarget());
-        Player opponent = Bukkit.getPlayer(request.getPlayer());
+        Player opponent = Bukkit.getPlayer(request.getSender());
         player.teleport(spawnLoc);
         player.setAllowFlight(false);
         if (firstPlayer != null) {
@@ -125,10 +152,10 @@ public class Spectating implements Listener {
     public static void endSpectatingForEndGame(Player player, Duels plugin) {
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         UUID toSpectateUUID = Duels.spectators.get(player.getUniqueId());
-        DuelRequest request = Duels.requests.get(toSpectateUUID);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectateUUID);
         Duels.spectators.remove(player.getUniqueId());
         Player firstPlayer = Bukkit.getPlayer(request.getTarget());
-        Player opponent = Bukkit.getPlayer(request.getPlayer());
+        Player opponent = Bukkit.getPlayer(request.getSender());
         player.teleport(spawnLoc);
         player.setAllowFlight(false);
         if (firstPlayer != null) {
@@ -141,7 +168,7 @@ public class Spectating implements Listener {
     public static void startSpectating(Player player, Player toSpectate, Duels plugin) {
         //the teleport needs to be first here
         player.teleport(toSpectate);
-        DuelRequest request = Duels.requests.get(toSpectate.getUniqueId());
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectate.getUniqueId());
         Player opponent = Bukkit.getPlayer(request.getOpponent(toSpectate.getUniqueId()));
         Duels.spectators.put(player.getUniqueId(), toSpectate.getUniqueId());
         player.setAllowFlight(true);

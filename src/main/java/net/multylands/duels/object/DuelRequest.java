@@ -5,32 +5,30 @@ import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
 public class DuelRequest {
-    UUID playerUUID;
+    UUID senderUUID;
     UUID targetUUID;
+    UUID winnerUUID;
     DuelRestrictions duelRestrictions;
     boolean isInGame;
     int taskAssignedIDInTheList;
+    boolean isAboutToBeTeleportedToSpawn = false;
     Duels plugin;
     List<UUID> spectators = new ArrayList<>();
     boolean isStartingIn5Seconds;
     Arena arena;
     int taskId = 0;
+    ArrayList<Integer> taskIdForRequestTimeout = new ArrayList<>();
 
-    public DuelRequest(UUID player, UUID target, DuelRestrictions duelRestrictions, boolean isInGame, boolean isStartingIn5Seconds, Duels plugin) {
-        this.playerUUID = player;
+    public DuelRequest(UUID sender, UUID target, DuelRestrictions duelRestrictions, boolean isInGame, boolean isStartingIn5Seconds, Duels plugin) {
+        this.senderUUID = sender;
         this.targetUUID = target;
         this.isStartingIn5Seconds = isStartingIn5Seconds;
         this.duelRestrictions = duelRestrictions;
@@ -42,8 +40,12 @@ public class DuelRequest {
         return taskAssignedIDInTheList;
     }
 
-    public UUID getPlayer() {
-        return playerUUID;
+    public UUID getSender() {
+        return senderUUID;
+    }
+
+    public ArrayList<Integer> getTaskIdsForRequestTimeout() {
+        return taskIdForRequestTimeout;
     }
 
     public UUID getTarget() {
@@ -58,13 +60,28 @@ public class DuelRequest {
         return isStartingIn5Seconds;
     }
 
+    public void setIsAboutToTeleportedToSpawn(boolean value) {
+        isAboutToBeTeleportedToSpawn = value;
+    }
+
+    public boolean getIsAboutToTeleportedToSpawn() {
+        return isAboutToBeTeleportedToSpawn;
+    }
+
+    public UUID getWinnerUUID() {
+        return winnerUUID;
+    }
+
+    public void setWinnerUUID(UUID winner) {
+        winnerUUID = winner;
+    }
 
     public DuelRestrictions getDuelRestrictions() {
         return duelRestrictions;
     }
 
-    public void setPlayer(UUID player) {
-        this.playerUUID = player;
+    public void setSender(UUID player) {
+        this.senderUUID = player;
     }
 
     public void setIsInGame(boolean isInGame) {
@@ -84,17 +101,51 @@ public class DuelRequest {
     }
 
     public void storeRequest(boolean justStarted) {
-        Duels.requests.put(playerUUID, this);
+        Set<DuelRequest> requestsThatWereAlreadyThere = getRequestsThatWereAlreadyThereInReceiveToSendersWithAlreadyRemovedThisRequest(targetUUID);
+
+        //second map
+        Set<DuelRequest> requestsThatWereAlreadyThereSenderToReceiver = getRequestsThatWereAlreadyThereInSenderToReceiversWithAlreadyRemovedThisRequest(senderUUID);
+
         if (justStarted) {
-            Duels.playerToOpponentInGame.put(playerUUID, targetUUID);
-            Duels.playerToOpponentInGame.put(targetUUID, playerUUID);
+            Duels.playerToOpponentInGame.put(senderUUID, targetUUID);
+            Duels.playerToOpponentInGame.put(targetUUID, senderUUID);
         }
+        int taskIDOfTheTimeout = Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (isInGame) {
+                return;
+            }
+            removeStoreRequest(false);
+        }, plugin.getConfig().getInt("request-timeout") * 20).getTaskId();
+        taskIdForRequestTimeout.add(taskIDOfTheTimeout);
+
+        //do not move the below code up because the taskid will not be saved then
+        requestsThatWereAlreadyThere.add(this);
+        requestsThatWereAlreadyThereSenderToReceiver.add(this);
+        Duels.requestsReceiverToSenders.put(targetUUID, requestsThatWereAlreadyThere);
+        Duels.requestsSenderToReceivers.put(senderUUID, requestsThatWereAlreadyThereSenderToReceiver);
     }
 
     public void removeStoreRequest(boolean justEnded) {
-        Duels.requests.remove(playerUUID);
+        Iterator<Integer> iterator = taskIdForRequestTimeout.iterator();
+        iterator.forEachRemaining(taskIDOfTheTimeout -> {
+            Bukkit.getScheduler().cancelTask(taskIDOfTheTimeout);
+        });
+        taskIdForRequestTimeout.clear();
+        Set<DuelRequest> requestsThatWereAlreadyThere = getRequestsThatWereAlreadyThereInReceiveToSendersWithAlreadyRemovedThisRequest(targetUUID);
+
+        Set<DuelRequest> requestsThatWereAlreadyThereSenderToReceiver = getRequestsThatWereAlreadyThereInSenderToReceiversWithAlreadyRemovedThisRequest(senderUUID);
+        if (requestsThatWereAlreadyThereSenderToReceiver.isEmpty()) {
+            Duels.requestsSenderToReceivers.remove(senderUUID);
+        } else {
+            Duels.requestsSenderToReceivers.put(senderUUID, requestsThatWereAlreadyThereSenderToReceiver);
+        }
+        if (requestsThatWereAlreadyThere.isEmpty()) {
+            Duels.requestsReceiverToSenders.remove(targetUUID);
+        } else {
+            Duels.requestsReceiverToSenders.put(targetUUID, requestsThatWereAlreadyThere);
+        }
         if (justEnded) {
-            Duels.playerToOpponentInGame.remove(playerUUID);
+            Duels.playerToOpponentInGame.remove(senderUUID);
             Duels.playerToOpponentInGame.remove(targetUUID);
         }
     }
@@ -110,7 +161,7 @@ public class DuelRequest {
     public void startGame(Arena arena) {
         this.arena = arena;
         arena.setAvailable(false);
-        Player player = Bukkit.getPlayer(playerUUID);
+        Player player = Bukkit.getPlayer(senderUUID);
         Player target = Bukkit.getPlayer(targetUUID);
 
         Location targetLoc = arena.getFirstLocation();
@@ -125,7 +176,9 @@ public class DuelRequest {
         player.teleport(playerLoc);
         setIsInGame(true);
         setIsStartingIn5Seconds(true);
-        Duels.requests.put(playerUUID, this);
+        Set<DuelRequest> requestsThatWereAlreadyThere = getRequestsThatWereAlreadyThereInReceiveToSendersWithAlreadyRemovedThisRequest(targetUUID);
+        requestsThatWereAlreadyThere.add(this);
+        Duels.requestsReceiverToSenders.put(senderUUID, requestsThatWereAlreadyThere);
         disableFlying(player, target);
         handleEffects(player, target);
         handleShields(player, target);
@@ -145,7 +198,7 @@ public class DuelRequest {
         storeRequest(true);
     }
 
-    public void endGame(UUID winnerUUID, boolean ranOutOfTime, boolean endedByServerRestart) {
+    public void endGame(UUID winnerUUIDFromMethod, boolean ranOutOfTime, boolean endedByServerRestart) {
         setIsInGame(false);
         storeRequest(false);
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
@@ -153,7 +206,7 @@ public class DuelRequest {
             Spectating.endSpectatingForEndGame(Bukkit.getPlayer(spectatorUUID), plugin);
         }
         spectators.clear();
-        Player player = Bukkit.getPlayer(playerUUID);
+        Player player = Bukkit.getPlayer(senderUUID);
         Player target = Bukkit.getPlayer(getOpponent(targetUUID));
         if (target != null) {
             undoShields(player);
@@ -168,13 +221,16 @@ public class DuelRequest {
             return;
         }
         //dont move these two lines below to above because they will cancel the ranoutoftime task and code in it will never be executed
-        Bukkit.getScheduler().cancelTask(Duels.tasksToCancel.get(playerUUID));
-        Duels.tasksToCancel.remove(playerUUID);
+        Bukkit.getScheduler().cancelTask(Duels.tasksToCancel.get(senderUUID));
+        Duels.tasksToCancel.remove(senderUUID);
         if (endedByServerRestart) {
             target.teleport(spawnLoc);
             player.teleport(spawnLoc);
             return;
         }
+        setIsAboutToTeleportedToSpawn(true);
+        storeRequest(false);
+        setWinnerUUID(winnerUUIDFromMethod);
         Player winner = Bukkit.getPlayer(winnerUUID);
         Player loser = Bukkit.getPlayer(getOpponent(winnerUUID));
         if (winner == null) {
@@ -187,15 +243,16 @@ public class DuelRequest {
         Duels.scheduler.runTaskLater(plugin, () -> {
             winner.teleport(spawnLoc);
             arena.setAvailable(true);
+            isAboutToBeTeleportedToSpawn = false;
             removeStoreRequest(true);
         }, 20L * plugin.getConfig().getInt("time_to_pick_up_items"));
     }
 
     public UUID getOpponent(UUID someone) {
-        if (someone == playerUUID) {
+        if (someone == senderUUID) {
             return targetUUID;
         } else {
-            return playerUUID;
+            return senderUUID;
         }
     }
 
@@ -307,9 +364,9 @@ public class DuelRequest {
         taskAssignedIDInTheList = random.nextInt(999999);
         taskId = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             //just provide random uuid here it doesn't really matter.
-            endGame(playerUUID, true, false);
+            endGame(senderUUID, true, false);
         }, 20L * 60 * plugin.getConfig().getInt("max_duel_time_minutes")).getTaskId();
-        Duels.tasksToCancel.put(playerUUID, taskId);
+        Duels.tasksToCancel.put(senderUUID, taskId);
     }
 
     public void handleShields(Player player, Player target) {
@@ -319,6 +376,7 @@ public class DuelRequest {
             target.setShieldBlockingDelay(maxDuelTimeInTicks);
         }
     }
+
     public void undoShields(Player player) {
         if (!duelRestrictions.isShieldsAllowed()) {
             player.setShieldBlockingDelay(plugin.getConfig().getInt("default-shield-blocking-delay"));
@@ -341,5 +399,42 @@ public class DuelRequest {
         player.setAllowFlight(false);
         target.setFlying(false);
         target.setAllowFlight(false);
+    }
+
+    public Set<DuelRequest> getRequestsThatWereAlreadyThereInReceiveToSendersWithAlreadyRemovedThisRequest(UUID targetUUID) {
+        Set<DuelRequest> requestsThatWereAlreadyThere = Duels.requestsReceiverToSenders.get(targetUUID);
+        //checking if there was no value set for that key preventing requestsThatWereAlreadyThere to be null
+        if (Duels.requestsReceiverToSenders.get(targetUUID) == null) {
+            requestsThatWereAlreadyThere = new HashSet<>();
+        } else {
+            //removing the old request that was in map
+            Iterator<DuelRequest> iterator = requestsThatWereAlreadyThere.iterator();
+            while (iterator.hasNext()) {
+                DuelRequest request = iterator.next();
+                if (request.getSender() == senderUUID && request.getTarget() == targetUUID) {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+        return requestsThatWereAlreadyThere;
+    }
+
+    public Set<DuelRequest> getRequestsThatWereAlreadyThereInSenderToReceiversWithAlreadyRemovedThisRequest(UUID senderUUID) {
+        Set<DuelRequest> requestsThatWereAlreadyThereSenderToReceiver = Duels.requestsSenderToReceivers.get(senderUUID);
+        if (Duels.requestsSenderToReceivers.get(senderUUID) == null) {
+            requestsThatWereAlreadyThereSenderToReceiver = new HashSet<>();
+        } else {
+            //removing the old request that was in map
+            Iterator<DuelRequest> iterator = requestsThatWereAlreadyThereSenderToReceiver.iterator();
+            while (iterator.hasNext()) {
+                DuelRequest request = iterator.next();
+                if (request.getSender() == senderUUID && request.getTarget() == targetUUID) {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+        return requestsThatWereAlreadyThereSenderToReceiver;
     }
 }

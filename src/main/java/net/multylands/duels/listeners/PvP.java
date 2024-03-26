@@ -27,10 +27,11 @@ public class PvP implements Listener {
     public PvP(Duels plugin) {
         this.plugin = plugin;
     }
+    //prevent moving for during countdown
     @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -45,7 +46,7 @@ public class PvP implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         Player playerWhoLeft = event.getPlayer();
         UUID playerWhoLeftUUID = playerWhoLeft.getUniqueId();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerWhoLeft);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerWhoLeft.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -60,7 +61,26 @@ public class PvP implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        if (!Duels.playerToOpponentInGame.containsKey(player.getUniqueId())) {
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
+        if (!RequestUtils.isInGame(request)) {
+            return;
+        }
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.no-commands-in-duel"));
+        event.setCancelled(true);
+    }
+    //anti command
+    @EventHandler(ignoreCancelled = true)
+    public void onCommandForWinner(PlayerCommandPreprocessEvent event) {
+        Player player = event.getPlayer();
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
+        //do not check this with requestutils.isingame because when we run endGame method we set game as ended.
+        if (request == null) {
+            return;
+        }
+        if (!request.getIsAboutToTeleportedToSpawn()) {
+            return;
+        }
+        if (player.getUniqueId() != request.getWinnerUUID()) {
             return;
         }
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.no-commands-in-duel"));
@@ -72,7 +92,7 @@ public class PvP implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player dead = event.getEntity().getPlayer();
         UUID deadUUID = dead.getUniqueId();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(dead);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(dead.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -85,35 +105,11 @@ public class PvP implements Listener {
         UUID winnerUUID = request.getOpponent(deadUUID);
         request.endGame(winnerUUID, false, false);
     }
-    //antidamage for spectators
-    @EventHandler(ignoreCancelled = true)
-    public void onPlayerDamage(EntityDamageByEntityEvent event) {
-        Entity entity = event.getEntity();
-        if (!(entity instanceof Player)) {
-            return;
-        }
-        Player damagedPlayer = ((Player) entity).getPlayer();
-        Entity damagerEntity = event.getDamager();
-        if (!(damagerEntity instanceof Player)) {
-            return;
-        }
-        Player damager = ((Player) damagerEntity).getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(damagedPlayer);
-        if (!RequestUtils.isInGame(request)) {
-            return;
-        }
-        if (request.getOpponent(damagedPlayer.getUniqueId()) == damager.getUniqueId()) {
-            return;
-        }
-        Chat.sendMessage(plugin, damager, plugin.languageConfig.getString("duel.cannot-damage-in-duel"));
-        event.setCancelled(true);
-    }
-
     //anti teleport & ender pearl fix
     @EventHandler(ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -138,7 +134,7 @@ public class PvP implements Listener {
             return;
         }
         Player shooter = (Player) event.getEntity().getShooter();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(shooter);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(shooter.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -157,10 +153,7 @@ public class PvP implements Listener {
         }
         Player playerWhoUsedTotem = (Player) event.getEntity();
         UUID playerWhoUsedTotemUUID = playerWhoUsedTotem.getUniqueId();
-        if (!playerWhoUsedTotem.getInventory().contains(Material.TOTEM_OF_UNDYING)) {
-            return;
-        }
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerWhoUsedTotem);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerWhoUsedTotem.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -179,7 +172,7 @@ public class PvP implements Listener {
             return;
         }
         Player player = ((Player) entity).getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -200,7 +193,7 @@ public class PvP implements Listener {
             return;
         }
         Player shooter = (Player) event.getEntity().getShooter();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(shooter);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(shooter.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -217,7 +210,7 @@ public class PvP implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -234,7 +227,7 @@ public class PvP implements Listener {
             return;
         }
         Player player = (Player) event.getEntity().getShooter();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -253,7 +246,7 @@ public class PvP implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -271,7 +264,7 @@ public class PvP implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
             return;
         }

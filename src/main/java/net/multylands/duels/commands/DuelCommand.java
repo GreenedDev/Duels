@@ -43,27 +43,38 @@ public class DuelCommand implements CommandExecutor {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.cant-duel-yourself"));
             return false;
         }
-        if (Duels.requests.containsKey(player.getUniqueId())) {
-            DuelRequest request = Duels.requests.get(player.getUniqueId());
-            UUID requestsTarget = request.getTarget();
-            if (requestsTarget.equals(target.getUniqueId())) {
+        //already sent check
+        if (Duels.requestsReceiverToSenders.containsKey(target.getUniqueId())) {
+            for (DuelRequest request : Duels.requestsReceiverToSenders.get(target.getUniqueId())) {
+                if (request.getSender() != player.getUniqueId()) {
+                    continue;
+                }
+                if (request.getIsAboutToTeleportedToSpawn()) {
+                    Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-already-in-duel").replace("%player%", target.getDisplayName()));
+                    return false;
+                }
                 Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.request-already-sent").replace("%player%", target.getDisplayName()));
                 return false;
             }
         }
-        if (Duels.requests.containsKey(target.getUniqueId())) {
-            DuelRequest request = Duels.requests.get(target.getUniqueId());
-            if (request.getIsInGame()) {
+        //target already in duel check
+        if (Duels.requestsReceiverToSenders.containsKey(target.getUniqueId())) {
+            for (DuelRequest request : Duels.requestsReceiverToSenders.get(target.getUniqueId())) {
+                if (!request.getIsInGame()) {
+                    continue;
+                }
                 Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-already-in-duel").replace("%player%", target.getDisplayName()));
                 return false;
             }
         }
+        //ignore check
         if (plugin.ignoresConfig.contains("Ignores." + target.getUniqueId())) {
             for (String loopUUID : plugin.ignoresConfig.getStringList("Ignores." + target.getUniqueId())) {
-                if (Objects.equals(loopUUID, player.getUniqueId().toString())) {
-                    Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.player-is-ignoring-requests"));
-                    return false;
+                if (!Objects.equals(loopUUID, player.getUniqueId().toString())) {
+                    continue;
                 }
+                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.player-is-ignoring-requests"));
+                return false;
             }
         }
         guiManager.openInventory(player, target);

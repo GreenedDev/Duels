@@ -5,6 +5,7 @@ import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -178,7 +179,9 @@ public class GUI implements Listener {
         } else if (slot == startSlot) {
             restrictions.setComplete(true);
             //dont change position of player and target below
-            request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin);
+            request = RequestUtils.getRequestForCommands(target.getUniqueId(), player.getUniqueId());
+            request.setDuelRestrictions(restrictions);
+//          request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin);
 
 
             request.storeRequest(false);

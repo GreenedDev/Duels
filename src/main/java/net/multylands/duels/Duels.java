@@ -17,7 +17,6 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -30,7 +29,8 @@ import java.util.*;
 public class Duels extends JavaPlugin {
     public static HashMap<String, Arena> Arenas = new HashMap<>();
     //storing only sender: requestthatcontainstargetname
-    public static HashMap<UUID, DuelRequest> requests = new HashMap<>();
+    public static HashMap<UUID, Set<DuelRequest>> requestsReceiverToSenders = new HashMap<>();
+    public static HashMap<UUID, Set<DuelRequest>> requestsSenderToReceivers = new HashMap<>();
     //storing sender: player
     //and player: sender
     public static HashMap<UUID, UUID> playerToOpponentInGame = new HashMap<>();
@@ -202,10 +202,16 @@ public class Duels extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (DuelRequest request : requests.values()) {
-            request.endGame(null, false, true);
+        for (Set<DuelRequest> requestsSet : requestsReceiverToSenders.values()) {
+            for (DuelRequest request : requestsSet) {
+                if (!request.getIsInGame()) {
+                    continue;
+                }
+                request.endGame(null, false, true);
+            }
         }
-        requests.clear();
+        requestsReceiverToSenders.clear();
+        requestsSenderToReceivers.clear();
         playerToOpponentInGame.clear();
         Arenas.clear();
         tasksToCancel.clear();
