@@ -106,4 +106,85 @@ public class DuelRestrictions {
     public void setEnderPearlAllowed(boolean yesOrNot) {
         isEnderPearlAllowed = yesOrNot;
     }
+    public String getEnabled() {
+        StringBuilder builder = new StringBuilder();
+        if (isNotchAllowed) {
+            builder.append("Notch,");
+        }
+        if (isPotionsAllowed) {
+            builder.append("Potions,");
+        }
+        if (isGoldenAppleAllowed) {
+            builder.append("Golden apple,");
+        }
+        if (isShieldsAllowed) {
+            builder.append("Shields,");
+        }
+        if (isTotemsAllowed) {
+            builder.append("Totems,");
+        }
+        if (isBowAllowed) {
+            builder.append("Bow,");
+        }
+        if (isElytraAllowed) {
+            builder.append("Elytra,");
+        }
+        if (isEnderPearlAllowed) {
+            builder.append("Ender Pearl,");
+        }
+        if (isKeepInventoryEnabled) {
+            builder.append("Keep Inventory,");
+        }
+        String finalString = builder.toString();
+        if (finalString.isEmpty()) {
+            return null;
+        }
+        String end = finalString.replace(finalString.substring(0, finalString.length() - 1), "");
+        if (end.equals(",")) {
+            return finalString.substring(0, finalString.length() - 1) + ".";
+        } else {
+            return null;
+        }
+    }
+
+    public String getDisabled() {
+        StringBuilder builder = new StringBuilder();
+        if (!isNotchAllowed) {
+            builder.append("Notch,");
+        }
+        if (!isPotionsAllowed) {
+            builder.append("Potions,");
+        }
+        if (!isGoldenAppleAllowed) {
+            builder.append("Golden apple,");
+        }
+        if (!isShieldsAllowed) {
+            builder.append("Shields,");
+        }
+        if (!isTotemsAllowed) {
+            builder.append("Totems,");
+        }
+        if (!isBowAllowed) {
+            builder.append("Bow,");
+        }
+        if (!isElytraAllowed) {
+            builder.append("Elytra,");
+        }
+        if (!isEnderPearlAllowed) {
+            builder.append("Ender Pearl,");
+        }
+        if (!isKeepInventoryEnabled) {
+            builder.append("Keep Inventory,");
+        }
+        String finalString = builder.toString();
+        if (finalString.isEmpty()) {
+            return null;
+        }
+        String end = finalString.replace(finalString.substring(0, finalString.length() - 1), "");
+        if (end.equals(",")) {
+            return finalString.substring(0, finalString.length() - 1) + ".";
+        } else {
+            return null;
+        }
+    }
 }

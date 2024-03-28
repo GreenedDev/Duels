@@ -63,7 +63,7 @@ public class AcceptCommand implements CommandExecutor {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.no-arenas-available"));
             return false;
         }
-        if (!request.getDuelRestrictions().isComplete()) {
+        if (!request.getRestrictions().isComplete()) {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-hasnt-sent-request"));
             return false;
         }

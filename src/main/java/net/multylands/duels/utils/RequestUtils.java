@@ -29,6 +29,9 @@ public class RequestUtils {
                 request = requests;
             }
         }
+        if (request == null) {
+            return null;
+        }
         return request;
     }
     public static boolean isInGame(DuelRequest request) {

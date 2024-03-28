@@ -72,7 +72,7 @@ public class GUI implements Listener {
             player.closeInventory();
             return;
         }
-        DuelRestrictions restrictions = request.getDuelRestrictions();
+        DuelRestrictions restrictions = request.getRestrictions();
         boolean isBowEnabled = restrictions.isBowAllowed();
         boolean isTotemEnabled = restrictions.isTotemsAllowed();
         boolean isGPEnabled = restrictions.isGoldenAppleAllowed();
@@ -188,11 +188,11 @@ public class GUI implements Listener {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.request-sent").replace("%player%", target.getName()));
             Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.request-received").replace("%player%", player.getName()));
             Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.restrictions"));
-            if (request.getEnabled() != null) {
-                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.enabled-restrictions")+request.getEnabled());
+            if (request.getRestrictions().getEnabled() != null) {
+                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.enabled-restrictions")+request.getRestrictions().getEnabled());
             }
-            if (request.getDisabled() != null) {
-                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.disabled-restrictions") + request.getDisabled());
+            if (request.getRestrictions().getDisabled() != null) {
+                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.disabled-restrictions") + request.getRestrictions().getDisabled());
             }
             Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.click").replace("%player%", player.getName()));
             PlayersWhoSentRequest.add(player.getUniqueId());

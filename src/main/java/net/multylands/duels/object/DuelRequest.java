@@ -76,7 +76,7 @@ public class DuelRequest {
         winnerUUID = winner;
     }
 
-    public DuelRestrictions getDuelRestrictions() {
+    public DuelRestrictions getRestrictions() {
         return duelRestrictions;
     }
 
@@ -101,10 +101,10 @@ public class DuelRequest {
     }
 
     public void storeRequest(boolean justStarted) {
-        Set<DuelRequest> requestsThatWereAlreadyThere = getRequestsThatWereAlreadyThereInReceiveToSendersWithAlreadyRemovedThisRequest(targetUUID);
+        Set<DuelRequest> requestsWithoutThisRequestReceiverToSenders = getRequestsReceiverToSenders(targetUUID);
 
         //second map
-        Set<DuelRequest> requestsThatWereAlreadyThereSenderToReceiver = getRequestsThatWereAlreadyThereInSenderToReceiversWithAlreadyRemovedThisRequest(senderUUID);
+        Set<DuelRequest> requestsWithoutThisRequestSenderToReceiver = getRequestsSenderToReceivers(senderUUID);
 
         if (justStarted) {
             Duels.playerToOpponentInGame.put(senderUUID, targetUUID);
@@ -119,10 +119,10 @@ public class DuelRequest {
         taskIdForRequestTimeout.add(taskIDOfTheTimeout);
 
         //do not move the below code up because the taskid will not be saved then
-        requestsThatWereAlreadyThere.add(this);
-        requestsThatWereAlreadyThereSenderToReceiver.add(this);
-        Duels.requestsReceiverToSenders.put(targetUUID, requestsThatWereAlreadyThere);
-        Duels.requestsSenderToReceivers.put(senderUUID, requestsThatWereAlreadyThereSenderToReceiver);
+        requestsWithoutThisRequestReceiverToSenders.add(this);
+        requestsWithoutThisRequestSenderToReceiver.add(this);
+        Duels.requestsReceiverToSenders.put(targetUUID, requestsWithoutThisRequestReceiverToSenders);
+        Duels.requestsSenderToReceivers.put(senderUUID, requestsWithoutThisRequestSenderToReceiver);
     }
 
     public void removeStoreRequest(boolean justEnded) {
@@ -131,18 +131,18 @@ public class DuelRequest {
             Bukkit.getScheduler().cancelTask(taskIDOfTheTimeout);
         });
         taskIdForRequestTimeout.clear();
-        Set<DuelRequest> requestsThatWereAlreadyThere = getRequestsThatWereAlreadyThereInReceiveToSendersWithAlreadyRemovedThisRequest(targetUUID);
+        Set<DuelRequest> requestsWithoutThisRequestReceiverToSenders = getRequestsReceiverToSenders(targetUUID);
 
-        Set<DuelRequest> requestsThatWereAlreadyThereSenderToReceiver = getRequestsThatWereAlreadyThereInSenderToReceiversWithAlreadyRemovedThisRequest(senderUUID);
-        if (requestsThatWereAlreadyThereSenderToReceiver.isEmpty()) {
+        Set<DuelRequest> requestsWithoutThisRequestSenderToReceiver = getRequestsSenderToReceivers(senderUUID);
+        if (requestsWithoutThisRequestSenderToReceiver.isEmpty()) {
             Duels.requestsSenderToReceivers.remove(senderUUID);
         } else {
-            Duels.requestsSenderToReceivers.put(senderUUID, requestsThatWereAlreadyThereSenderToReceiver);
+            Duels.requestsSenderToReceivers.put(senderUUID, requestsWithoutThisRequestSenderToReceiver);
         }
-        if (requestsThatWereAlreadyThere.isEmpty()) {
+        if (requestsWithoutThisRequestReceiverToSenders.isEmpty()) {
             Duels.requestsReceiverToSenders.remove(targetUUID);
         } else {
-            Duels.requestsReceiverToSenders.put(targetUUID, requestsThatWereAlreadyThere);
+            Duels.requestsReceiverToSenders.put(targetUUID, requestsWithoutThisRequestReceiverToSenders);
         }
         if (justEnded) {
             Duels.playerToOpponentInGame.remove(senderUUID);
@@ -176,7 +176,7 @@ public class DuelRequest {
         player.teleport(playerLoc);
         setIsInGame(true);
         setIsStartingIn5Seconds(true);
-        Set<DuelRequest> requestsThatWereAlreadyThere = getRequestsThatWereAlreadyThereInReceiveToSendersWithAlreadyRemovedThisRequest(targetUUID);
+        Set<DuelRequest> requestsThatWereAlreadyThere = getRequestsReceiverToSenders(targetUUID);
         requestsThatWereAlreadyThere.add(this);
         Duels.requestsReceiverToSenders.put(senderUUID, requestsThatWereAlreadyThere);
         disableFlying(player, target);
@@ -194,7 +194,7 @@ public class DuelRequest {
                 Chat.messagePlayers(plugin, player, target, plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color + countdown));
             }
         }, 0, 20);
-        saveRanOutOfTimeTask();
+        saveAndRunRanOutOfTimeTask();
         storeRequest(true);
     }
 
@@ -207,7 +207,7 @@ public class DuelRequest {
         }
         spectators.clear();
         Player player = Bukkit.getPlayer(senderUUID);
-        Player target = Bukkit.getPlayer(getOpponent(targetUUID));
+        Player target = Bukkit.getPlayer(targetUUID);
         if (target != null) {
             undoShields(player);
         }
@@ -256,90 +256,6 @@ public class DuelRequest {
         }
     }
 
-    public String getEnabled() {
-        StringBuilder builder = new StringBuilder();
-        DuelRestrictions restrictions = getDuelRestrictions();
-        if (restrictions.isNotchAllowed) {
-            builder.append("Notch,");
-        }
-        if (restrictions.isPotionsAllowed) {
-            builder.append("Potions,");
-        }
-        if (restrictions.isGoldenAppleAllowed) {
-            builder.append("Golden apple,");
-        }
-        if (restrictions.isShieldsAllowed) {
-            builder.append("Shields,");
-        }
-        if (restrictions.isTotemsAllowed) {
-            builder.append("Totems,");
-        }
-        if (restrictions.isBowAllowed) {
-            builder.append("Bow,");
-        }
-        if (restrictions.isElytraAllowed) {
-            builder.append("Elytra,");
-        }
-        if (restrictions.isEnderPearlAllowed) {
-            builder.append("Ender Pearl,");
-        }
-        if (restrictions.isKeepInventoryEnabled) {
-            builder.append("Keep Inventory,");
-        }
-        String finalString = builder.toString();
-        if (finalString.isEmpty()) {
-            return null;
-        }
-        String end = finalString.replace(finalString.substring(0, finalString.length() - 1), "");
-        if (end.equals(",")) {
-            return finalString.substring(0, finalString.length() - 1) + ".";
-        } else {
-            return null;
-        }
-    }
-
-    public String getDisabled() {
-        StringBuilder builder = new StringBuilder();
-        DuelRestrictions restrictions = getDuelRestrictions();
-        if (!restrictions.isNotchAllowed) {
-            builder.append("Notch,");
-        }
-        if (!restrictions.isPotionsAllowed) {
-            builder.append("Potions,");
-        }
-        if (!restrictions.isGoldenAppleAllowed) {
-            builder.append("Golden apple,");
-        }
-        if (!restrictions.isShieldsAllowed) {
-            builder.append("Shields,");
-        }
-        if (!restrictions.isTotemsAllowed) {
-            builder.append("Totems,");
-        }
-        if (!restrictions.isBowAllowed) {
-            builder.append("Bow,");
-        }
-        if (!restrictions.isElytraAllowed) {
-            builder.append("Elytra,");
-        }
-        if (!restrictions.isEnderPearlAllowed) {
-            builder.append("Ender Pearl,");
-        }
-        if (!restrictions.isKeepInventoryEnabled) {
-            builder.append("Keep Inventory,");
-        }
-        String finalString = builder.toString();
-        if (finalString.isEmpty()) {
-            return null;
-        }
-        String end = finalString.replace(finalString.substring(0, finalString.length() - 1), "");
-        if (end.equals(",")) {
-            return finalString.substring(0, finalString.length() - 1) + ".";
-        } else {
-            return null;
-        }
-    }
-
     public String getColorForNumber(AtomicInteger countdown) {
         if (countdown.get() == 5) {
             return "&4";
@@ -359,7 +275,7 @@ public class DuelRequest {
         return arena;
     }
 
-    public void saveRanOutOfTimeTask() {
+    public void saveAndRunRanOutOfTimeTask() {
         Random random = new Random();
         taskAssignedIDInTheList = random.nextInt(999999);
         taskId = Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -401,13 +317,13 @@ public class DuelRequest {
         target.setAllowFlight(false);
     }
 
-    public Set<DuelRequest> getRequestsThatWereAlreadyThereInReceiveToSendersWithAlreadyRemovedThisRequest(UUID targetUUID) {
+    public Set<DuelRequest> getRequestsReceiverToSenders(UUID targetUUID) {
         Set<DuelRequest> requestsThatWereAlreadyThere = Duels.requestsReceiverToSenders.get(targetUUID);
         //checking if there was no value set for that key preventing requestsThatWereAlreadyThere to be null
         if (Duels.requestsReceiverToSenders.get(targetUUID) == null) {
             requestsThatWereAlreadyThere = new HashSet<>();
         } else {
-            //removing the old request that was in map
+            //removing the old request that was in map. so that when you add a new one duplicate doesnt happen
             Iterator<DuelRequest> iterator = requestsThatWereAlreadyThere.iterator();
             while (iterator.hasNext()) {
                 DuelRequest request = iterator.next();
@@ -420,12 +336,12 @@ public class DuelRequest {
         return requestsThatWereAlreadyThere;
     }
 
-    public Set<DuelRequest> getRequestsThatWereAlreadyThereInSenderToReceiversWithAlreadyRemovedThisRequest(UUID senderUUID) {
+    public Set<DuelRequest> getRequestsSenderToReceivers(UUID senderUUID) {
         Set<DuelRequest> requestsThatWereAlreadyThereSenderToReceiver = Duels.requestsSenderToReceivers.get(senderUUID);
         if (Duels.requestsSenderToReceivers.get(senderUUID) == null) {
             requestsThatWereAlreadyThereSenderToReceiver = new HashSet<>();
         } else {
-            //removing the old request that was in map
+            //removing the old request that was in map. so that when you add a new one duplicate doesnt happen
             Iterator<DuelRequest> iterator = requestsThatWereAlreadyThereSenderToReceiver.iterator();
             while (iterator.hasNext()) {
                 DuelRequest request = iterator.next();

@@ -96,7 +96,7 @@ public class PvP implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getDuelRestrictions().isKeepInventoryAllowed()) {
+        if (request.getRestrictions().isKeepInventoryAllowed()) {
             event.setKeepInventory(true);
             event.getDrops().clear();
             event.setKeepLevel(true);
@@ -117,7 +117,7 @@ public class PvP implements Listener {
             event.setCancelled(true);
             return;
         }
-        if (request.getDuelRestrictions().isEnderPearlAllowed()) {
+        if (request.getRestrictions().isEnderPearlAllowed()) {
             return;
         }
         event.setCancelled(true);
@@ -138,7 +138,7 @@ public class PvP implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getDuelRestrictions().isBowAllowed()) {
+        if (request.getRestrictions().isBowAllowed()) {
             return;
         }
         Chat.sendMessage(plugin, shooter, (plugin.languageConfig.getString("duel.arrows-deny-message")));
@@ -157,7 +157,7 @@ public class PvP implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getDuelRestrictions().isTotemsAllowed()) {
+        if (request.getRestrictions().isTotemsAllowed()) {
             return;
         }
         UUID winner = request.getOpponent(playerWhoUsedTotemUUID);
@@ -176,7 +176,7 @@ public class PvP implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getDuelRestrictions().isElytraAllowed()) {
+        if (request.getRestrictions().isElytraAllowed()) {
             return;
         }
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.elytra-deny-message"));
@@ -197,7 +197,7 @@ public class PvP implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getDuelRestrictions().isEnderPearlAllowed()) {
+        if (request.getRestrictions().isEnderPearlAllowed()) {
             return;
         }
         Chat.sendMessage(plugin, shooter, plugin.languageConfig.getString("duel.ender-pearl-deny-message"));
@@ -214,7 +214,7 @@ public class PvP implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getDuelRestrictions().isPotionsAllowed()) {
+        if (request.getRestrictions().isPotionsAllowed()) {
             return;
         }
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.potions-deny-message"));
@@ -231,7 +231,7 @@ public class PvP implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getDuelRestrictions().isPotionsAllowed()) {
+        if (request.getRestrictions().isPotionsAllowed()) {
             return;
         }
         player.getWorld().dropItem(player.getLocation(), event.getPotion().getItem());
@@ -250,7 +250,7 @@ public class PvP implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getDuelRestrictions().isGoldenAppleAllowed()) {
+        if (request.getRestrictions().isGoldenAppleAllowed()) {
             return;
         }
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.golden-apples-deny-message"));
@@ -268,7 +268,7 @@ public class PvP implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getDuelRestrictions().isNotchAllowed()) {
+        if (request.getRestrictions().isNotchAllowed()) {
             return;
         }
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.enchanted-golden-apples-deny-message"));

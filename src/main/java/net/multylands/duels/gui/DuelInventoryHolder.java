@@ -2,9 +2,7 @@ package net.multylands.duels.gui;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
-import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.utils.Chat;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
@@ -17,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DuelInventoryHolder implements InventoryHolder {
-
     int cancelSlot;
     private Inventory inventory;
     public List<String> lore = new ArrayList<>();
@@ -38,8 +35,6 @@ public class DuelInventoryHolder implements InventoryHolder {
         addRestrictionItemIfEnabled("elytra", inventory);
         addRestrictionItemIfEnabled("ender-pearl", inventory);
         addRestrictionItemIfEnabled("keep-inventory", inventory);
-        addRestrictionItemIfEnabled("", inventory);
-        addRestrictionItemIfEnabled("", inventory);
         ItemStack cancel = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.cancel.item")));
         ItemMeta cancelMeta = cancel.getItemMeta();
         cancelMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.cancel.display-name")));

@@ -1,6 +1,6 @@
 package net.multylands.duels.object;
 
-import net.multylands.duels.utils.ArenaList;
+import net.multylands.duels.Duels;
 import org.bukkit.Location;
 import java.util.UUID;
 
@@ -23,7 +23,7 @@ public class Arena {
     }
     public void setAvailable(boolean value) {
         this.isAvailable = value;
-        ArenaList.store(this, getID());
+        Duels.Arenas.put(getID(), this);
     }
     public Location getFirstLocation() {
         return loc1;
