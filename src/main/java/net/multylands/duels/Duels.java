@@ -3,13 +3,13 @@ package net.multylands.duels;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.multylands.duels.commands.*;
+import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.listeners.GUI;
 import net.multylands.duels.listeners.PvP;
 import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.listeners.UpdateListener;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
-import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.ConfigUtils;
 import net.multylands.duels.utils.UpdateChecker;
@@ -24,7 +24,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.UUID;
 
 public class Duels extends JavaPlugin {
     public static HashMap<String, Arena> Arenas = new HashMap<>();
@@ -70,12 +72,14 @@ public class Duels extends JavaPlugin {
         }
         return this.adventure;
     }
+
     public void implementBStats() {
         Metrics metrics = new Metrics(this, 21176);
         metrics.addCustomChart(new SingleLineChart("servers", () -> {
             return 1;
         }));
     }
+
     private void createConfigs() {
         try {
             ConfigUtils configUtils = new ConfigUtils(this);
@@ -127,6 +131,7 @@ public class Duels extends JavaPlugin {
             throw new RuntimeException(e);
         }
     }
+
     public void saveArenasConfig() {
         try {
             arenasConfig.save(arenasFile);
@@ -134,6 +139,7 @@ public class Duels extends JavaPlugin {
             throw new RuntimeException(e);
         }
     }
+
     public void checkForUpdates() {
         new UpdateChecker(this, 114685).getVersion(version -> {
             if (!getDescription().getVersion().equals(version)) {
@@ -142,6 +148,7 @@ public class Duels extends JavaPlugin {
             }
         });
     }
+
     public void reloadArenaConfig() {
         arenasFile = new File(getDataFolder(), "arenas.yml");
         arenasConfig = YamlConfiguration.loadConfiguration(arenasFile);
@@ -153,13 +160,15 @@ public class Duels extends JavaPlugin {
             Arenas.put(arenaID, arena);
         }
     }
+
     public void checkPaper() {
         boolean isPaper = false;
         try {
             // Any other works, just the shortest I could find.
             Class.forName("com.destroystokyo.paper.ParticleBuilder");
             isPaper = true;
-        } catch (ClassNotFoundException ignored) {}
+        } catch (ClassNotFoundException ignored) {
+        }
         if (!isPaper) {
             getLogger().info("Server isn't running the PAPER software which means i can't use it's API to deal with shield restrictions. Please switch to paper otherwise Shield restriction will be disabled.");
         }
@@ -170,6 +179,7 @@ public class Duels extends JavaPlugin {
         languageFile = new File(getDataFolder(), "language.yml");
         languageConfig = YamlConfiguration.loadConfiguration(languageFile);
     }
+
     public void registerListenersAndCommands() {
         getServer().getPluginManager().registerEvents(new GUI(this), this);
         getServer().getPluginManager().registerEvents(new PvP(this), this);
@@ -221,6 +231,7 @@ public class Duels extends JavaPlugin {
             this.adventure = null;
         }
     }
+
     public FileConfiguration getConfigFromResource(String resourceName) throws IOException, InvalidConfigurationException {
         YamlConfiguration config = new YamlConfiguration();
         InputStream stream = getResource(resourceName);

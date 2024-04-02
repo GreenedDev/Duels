@@ -1,9 +1,9 @@
 package net.multylands.duels.listeners;
 
+import net.multylands.duels.Duels;
 import net.multylands.duels.gui.DuelInventoryHolder;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
-import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Bukkit;

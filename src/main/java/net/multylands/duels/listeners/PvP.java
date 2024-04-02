@@ -1,7 +1,7 @@
 package net.multylands.duels.listeners;
 
-import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.Duels;
+import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Location;
@@ -13,11 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 

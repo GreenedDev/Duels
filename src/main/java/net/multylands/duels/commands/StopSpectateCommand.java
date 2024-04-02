@@ -2,9 +2,7 @@ package net.multylands.duels.commands;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.listeners.Spectating;
-import net.multylands.duels.object.Arena;
 import net.multylands.duels.utils.Chat;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

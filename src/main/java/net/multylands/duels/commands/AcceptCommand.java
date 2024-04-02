@@ -1,7 +1,5 @@
 package net.multylands.duels.commands;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.Duels;
@@ -28,7 +26,7 @@ public class AcceptCommand implements CommandExecutor {
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 1) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label)+" player");
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
             return false;
         }
         Player target = Bukkit.getPlayer(args[0]);
@@ -37,11 +35,12 @@ public class AcceptCommand implements CommandExecutor {
             return false;
         }
         for (Arena arena : Duels.Arenas.values()) {
-            if (!arena.isAvailable) {
-                if (player.getUniqueId().equals(arena.getSenderUUID()) || player.getUniqueId().equals(arena.getTargetUUID())) {
-                    Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.already-in-duel"));
-                    return false;
-                }
+            if (arena.isAvailable()) {
+                continue;
+            }
+            if (player.getUniqueId().equals(arena.getSenderUUID()) || player.getUniqueId().equals(arena.getTargetUUID())) {
+                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.already-in-duel"));
+                return false;
             }
         }
         DuelRequest request = RequestUtils.getRequestForCommands(player.getUniqueId(), target.getUniqueId());
@@ -53,11 +52,12 @@ public class AcceptCommand implements CommandExecutor {
         boolean Available = false;
         Arena availableArena = null;
         for (Arena arena : Duels.Arenas.values()) {
-            if (arena.isAvailable) {
-                Available = true;
-                availableArena = arena;
-                break;
+            if (!arena.isAvailable()) {
+                continue;
             }
+            Available = true;
+            availableArena = arena;
+            break;
         }
         if (!Available) {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.no-arenas-available"));

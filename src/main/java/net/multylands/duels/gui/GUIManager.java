@@ -1,8 +1,8 @@
 package net.multylands.duels.gui;
 
+import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
-import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

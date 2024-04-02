@@ -2,7 +2,6 @@ package net.multylands.duels.commands;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.listeners.Spectating;
-import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.RequestUtils;
@@ -11,8 +10,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 public class SpectateCommand implements CommandExecutor {
     public Duels plugin;

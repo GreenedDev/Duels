@@ -34,12 +34,14 @@ public class RequestUtils {
         }
         return request;
     }
+
     public static boolean isInGame(DuelRequest request) {
         if (request == null) {
             return false;
         }
         return request.getIsInGame();
     }
+
     public static DuelRequest getRequestForCommands(UUID receiverUUID, UUID senderUUID) {
         DuelRequest request = null;
         if (Duels.requestsReceiverToSenders.get(receiverUUID) == null) {
