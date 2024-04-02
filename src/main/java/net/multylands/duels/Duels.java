@@ -161,7 +161,7 @@ public class Duels extends JavaPlugin {
             isPaper = true;
         } catch (ClassNotFoundException ignored) {}
         if (!isPaper) {
-            getLogger().info("Server isn't running the PAPER software that means i cant use it's API to deal with shield restrictions. Please switch to paper otherwise Shield restriction will be disabled.");
+            getLogger().info("Server isn't running the PAPER software which means i can't use it's API to deal with shield restrictions. Please switch to paper otherwise Shield restriction will be disabled.");
         }
         isServerPaper = isPaper;
     }

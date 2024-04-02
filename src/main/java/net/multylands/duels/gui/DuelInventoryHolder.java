@@ -26,15 +26,15 @@ public class DuelInventoryHolder implements InventoryHolder {
         cancelSlot = plugin.languageConfig.getInt("duel-GUI.cancel.slot");
         this.request = request;
         this.inventory = plugin.getServer().createInventory(this, size, Chat.Color(plugin.languageConfig.getString("duel-GUI.title")));
-        addRestrictionItemIfEnabled("bow", inventory);
-        addRestrictionItemIfEnabled("totem", inventory);
-        addRestrictionItemIfEnabled("golden-apple", inventory);
-        addRestrictionItemIfEnabled("enchanted-golden-apple", inventory);
-        addRestrictionItemIfEnabled("potions", inventory);
-        addRestrictionItemIfEnabled("shields", inventory);
-        addRestrictionItemIfEnabled("elytra", inventory);
-        addRestrictionItemIfEnabled("ender-pearl", inventory);
-        addRestrictionItemIfEnabled("keep-inventory", inventory);
+        addRestrictionItemIfEnabled("bow", inventory, request.getRestrictions().isBowAllowed());
+        addRestrictionItemIfEnabled("totem", inventory, request.getRestrictions().isTotemsAllowed());
+        addRestrictionItemIfEnabled("golden-apple", inventory, request.getRestrictions().isGoldenAppleAllowed());
+        addRestrictionItemIfEnabled("enchanted-golden-apple", inventory, request.getRestrictions().isNotchAllowed());
+        addRestrictionItemIfEnabled("potions", inventory, request.getRestrictions().isPotionsAllowed());
+        addRestrictionItemIfEnabled("shields", inventory, request.getRestrictions().isShieldsAllowed());
+        addRestrictionItemIfEnabled("elytra", inventory, request.getRestrictions().isElytraAllowed());
+        addRestrictionItemIfEnabled("ender-pearl", inventory, request.getRestrictions().isEnderPearlAllowed());
+        addRestrictionItemIfEnabled("keep-inventory", inventory, request.getRestrictions().isKeepInventoryAllowed());
         ItemStack cancel = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.cancel.item")));
         ItemMeta cancelMeta = cancel.getItemMeta();
         cancelMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.cancel.display-name")));
@@ -63,7 +63,7 @@ public class DuelInventoryHolder implements InventoryHolder {
     public Inventory getInventory() {
         return this.inventory;
     }
-    public void addRestrictionItemIfEnabled(String name, Inventory inventory) {
+    public void addRestrictionItemIfEnabled(String name, Inventory inventory, boolean toggled) {
         if (plugin.getConfig().getBoolean("restriction-modules."+name)) {
             ItemStack item = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.toggle-"+name+".item")));
             ItemMeta itemMeta = item.getItemMeta();
@@ -71,7 +71,11 @@ public class DuelInventoryHolder implements InventoryHolder {
                 itemMeta.addEnchant(Enchantment.LURE, 1, true);
                 itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
-            itemMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-"+name+".display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+            if (toggled) {
+                itemMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-" + name + ".display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+            } else {
+                itemMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-" + name + ".display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+            }
             for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.toggle-"+name+".lore")) {
                 lore.add(Chat.Color(loreLine));
             }
