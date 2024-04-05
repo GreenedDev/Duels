@@ -99,6 +99,7 @@ public class DuelRestrictions {
     public void setElytraAllowed(boolean yesOrNot) {
         isElytraAllowed = yesOrNot;
     }
+
     public void setKeepInventoryAllowed(boolean yesOrNot) {
         isKeepInventoryEnabled = yesOrNot;
     }
@@ -106,6 +107,7 @@ public class DuelRestrictions {
     public void setEnderPearlAllowed(boolean yesOrNot) {
         isEnderPearlAllowed = yesOrNot;
     }
+
     public String getEnabled() {
         StringBuilder builder = new StringBuilder();
         if (isNotchAllowed) {

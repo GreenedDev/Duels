@@ -189,7 +189,7 @@ public class GUI implements Listener {
             Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.request-received").replace("%player%", player.getName()));
             Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.restrictions"));
             if (request.getRestrictions().getEnabled() != null) {
-                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.enabled-restrictions")+request.getRestrictions().getEnabled());
+                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.enabled-restrictions") + request.getRestrictions().getEnabled());
             }
             if (request.getRestrictions().getDisabled() != null) {
                 Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.disabled-restrictions") + request.getRestrictions().getDisabled());

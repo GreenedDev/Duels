@@ -8,9 +8,11 @@ import org.bukkit.command.CommandSender;
 
 public class ReloadCommand implements CommandExecutor {
     Duels plugin;
+
     public ReloadCommand(Duels duels) {
         plugin = duels;
     }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length != 0) {

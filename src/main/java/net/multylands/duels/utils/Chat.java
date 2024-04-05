@@ -10,6 +10,7 @@ public class Chat {
     public static String Color(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
+
     public static void sendMessage(Duels plugin, Player player, String message) {
         if (message.startsWith("$")) {
             Component parsed = plugin.miniMessage().deserialize(message.substring(1));
@@ -18,6 +19,7 @@ public class Chat {
             player.sendMessage(Color(message));
         }
     }
+
     public static void sendMessageSender(Duels plugin, CommandSender sender, String message) {
         if (message.startsWith("$")) {
             Component parsed = plugin.miniMessage().deserialize(message.substring(1));
@@ -26,6 +28,7 @@ public class Chat {
             sender.sendMessage(Color(message));
         }
     }
+
     public static void messagePlayers(Duels plugin, Player player, Player target, String message) {
         Chat.sendMessage(plugin, player, message);
         Chat.sendMessage(plugin, target, message);

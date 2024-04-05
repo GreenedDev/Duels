@@ -14,9 +14,11 @@ import java.util.List;
 
 public class IgnoreCommand implements CommandExecutor {
     public Duels plugin;
+
     public IgnoreCommand(Duels plugin) {
         this.plugin = plugin;
     }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -25,7 +27,7 @@ public class IgnoreCommand implements CommandExecutor {
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 1) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label)+" player");
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
             return false;
         }
         Player target = Bukkit.getPlayer(args[0]);
@@ -33,29 +35,29 @@ public class IgnoreCommand implements CommandExecutor {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-is-offline"));
             return false;
         }
-        if (plugin.ignoresConfig.getList("Ignores") == null || !plugin.ignoresConfig.getList("Ignores").contains(player.getUniqueId())) {
+        String playerUUID = player.getUniqueId().toString();
+        String targetUUID = target.getUniqueId().toString();
+        if (plugin.ignoresConfig.getStringList("Ignores").isEmpty() || !plugin.ignoresConfig.getStringList("Ignores").contains(playerUUID)) {
             List<String> uuids = new ArrayList<>(Collections.emptyList());
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ignoring-on-player-enable").replace("%player%", target.getDisplayName()));
-            uuids.add(target.getUniqueId().toString());
-            plugin.ignoresConfig.set("Ignores." + player.getUniqueId(), uuids);
+            uuids.add(targetUUID);
+            plugin.ignoresConfig.set("Ignores." + playerUUID, uuids);
             plugin.saveIgnoresConfig();
             return false;
         }
-        List<String> uuids = plugin.ignoresConfig.getStringList("Ignores." + player.getUniqueId());
-        if (uuids.contains(target.getUniqueId().toString())) {
+        List<String> uuids = plugin.ignoresConfig.getStringList("Ignores." + playerUUID);
+        if (uuids.contains(targetUUID)) {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ignoring-on-player-disable").replace("%player%", target.getDisplayName()));
-            uuids.remove(target.getUniqueId().toString());
-            plugin.ignoresConfig.set("Ignores." + player.getUniqueId(), null);
+            uuids.remove(targetUUID);
+            plugin.ignoresConfig.set("Ignores." + playerUUID, null);
             plugin.saveIgnoresConfig();
             return false;
-        }
-        if (!uuids.contains(target.getUniqueId())) {
+        } else {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ignoring-on-player-enable").replace("%player%", target.getDisplayName()));
-            uuids.add(target.getUniqueId().toString());
-            plugin.ignoresConfig.set("Ignores." + player.getUniqueId(), uuids);
+            uuids.add(targetUUID);
+            plugin.ignoresConfig.set("Ignores." + playerUUID, uuids);
             plugin.saveIgnoresConfig();
             return false;
         }
-        return false;
     }
 }

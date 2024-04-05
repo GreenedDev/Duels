@@ -12,9 +12,11 @@ import org.bukkit.entity.Player;
 
 public class CancelCommand implements CommandExecutor {
     Duels plugin;
+
     public CancelCommand(Duels plugin) {
         this.plugin = plugin;
     }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -23,7 +25,7 @@ public class CancelCommand implements CommandExecutor {
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 1) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label)+" player");
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
             return false;
         }
         //checking if he has sent any request

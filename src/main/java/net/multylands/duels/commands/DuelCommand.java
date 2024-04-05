@@ -30,7 +30,7 @@ public class DuelCommand implements CommandExecutor {
         }
         Player player = (Player) sender;
         if (args.length != 1) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label)+ " player");
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
             return false;
         }
         Player target = Bukkit.getPlayer(args[0]);

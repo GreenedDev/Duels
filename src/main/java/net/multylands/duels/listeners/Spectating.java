@@ -46,6 +46,7 @@ public class Spectating implements Listener {
         playerWhoMoved.teleport(loc1);
         event.setCancelled(true);
     }
+
     //antidamage for spectators
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageByEntityEvent event) {
@@ -134,6 +135,7 @@ public class Spectating implements Listener {
         }
         endSpectating(player, plugin);
     }
+
     public static void endSpectating(Player player, Duels plugin) {
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         UUID toSpectateUUID = Duels.spectators.get(player.getUniqueId());
@@ -152,6 +154,7 @@ public class Spectating implements Listener {
         request.removeSpectator(player.getUniqueId());
         request.storeRequest(false);
     }
+
     public static void endSpectatingForEndGame(Player player, Duels plugin) {
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         UUID toSpectateUUID = Duels.spectators.get(player.getUniqueId());
@@ -168,6 +171,7 @@ public class Spectating implements Listener {
             firstPlayer.showPlayer(plugin, player);
         }
     }
+
     public static void startSpectating(Player player, Player toSpectate, Duels plugin) {
         //the teleport needs to be first here
         player.teleport(toSpectate);

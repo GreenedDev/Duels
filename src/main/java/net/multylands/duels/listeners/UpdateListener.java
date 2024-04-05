@@ -9,9 +9,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class UpdateListener implements Listener {
     Duels plugin;
+
     public UpdateListener(Duels plugin) {
         this.plugin = plugin;
     }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();

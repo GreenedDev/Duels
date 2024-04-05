@@ -17,10 +17,13 @@ import java.util.List;
 
 public class GUIManager {
     public Duels plugin;
+
     public GUIManager(Duels plugin) {
         this.plugin = plugin;
     }
+
     public List<String> lore = new ArrayList<>();
+
     public void openInventory(Player sender, Player target) {
         sender.closeInventory();
         DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, false, false);

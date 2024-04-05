@@ -23,6 +23,7 @@ public class PvP implements Listener {
     public PvP(Duels plugin) {
         this.plugin = plugin;
     }
+
     //prevent moving for during countdown
     @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
@@ -64,6 +65,7 @@ public class PvP implements Listener {
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.no-commands-in-duel"));
         event.setCancelled(true);
     }
+
     //anti command
     @EventHandler(ignoreCancelled = true)
     public void onCommandForWinner(PlayerCommandPreprocessEvent event) {
@@ -101,6 +103,7 @@ public class PvP implements Listener {
         UUID winnerUUID = request.getOpponent(deadUUID);
         request.endGame(winnerUUID, false, false);
     }
+
     //anti teleport & ender pearl fix
     @EventHandler(ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event) {
@@ -160,6 +163,7 @@ public class PvP implements Listener {
         event.setCancelled(true);
         request.endGame(winner, false, false);
     }
+
     //antielytra
     @EventHandler(ignoreCancelled = true)
     public void onGliding(EntityToggleGlideEvent event) {
@@ -178,6 +182,7 @@ public class PvP implements Listener {
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.elytra-deny-message"));
         event.setCancelled(true);
     }
+
     //antipearl
     @EventHandler(ignoreCancelled = true)
     public void enderPearlLaunch(ProjectileLaunchEvent event) {
@@ -199,6 +204,7 @@ public class PvP implements Listener {
         Chat.sendMessage(plugin, shooter, plugin.languageConfig.getString("duel.ender-pearl-deny-message"));
         event.setCancelled(true);
     }
+
     //anti potion
     @EventHandler(ignoreCancelled = true)
     public void onPotionDrink(PlayerItemConsumeEvent event) {
@@ -216,6 +222,7 @@ public class PvP implements Listener {
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.potions-deny-message"));
         event.setCancelled(true);
     }
+
     //fix dis
     @EventHandler(ignoreCancelled = true)
     public void onPotionSplash(PotionSplashEvent event) {
