@@ -44,6 +44,8 @@ public class PvP implements Listener {
         Player playerWhoLeft = event.getPlayer();
         UUID playerWhoLeftUUID = playerWhoLeft.getUniqueId();
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerWhoLeft.getUniqueId());
+        System.out.println(request);
+        System.out.println(RequestUtils.isInGame(request));
         if (!RequestUtils.isInGame(request)) {
             return;
         }
