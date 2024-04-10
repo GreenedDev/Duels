@@ -10,6 +10,7 @@ import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.listeners.UpdateListener;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
+import net.multylands.duels.papi.PAPIDuels;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.ConfigUtils;
 import net.multylands.duels.utils.UpdateChecker;
@@ -27,6 +28,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class Duels extends JavaPlugin {
     public static HashMap<String, Arena> Arenas = new HashMap<>();
@@ -175,6 +177,14 @@ public class Duels extends JavaPlugin {
         isServerPaper = isPaper;
     }
 
+    public void implementPlaceholderAPI() {
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //
+            new PAPIDuels(this).register(); //
+        } else {
+            getLogger().log(Level.WARNING, "Could not find PlaceholderAPI! You wouldn't be able to use plugin's placeholders.");
+        }
+    }
+
     public void reloadLanguageConfig() {
         languageFile = new File(getDataFolder(), "language.yml");
         languageConfig = YamlConfiguration.loadConfiguration(languageFile);
@@ -206,6 +216,7 @@ public class Duels extends JavaPlugin {
         createConfigs();
         implementBStats();
         checkForUpdates();
+        implementPlaceholderAPI();
         manager = new GUIManager(this);
         registerListenersAndCommands();
     }
