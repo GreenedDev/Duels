@@ -8,6 +8,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -26,6 +28,7 @@ public class DuelRequest {
     Arena arena;
     int taskId = 0;
     ArrayList<Integer> taskIdForRequestTimeout = new ArrayList<>();
+    Instant runOutOfTime;
 
     public DuelRequest(UUID sender, UUID target, DuelRestrictions duelRestrictions, boolean isInGame, boolean isStartingIn5Seconds, Duels plugin) {
         this.senderUUID = sender;
@@ -256,6 +259,14 @@ public class DuelRequest {
         }
     }
 
+    public Instant getRunOutOfTimeInstant() {
+        return runOutOfTime;
+    }
+
+    public void setRunOutOfTimeInstant(Instant newValue) {
+        runOutOfTime = newValue;
+    }
+
     public String getColorForNumber(AtomicInteger countdown) {
         if (countdown.get() == 5) {
             return "&4";
@@ -277,12 +288,15 @@ public class DuelRequest {
 
     public void saveAndRunRanOutOfTimeTask() {
         Random random = new Random();
+        int max_duel_time_minutes = plugin.getConfig().getInt("max_duel_time_minutes");
         taskAssignedIDInTheList = random.nextInt(999999);
         taskId = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             //just provide random uuid here it doesn't really matter.
             endGame(senderUUID, true, false);
-        }, 20L * 60 * plugin.getConfig().getInt("max_duel_time_minutes")).getTaskId();
+        }, 20L * 60 * max_duel_time_minutes).getTaskId();
         Duels.tasksToCancel.put(senderUUID, taskId);
+        Instant timeWhenDuelRunsOutOfTime = Instant.now().plus(max_duel_time_minutes, ChronoUnit.MINUTES);
+        setRunOutOfTimeInstant(timeWhenDuelRunsOutOfTime);
     }
 
     public void handleShields(Player player, Player target) {
