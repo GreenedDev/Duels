@@ -1,17 +1,16 @@
-package net.multylands.duels.commands;
+package net.multylands.duels.commands.admin;
 
 import net.multylands.duels.Duels;
-import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.utils.Chat;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class StopSpectateCommand implements CommandExecutor {
+public class SetSpawnCommand implements CommandExecutor {
     public Duels plugin;
 
-    public StopSpectateCommand(Duels plugin) {
+    public SetSpawnCommand(Duels plugin) {
         this.plugin = plugin;
     }
 
@@ -22,16 +21,17 @@ public class StopSpectateCommand implements CommandExecutor {
             return false;
         }
         Player player = ((Player) sender).getPlayer();
+        if (!player.hasPermission("duels.admin.setspawn")) {
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("no-perm"));
+            return false;
+        }
         if (args.length != 0) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " setspawn");
             return false;
         }
-        if (!Duels.spectators.containsKey(player.getUniqueId())) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.not-in-spectator"));
-            return false;
-        }
-        Spectating.endSpectating(player, plugin);
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.spectate-end-success"));
+        plugin.getConfig().set("spawn_location", player.getLocation());
+        plugin.saveConfig();
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.spawn-set-success"));
         return false;
     }
 }

@@ -2,7 +2,10 @@ package net.multylands.duels;
 
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.multylands.duels.commands.*;
+import net.multylands.duels.commands.DuelAdminCommand;
+import net.multylands.duels.commands.DuelCommand;
+import net.multylands.duels.commands.admin.*;
+import net.multylands.duels.commands.player.*;
 import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.listeners.GUI;
 import net.multylands.duels.listeners.PvP;
@@ -18,6 +21,7 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -60,6 +64,7 @@ public class Duels extends JavaPlugin {
     public static BukkitScheduler scheduler = Bukkit.getScheduler();
     public GUIManager manager;
     private BukkitAudiences adventure;
+    public static HashMap<String, CommandExecutor> commandExecutors = new HashMap<>();
 
     public MiniMessage miniMessage() {
         if (this.miniMessage == null) {
@@ -200,12 +205,16 @@ public class Duels extends JavaPlugin {
         getCommand("cancelduel").setExecutor(new CancelCommand(this));
         getCommand("denyduel").setExecutor(new DenyCommand(this));
         getCommand("ignoreduel").setExecutor(new IgnoreCommand(this));
-        getCommand("reloadduel").setExecutor(new ReloadCommand(this));
-        getCommand("setarenapos").setExecutor(new SetPosCommand(this));
-        getCommand("createduelarena").setExecutor(new CreateArenaCommand(this));
-        getCommand("setduelspawn").setExecutor(new SetSpawnCommand(this));
         getCommand("spectate").setExecutor(new SpectateCommand(this));
         getCommand("stopspectate").setExecutor(new StopSpectateCommand(this));
+        //admin commands
+        getCommand("dueladmin").setExecutor(new DuelAdminCommand(this));
+        commandExecutors.put("reload", new ReloadCommand(this));
+        commandExecutors.put("setarenapos", new SetPosCommand(this));
+        commandExecutors.put("setspawn", new SetSpawnCommand(this));
+        commandExecutors.put("createarena", new CreateArenaCommand(this));
+        commandExecutors.put("deletearena", new DeleteArenaCommand(this));
+
     }
 
     @Override

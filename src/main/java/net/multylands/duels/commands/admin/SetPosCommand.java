@@ -1,4 +1,4 @@
-package net.multylands.duels.commands;
+package net.multylands.duels.commands.admin;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
@@ -21,12 +21,12 @@ public class SetPosCommand implements CommandExecutor {
             return false;
         }
         Player player = ((Player) sender).getPlayer();
-        if (!player.hasPermission("duels.setpos")) {
+        if (!player.hasPermission("duels.admin.setpos")) {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("no-perm"));
             return false;
         }
         if (args.length != 2) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " arenaName pos1");
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " setarenapos arenaName pos1");
             return false;
         }
         String arenaName = args[0];

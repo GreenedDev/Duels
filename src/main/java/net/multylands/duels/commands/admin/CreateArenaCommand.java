@@ -1,4 +1,4 @@
-package net.multylands.duels.commands;
+package net.multylands.duels.commands.admin;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
@@ -21,12 +21,12 @@ public class CreateArenaCommand implements CommandExecutor {
             return false;
         }
         Player player = ((Player) sender).getPlayer();
-        if (!player.hasPermission("duels.createarena")) {
+        if (!player.hasPermission("duels.admin.createarena")) {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("no-perm"));
             return false;
         }
         if (args.length != 1) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " arenaName");
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " createarena arenaName");
             return false;
         }
         String arenaName = args[0];
