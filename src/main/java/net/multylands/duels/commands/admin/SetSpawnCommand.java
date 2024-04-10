@@ -1,4 +1,4 @@
-package net.multylands.duels.commands;
+package net.multylands.duels.commands.admin;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
@@ -16,17 +16,17 @@ public class SetSpawnCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!sender.hasPermission("duels.admin.setspawn")) {
+            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("no-perm"));
+            return false;
+        }
         if (!(sender instanceof Player)) {
             Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
-        if (!player.hasPermission("duels.setspawn")) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("no-perm"));
-            return false;
-        }
         if (args.length != 0) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " arenaName pos1");
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " setspawn");
             return false;
         }
         plugin.getConfig().set("spawn_location", player.getLocation());

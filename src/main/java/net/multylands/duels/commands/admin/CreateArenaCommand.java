@@ -1,4 +1,4 @@
-package net.multylands.duels.commands;
+package net.multylands.duels.commands.admin;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
@@ -16,17 +16,17 @@ public class CreateArenaCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!sender.hasPermission("duels.admin.createarena")) {
+            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("no-perm"));
+            return false;
+        }
         if (!(sender instanceof Player)) {
             Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
-        if (!player.hasPermission("duels.createarena")) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("no-perm"));
-            return false;
-        }
         if (args.length != 1) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " arenaName");
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " createarena arenaName");
             return false;
         }
         String arenaName = args[0];

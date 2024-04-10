@@ -7,7 +7,15 @@ no-perm: "&cYou don't have a permission to execute this command!"
 all-config-reloaded: "&aArenas, Language and default config has been reloaded!"
 
 update-available: "&6[Duels] &aAn update &6%newversion% &afor the Duels plugin is now available. Download it from &bhttps://www.spigotmc.org/resources/114685/"
-
+help:
+  admin:
+    - "&aDuel Admin Commands:"
+    - "&e/dueladmin &7- &bDisplays this message."
+    - "&e/dueladmin setspawn &7- &bSet the spawn location where players will be TPed after match."
+    - "&e/dueladmin createarena <arenaName> &7- &bCreate arena with specific name."
+    - "&e/dueladmin setarenapos <arenaName> pos<1/2> &7- &bSet the arena's corner points."
+    - "&e/dueladmin deletearena &7- &bDelete arena with the specific name."
+    - "&e/dueladmin reload &7- &bReload the configuration."
 duel:
   target-is-offline: "&cGiven player is offline."
   already-in-duel: "&cYou can't accept a duel while playing one."
@@ -55,7 +63,9 @@ duel:
   pos-wrong: "&cWrong position in the command. You need to type pos1 or pos2. (pos1 for one player's position, pos2 for second player's position)"
 
   create-arena-already-exists: "&cThe arena with that name already exists. If you want to modify it's positions type &6/setarenapos&c. If you want to create new arena type &6/createduelarena <name>&c."
+  delete-arena-doesnt-exists: "&cArena with that name doesn't exist."
   create-arena-success: "&aArena &b%arena%&a has been successfully created! To set it's positions try &6/setarenapos"
+  delete-arena-success: "&aArena &6%arena%&a has been successfully deleted!"
 
   spawn-set-success: "&aSpawn location has been set successfully!"
 

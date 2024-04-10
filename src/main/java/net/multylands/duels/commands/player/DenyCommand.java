@@ -1,7 +1,7 @@
-package net.multylands.duels.commands;
+package net.multylands.duels.commands.player;
 
-import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.Duels;
+import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Bukkit;

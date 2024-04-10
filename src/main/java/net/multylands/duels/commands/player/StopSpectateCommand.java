@@ -1,4 +1,4 @@
-package net.multylands.duels.commands;
+package net.multylands.duels.commands.player;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.listeners.Spectating;

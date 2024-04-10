@@ -1,4 +1,4 @@
-package net.multylands.duels.commands;
+package net.multylands.duels.commands.admin;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
@@ -15,12 +15,12 @@ public class ReloadCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length != 0) {
-            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("command-usage").replace("%command%", label));
+        if (!sender.hasPermission("duels.admin.reload")) {
+            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("no-perm"));
             return false;
         }
-        if (!sender.hasPermission("duels.reload")) {
-            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("no-perm"));
+        if (args.length != 0) {
+            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " reload");
             return false;
         }
         plugin.reloadArenaConfig();
