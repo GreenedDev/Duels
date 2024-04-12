@@ -31,7 +31,7 @@ public class SetSpawnCommand implements CommandExecutor {
         }
         plugin.getConfig().set("spawn_location", player.getLocation());
         plugin.saveConfig();
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.spawn-set-success"));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-spawn.success"));
         return false;
     }
 }

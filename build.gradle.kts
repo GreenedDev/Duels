@@ -69,8 +69,10 @@ tasks {
     runServer {
         downloadPlugins {
             modrinth("simple-fly", "nIB1yFFr")
-            modrinth("simplescore", "GK5oIgBS")
+            modrinth("miniplaceholders", "J2guR3GH")
+            url("https://github.com/MiniPlaceholders/Player-Expansion/releases/download/1.2.0/MiniPlaceholders-Player-Expansion-1.2.0.jar")
             url("https://hangarcdn.papermc.io/plugins/HelpChat/PlaceholderAPI/versions/2.11.5/PAPER/PlaceholderAPI-2.11.5.jar")
+            url("https://github.com/HSGamer/BetterBoard/releases/download/2.7/BetterBoard-2.7.jar")
         }
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.

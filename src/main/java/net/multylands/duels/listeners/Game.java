@@ -17,10 +17,10 @@ import org.bukkit.event.player.*;
 
 import java.util.UUID;
 
-public class PvP implements Listener {
+public class Game implements Listener {
     Duels plugin;
 
-    public PvP(Duels plugin) {
+    public Game(Duels plugin) {
         this.plugin = plugin;
     }
 

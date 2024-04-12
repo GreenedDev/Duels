@@ -4,11 +4,11 @@ command-usage: "&cUsage: /%command%"
 
 no-perm: "&cYou don't have a permission to execute this command!"
 
-all-config-reloaded: "&aArenas, Language and default config has been reloaded!"
-
 update-available: "&6[Duels] &aAn update &6%newversion% &afor the Duels plugin is now available. Download it from &bhttps://www.spigotmc.org/resources/114685/"
-help:
-  admin:
+admin:
+  reload:
+    all-config-reloaded: "&aArenas, Language and default config has been reloaded!"
+  help:
     - "&aDuel Admin Commands:"
     - "&e/dueladmin &7- &bDisplays this message."
     - "&e/dueladmin setspawn &7- &bSet the spawn location where players will be TPed after match."
@@ -16,6 +16,22 @@ help:
     - "&e/dueladmin setarenapos <arenaName> pos<1/2> &7- &bSet the arena's corner points."
     - "&e/dueladmin deletearena &7- &bDelete arena with the specific name."
     - "&e/dueladmin reload &7- &bReload the configuration."
+  arena-list:
+    list: "&aList of the arenas:"
+    meaning: "&aGreen &7- &2Active &f| &4RED &7- &cUnactive"
+  set-pos:
+    success: "&b%pos% &asuccessfully set!"
+    arena-loaded: "&aYou have successfully completed the arena setup. &6Arena has been loaded."
+    pos-no-arena: "&cThe arena with that name doesn't exist. Please create one with &6/dueladmin createarena <name>"
+    pos-wrong: "&cWrong position in the command. You need to type pos1 or pos2. (pos1 for one player's position, pos2 for second player's position)"
+  create-arena:
+    already-exists: "&cThe arena with that name already exists. If you want to modify it's positions type &6/dueladmin setarenapos&c. If you want to create new arena type &6/dueladmin createarena <name>&c."
+    success: "&aArena &b%arena%&a has been successfully created! To set it's positions try &6/dueladmin setarenapos"
+  delete-arena:
+    doesnt-exists: "&cArena with that name doesn't exist."
+    success: "&aArena &6%arena%&a has been successfully deleted!"
+  set-spawn:
+    success: "&aSpawn location has been set successfully!"
 duel:
   target-is-offline: "&cGiven player is offline."
   already-in-duel: "&cYou can't accept a duel while playing one."
@@ -57,17 +73,6 @@ duel:
   lost-duel: "&cYou lost the duel."
 
   click: "$<green>Click</green> <red><b><hover:show_text:'<red>Click to deny this request!</red>'><click:run_command:'/denyduel %player%'>DENY</click></hover></b></red>/<green><b><hover:show_text:'<green>Click to accept this request!</green>'><click:run_command:'/acceptduel %player%'>ACCEPT</click></hover></b></green>"
-
-  pos-set-successfully: "&b%pos% &asuccessfully set! If you are done with both positions, type &6/reloadduel &ato load new arenas."
-  pos-no-arena: "&cThe arena with that name doesn't exist. Please create one with &6/createduelarena <name>"
-  pos-wrong: "&cWrong position in the command. You need to type pos1 or pos2. (pos1 for one player's position, pos2 for second player's position)"
-
-  create-arena-already-exists: "&cThe arena with that name already exists. If you want to modify it's positions type &6/setarenapos&c. If you want to create new arena type &6/createduelarena <name>&c."
-  delete-arena-doesnt-exists: "&cArena with that name doesn't exist."
-  create-arena-success: "&aArena &b%arena%&a has been successfully created! To set it's positions try &6/setarenapos"
-  delete-arena-success: "&aArena &6%arena%&a has been successfully deleted!"
-
-  spawn-set-success: "&aSpawn location has been set successfully!"
 
   spectate-is-not-in-duel: "&b%player% &cis not in duel!"
   spectate-success: "&6Spectating &b%player%"

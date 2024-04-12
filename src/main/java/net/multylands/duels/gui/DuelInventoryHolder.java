@@ -25,7 +25,7 @@ public class DuelInventoryHolder implements InventoryHolder {
         this.plugin = plugin;
         cancelSlot = plugin.languageConfig.getInt("duel-GUI.cancel.slot");
         this.request = request;
-        this.inventory = plugin.getServer().createInventory(this, size, Chat.Color(plugin.languageConfig.getString("duel-GUI.title")));
+        this.inventory = plugin.getServer().createInventory(this, size, Chat.color(plugin.languageConfig.getString("duel-GUI.title")));
         addRestrictionItemIfEnabled("bow", inventory, request.getRestrictions().isBowAllowed());
         addRestrictionItemIfEnabled("totem", inventory, request.getRestrictions().isTotemsAllowed());
         addRestrictionItemIfEnabled("golden-apple", inventory, request.getRestrictions().isGoldenAppleAllowed());
@@ -37,9 +37,9 @@ public class DuelInventoryHolder implements InventoryHolder {
         addRestrictionItemIfEnabled("keep-inventory", inventory, request.getRestrictions().isKeepInventoryAllowed());
         ItemStack cancel = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.cancel.item")));
         ItemMeta cancelMeta = cancel.getItemMeta();
-        cancelMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.cancel.display-name")));
+        cancelMeta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.cancel.display-name")));
         for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.cancel.lore")) {
-            lore.add(Chat.Color(loreLine));
+            lore.add(Chat.color(loreLine));
         }
         if (plugin.languageConfig.getBoolean("duel-GUI.cancel.glowing")) {
             cancelMeta.addEnchant(Enchantment.LURE, 1, true);
@@ -73,12 +73,12 @@ public class DuelInventoryHolder implements InventoryHolder {
                 itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
             if (toggled) {
-                itemMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-" + name + ".display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                itemMeta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-" + name + ".display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
             } else {
-                itemMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-" + name + ".display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                itemMeta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-" + name + ".display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
             }
             for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.toggle-" + name + ".lore")) {
-                lore.add(Chat.Color(loreLine));
+                lore.add(Chat.color(loreLine));
             }
             itemMeta.setLore(lore);
             item.setItemMeta(itemMeta);

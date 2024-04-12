@@ -5,8 +5,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class ConfigUtils {
         }
         FileConfiguration defaultConfig;
         try {
-            defaultConfig = plugin.getConfigFromResource(fileName);
+            defaultConfig = getConfigFromResource(fileName);
             for (String actuallyMissingKey : KeysAndValues) {
                 config.set(actuallyMissingKey, defaultConfig.get(actuallyMissingKey));
                 File configFile = new File(plugin.getDataFolder(), fileName);
@@ -41,10 +40,20 @@ public class ConfigUtils {
     public List<String> getKeysAndValues(String resourceName) {
         FileConfiguration config = new YamlConfiguration();
         try {
-            config = plugin.getConfigFromResource(resourceName);
+            config = getConfigFromResource(resourceName);
         } catch (InvalidConfigurationException | IOException e) {
             System.out.println(e);
         }
         return new ArrayList<>(config.getKeys(true));
+    }
+
+    public FileConfiguration getConfigFromResource(String resourceName) throws IOException, InvalidConfigurationException {
+        YamlConfiguration config = new YamlConfiguration();
+        InputStream stream = plugin.getResource(resourceName);
+        Reader reader = new InputStreamReader(stream);
+        config.load(reader);
+        reader.close();
+        stream.close();
+        return config;
     }
 }

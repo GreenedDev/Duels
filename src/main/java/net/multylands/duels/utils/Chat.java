@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Chat {
-    public static String Color(String text) {
+    public static String color(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 
@@ -16,7 +16,7 @@ public class Chat {
             Component parsed = plugin.miniMessage().deserialize(message.substring(1));
             plugin.adventure().player(player).sendMessage(parsed);
         } else {
-            player.sendMessage(Color(message));
+            player.sendMessage(color(message));
         }
     }
 
@@ -25,7 +25,7 @@ public class Chat {
             Component parsed = plugin.miniMessage().deserialize(message.substring(1));
             plugin.adventure().sender(sender).sendMessage(parsed);
         } else {
-            sender.sendMessage(Color(message));
+            sender.sendMessage(color(message));
         }
     }
 

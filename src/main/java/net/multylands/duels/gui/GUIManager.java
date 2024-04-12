@@ -32,9 +32,9 @@ public class GUIManager {
         Inventory inventory = inventoryHolder.getInventory();
         ItemStack start = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.start.item")));
         ItemMeta startMeta = start.getItemMeta();
-        startMeta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.start.display-name")));
+        startMeta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.start.display-name")));
         for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.start.lore")) {
-            lore.add(Chat.Color(loreLine.replace("%player%", target.getName())));
+            lore.add(Chat.color(loreLine.replace("%player%", target.getName())));
         }
         if (plugin.languageConfig.getBoolean("duel-GUI.start.glowing")) {
             start.addEnchantment(Enchantment.ARROW_DAMAGE, 1);

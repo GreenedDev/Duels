@@ -1,11 +1,14 @@
 package net.multylands.duels.commands.admin;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 public class DeleteArenaCommand implements CommandExecutor {
     public Duels plugin;
@@ -31,13 +34,25 @@ public class DeleteArenaCommand implements CommandExecutor {
         }
         String arenaName = args[0];
         if (!plugin.arenasConfig.contains(arenaName)) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.delete-arena-doesnt-exists"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.delete-arena.doesnt-exists"));
             return false;
         }
         plugin.arenasConfig.set(arenaName, null);
         plugin.saveArenasConfig();
         plugin.reloadArenaConfig();
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.delete-arena-success").replace("%arena%", arenaName));
+        //to prevent players getting lost when their arena was deleted.
+        for (Set<DuelRequest> requestsSet : Duels.requestsReceiverToSenders.values()) {
+            for (DuelRequest request : requestsSet) {
+                if (!request.getIsInGame()) {
+                    continue;
+                }
+                if (!request.getArena().getID().equals(arenaName)) {
+                    continue;
+                }
+                request.endGame(null, false, true);
+            }
+        }
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.delete-arena.success").replace("%arena%", arenaName));
         return false;
     }
 }

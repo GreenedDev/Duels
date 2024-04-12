@@ -25,7 +25,9 @@ commands_blacklisted_or_whitelisted_in_spectator:
   - leavespectator
 placeholders:
   time:
-    format: "%hours% hours %minutes% minutes %seconds% seconds"
+    hours: "hours"
+    minutes: "minutes"
+    seconds: "seconds"
 #here you can toggle which modules will be enabled/disabled in the server. if you turn off any, it will not show up in the
 #duels GUI, so players won't be able to turn on/off that restriction.
 restriction-modules:

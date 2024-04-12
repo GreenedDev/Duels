@@ -26,7 +26,7 @@ public class ReloadCommand implements CommandExecutor {
         plugin.reloadArenaConfig();
         plugin.reloadConfig();
         plugin.reloadLanguageConfig();
-        Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("all-config-reloaded"));
+        Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("admin.reload.all-config-reloaded"));
         return false;
     }
 }

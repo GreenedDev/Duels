@@ -2,23 +2,13 @@ package net.multylands.duels;
 
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.multylands.duels.commands.DuelAdminCommand;
-import net.multylands.duels.commands.DuelCommand;
-import net.multylands.duels.commands.admin.*;
-import net.multylands.duels.commands.player.*;
 import net.multylands.duels.gui.GUIManager;
-import net.multylands.duels.listeners.GUI;
-import net.multylands.duels.listeners.PvP;
-import net.multylands.duels.listeners.Spectating;
-import net.multylands.duels.listeners.UpdateListener;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
-import net.multylands.duels.papi.PAPIDuels;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.ConfigUtils;
+import net.multylands.duels.utils.ServerUtils;
 import net.multylands.duels.utils.UpdateChecker;
-import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandExecutor;
@@ -28,15 +18,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
 
 public class Duels extends JavaPlugin {
     public static HashMap<String, Arena> Arenas = new HashMap<>();
-    //storing only sender: requestthatcontainstargetname
+    //storing only sender: request(withTargetName)
     public static HashMap<UUID, Set<DuelRequest>> requestsReceiverToSenders = new HashMap<>();
     public static HashMap<UUID, Set<DuelRequest>> requestsSenderToReceivers = new HashMap<>();
     //storing sender: player
@@ -57,7 +47,6 @@ public class Duels extends JavaPlugin {
     public File languageFile;
     public String languageFileName = "language.yml";
     MiniMessage miniMessage;
-    public boolean isServerPaper = true;
     public FileConfiguration ignoresConfig;
     public FileConfiguration arenasConfig;
     public FileConfiguration languageConfig;
@@ -67,24 +56,51 @@ public class Duels extends JavaPlugin {
     public static HashMap<String, CommandExecutor> commandExecutors = new HashMap<>();
 
     public MiniMessage miniMessage() {
-        if (this.miniMessage == null) {
+        if (miniMessage == null) {
             throw new IllegalStateException("miniMessage is null when getting it from the main class");
         }
-        return this.miniMessage;
+        return miniMessage;
     }
 
     public BukkitAudiences adventure() {
-        if (this.adventure == null) {
+        if (adventure == null) {
             throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
         }
         return this.adventure;
     }
 
-    public void implementBStats() {
-        Metrics metrics = new Metrics(this, 21176);
-        metrics.addCustomChart(new SingleLineChart("servers", () -> {
-            return 1;
-        }));
+    @Override
+    public void onEnable() {
+        this.adventure = BukkitAudiences.create(this);
+        miniMessage = MiniMessage.miniMessage();
+        if (!ServerUtils.isPaper(this)) {
+            getLogger().info("Server isn't running the PAPER software which means " +
+                    "i can't use it's API to deal with shield restrictions. Please switch to " +
+                    "paper otherwise Shield restriction will be disabled.");
+        }
+        checkForUpdates();
+        createConfigs();
+        ServerUtils.implementBStats(this);
+        ServerUtils.implementPlaceholderAPI(this);
+        manager = new GUIManager(this);
+        ServerUtils.registerListeners(this);
+        ServerUtils.registerCommands(this);
+    }
+
+    @Override
+    public void onDisable() {
+        for (Set<DuelRequest> requestsSet : requestsReceiverToSenders.values()) {
+            for (DuelRequest request : requestsSet) {
+                if (!request.getIsInGame()) {
+                    continue;
+                }
+                request.endGame(null, false, true);
+            }
+        }
+        if (this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
     }
 
     private void createConfigs() {
@@ -119,12 +135,7 @@ public class Duels extends JavaPlugin {
             configUtils.addMissingKeysAndValues(ignoresConfig, ignoresFileName);
             configUtils.addMissingKeysAndValues(arenasConfig, arenasFileName);
             configUtils.addMissingKeysAndValues(languageConfig, languageFileName);
-            for (String arenaID : arenasConfig.getKeys(false)) {
-                Location loc1 = arenasConfig.getLocation(arenaID + ".pos1");
-                Location loc2 = arenasConfig.getLocation(arenaID + ".pos2");
-                Arena arena = new Arena(loc1, loc2, null, null, arenaID);
-                Arenas.put(arenaID, arena);
-            }
+            loadArenas();
             duelInventorySize = languageConfig.getInt("duel-GUI.size");
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
@@ -160,78 +171,10 @@ public class Duels extends JavaPlugin {
         arenasFile = new File(getDataFolder(), "arenas.yml");
         arenasConfig = YamlConfiguration.loadConfiguration(arenasFile);
         Arenas.clear();
-        for (String arenaID : arenasConfig.getKeys(false)) {
-            Location loc1 = arenasConfig.getLocation(arenaID + ".pos1");
-            Location loc2 = arenasConfig.getLocation(arenaID + ".pos2");
-            Arena arena = new Arena(loc1, loc2, null, null, arenaID);
-            Arenas.put(arenaID, arena);
-        }
+        loadArenas();
     }
 
-    public void checkPaper() {
-        boolean isPaper = false;
-        try {
-            // Any other works, just the shortest I could find.
-            Class.forName("com.destroystokyo.paper.ParticleBuilder");
-            isPaper = true;
-        } catch (ClassNotFoundException ignored) {
-        }
-        if (!isPaper) {
-            getLogger().info("Server isn't running the PAPER software which means i can't use it's API to deal with shield restrictions. Please switch to paper otherwise Shield restriction will be disabled.");
-        }
-        isServerPaper = isPaper;
-    }
-
-    public void implementPlaceholderAPI() {
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //
-            new PAPIDuels(this).register(); //
-        } else {
-            getLogger().log(Level.WARNING, "Could not find PlaceholderAPI! You wouldn't be able to use plugin's placeholders.");
-        }
-    }
-
-    public void reloadLanguageConfig() {
-        languageFile = new File(getDataFolder(), "language.yml");
-        languageConfig = YamlConfiguration.loadConfiguration(languageFile);
-    }
-
-    public void registerListenersAndCommands() {
-        getServer().getPluginManager().registerEvents(new GUI(this), this);
-        getServer().getPluginManager().registerEvents(new PvP(this), this);
-        getServer().getPluginManager().registerEvents(new Spectating(this), this);
-        getServer().getPluginManager().registerEvents(new UpdateListener(this), this);
-        getCommand("duel").setExecutor(new DuelCommand(manager, this));
-        getCommand("acceptduel").setExecutor(new AcceptCommand(this));
-        getCommand("cancelduel").setExecutor(new CancelCommand(this));
-        getCommand("denyduel").setExecutor(new DenyCommand(this));
-        getCommand("ignoreduel").setExecutor(new IgnoreCommand(this));
-        getCommand("spectate").setExecutor(new SpectateCommand(this));
-        getCommand("stopspectate").setExecutor(new StopSpectateCommand(this));
-        //admin commands
-        getCommand("dueladmin").setExecutor(new DuelAdminCommand(this));
-        commandExecutors.put("reload", new ReloadCommand(this));
-        commandExecutors.put("setarenapos", new SetPosCommand(this));
-        commandExecutors.put("setspawn", new SetSpawnCommand(this));
-        commandExecutors.put("createarena", new CreateArenaCommand(this));
-        commandExecutors.put("deletearena", new DeleteArenaCommand(this));
-
-    }
-
-    @Override
-    public void onEnable() {
-        this.adventure = BukkitAudiences.create(this);
-        miniMessage = MiniMessage.miniMessage();
-        checkPaper();
-        createConfigs();
-        implementBStats();
-        checkForUpdates();
-        implementPlaceholderAPI();
-        manager = new GUIManager(this);
-        registerListenersAndCommands();
-    }
-
-    @Override
-    public void onDisable() {
+    public void loadArenas() {
         for (Set<DuelRequest> requestsSet : requestsReceiverToSenders.values()) {
             for (DuelRequest request : requestsSet) {
                 if (!request.getIsInGame()) {
@@ -240,25 +183,20 @@ public class Duels extends JavaPlugin {
                 request.endGame(null, false, true);
             }
         }
-        requestsReceiverToSenders.clear();
-        requestsSenderToReceivers.clear();
-        playerToOpponentInGame.clear();
-        Arenas.clear();
-        tasksToCancel.clear();
-        spectators.clear();
-        if (this.adventure != null) {
-            this.adventure.close();
-            this.adventure = null;
+        for (String arenaID : arenasConfig.getKeys(false)) {
+            if (arenasConfig.getLocation(arenaID + ".pos1") == null
+                    || arenasConfig.getLocation(arenaID + ".pos2") == null) {
+                continue;
+            }
+            Location loc1 = arenasConfig.getLocation(arenaID + ".pos1");
+            Location loc2 = arenasConfig.getLocation(arenaID + ".pos2");
+            Arena arena = new Arena(loc1, loc2, null, null, arenaID);
+            Arenas.put(arenaID, arena);
         }
     }
 
-    public FileConfiguration getConfigFromResource(String resourceName) throws IOException, InvalidConfigurationException {
-        YamlConfiguration config = new YamlConfiguration();
-        InputStream stream = getResource(resourceName);
-        Reader reader = new InputStreamReader(stream);
-        config.load(reader);
-        reader.close();
-        stream.close();
-        return config;
+    public void reloadLanguageConfig() {
+        languageFile = new File(getDataFolder(), "language.yml");
+        languageConfig = YamlConfiguration.loadConfiguration(languageFile);
     }
 }

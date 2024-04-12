@@ -100,80 +100,80 @@ public class GUI implements Listener {
             isBowEnabled = !isBowEnabled;
             restrictions.setBowAllowed(isBowEnabled);
             if (isBowEnabled) {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-bow.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-bow.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
             } else {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-bow.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-bow.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
         } else if (slot == totemSlot) {
             isTotemEnabled = !isTotemEnabled;
             restrictions.setTotemsAllowed(isTotemEnabled);
             if (isTotemEnabled) {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-totem.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-totem.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
             } else {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-totem.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-totem.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
         } else if (slot == GPSlot) {
             isGPEnabled = !isGPEnabled;
             restrictions.setGoldenAppleAllowed(isGPEnabled);
             if (isGPEnabled) {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
             } else {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
         } else if (slot == NotchSlot) {
             isNotchEnabled = !isNotchEnabled;
             restrictions.setNotchAllowed(isNotchEnabled);
             if (isNotchEnabled) {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-enchanted-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-enchanted-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
             } else {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-enchanted-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-enchanted-golden-apple.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
         } else if (slot == potionsSlot) {
             isPotionsEnabled = !isPotionsEnabled;
             restrictions.setPotionsAllowed(isPotionsEnabled);
             if (isPotionsEnabled) {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-potions.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-potions.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
             } else {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-potions.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-potions.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
         } else if (slot == shieldsSlot) {
             isShieldsEnabled = !isShieldsEnabled;
             restrictions.setShieldsAllowed(isShieldsEnabled);
             if (isShieldsEnabled) {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-shields.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-shields.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
             } else {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-shields.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-shields.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
         } else if (slot == elytraSlot) {
             isElytraEnabled = !isElytraEnabled;
             restrictions.setElytraAllowed(isElytraEnabled);
             if (isElytraEnabled) {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-elytra.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-elytra.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
             } else {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-elytra.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-elytra.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
         } else if (slot == enderpearlSlot) {
             isEnderPearlEnabled = !isEnderPearlEnabled;
             restrictions.setEnderPearlAllowed(isEnderPearlEnabled);
             if (isEnderPearlEnabled) {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-ender-pearl.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-ender-pearl.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
             } else {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-ender-pearl.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-ender-pearl.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
         } else if (slot == startSlot) {
@@ -205,10 +205,10 @@ public class GUI implements Listener {
             isKeepInventoryEnabled = !isKeepInventoryEnabled;
             restrictions.setKeepInventoryAllowed(isKeepInventoryEnabled);
             if (isKeepInventoryEnabled) {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-keep-inventory.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-keep-inventory.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
             } else {
-                meta.setDisplayName(Chat.Color(plugin.languageConfig.getString("duel-GUI.toggle-keep-inventory.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-keep-inventory.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
         }

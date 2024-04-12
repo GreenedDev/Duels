@@ -1,11 +1,16 @@
 package net.multylands.duels.commands.admin;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.object.Arena;
+import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 public class SetPosCommand implements CommandExecutor {
     public Duels plugin;
@@ -26,22 +31,48 @@ public class SetPosCommand implements CommandExecutor {
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 2) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " setarenapos arenaName pos1");
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " setarenapos arenaName pos1/2");
             return false;
         }
         String arenaName = args[0];
-        String pos = args[1];
+        String pos = args[1].toLowerCase();
         if (!plugin.arenasConfig.contains(arenaName)) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.pos-no-arena"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-pos.pos-no-arena"));
             return false;
         }
-        if (!pos.equalsIgnoreCase("pos1") && !pos.equalsIgnoreCase("pos2")) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.pos-wrong"));
+        if (!pos.equals("pos1") && !pos.equals("pos2")) {
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-pos.pos-wrong"));
             return false;
         }
-        plugin.arenasConfig.set(arenaName + "." + pos.toLowerCase(), player.getLocation());
+        plugin.arenasConfig.set(arenaName + "." + pos, player.getLocation());
+        //just removing the temporary value below
+        plugin.arenasConfig.set(arenaName + ".isnew", null);
         plugin.saveArenasConfig();
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.pos-set-successfully").replace("%pos%", pos));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-pos.success").replace("%pos%", pos));
+
+        if (plugin.arenasConfig.getLocation(arenaName + ".pos1") == null
+                || plugin.arenasConfig.getLocation(arenaName + ".pos2") == null) {
+            return false;
+        }
+        Location loc1 = plugin.arenasConfig.getLocation(arenaName + ".pos1");
+        Location loc2 = plugin.arenasConfig.getLocation(arenaName + ".pos2");
+        Arena arena = new Arena(loc1, loc2, null, null, arenaName);
+        if (Duels.Arenas.containsKey(arenaName)) {
+            //to prevent players getting lost when their arena was replaced.
+            for (Set<DuelRequest> requestsSet : Duels.requestsReceiverToSenders.values()) {
+                for (DuelRequest request : requestsSet) {
+                    if (!request.getIsInGame()) {
+                        continue;
+                    }
+                    if (!request.getArena().getID().equals(arenaName)) {
+                        continue;
+                    }
+                    request.endGame(null, false, true);
+                }
+            }
+        }
+        Duels.Arenas.put(arenaName, arena);
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-pos.arena-loaded"));
         return false;
     }
 }

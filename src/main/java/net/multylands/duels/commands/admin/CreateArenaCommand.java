@@ -31,12 +31,12 @@ public class CreateArenaCommand implements CommandExecutor {
         }
         String arenaName = args[0];
         if (plugin.arenasConfig.contains(arenaName)) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.create-arena-already-exists"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.create-arena.already-exists"));
             return false;
         }
-        plugin.arenasConfig.set(arenaName + ".pos1", player.getLocation());
+        plugin.arenasConfig.set(arenaName + ".isnew", true);
         plugin.saveArenasConfig();
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.create-arena-success").replace("%arena%", arenaName));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.create-arena.success").replace("%arena%", arenaName));
         return false;
     }
 }

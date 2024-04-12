@@ -94,18 +94,26 @@ public class PAPIDuels extends PlaceholderExpansion {
             long secondsBetween = now.until(timeWhenDuelRunsOutOfTime, ChronoUnit.SECONDS);
             return convertSecondsToHMS(secondsBetween);
         }
-        return Chat.Color(plugin.getConfig().getString("glowing-wrong-placeholder"));
+        return Chat.color(plugin.getConfig().getString("glowing-wrong-placeholder"));
     }
 
     public String convertSecondsToHMS(long seconds) {
         long H = (seconds / 60) / 60;  // covert total seconds to hours
         long M = (seconds / 60) % 60;  // Calculate the remaining minutes
         long S = seconds % 60;         // Calculate the remaining seconds
-
-        String format = plugin.getConfig().getString("placeholders.time.format");
-        format = format.replace("%hours%", String.valueOf(H));
-        format = format.replace("%minutes%", String.valueOf(M));
-        format = format.replace("%seconds%", String.valueOf(S));
-        return format;
+        String result = "";
+        String hoursDisplayed = plugin.getConfig().getString("placeholders.time.hours");
+        String minutesDisplayed = plugin.getConfig().getString("placeholders.time.minutes");
+        String secondsDisplayed = plugin.getConfig().getString("placeholders.time.seconds");
+        if (H != 0) {
+            result = H + " " + hoursDisplayed + " ";
+        }
+        if (M != 0) {
+            result = result + M + " " + minutesDisplayed + " ";
+        }
+        if (S != 0) {
+            result = result + S + " " + secondsDisplayed;
+        }
+        return result;
     }
 }
