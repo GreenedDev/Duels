@@ -9,7 +9,7 @@ import net.multylands.duels.listeners.GUI;
 import net.multylands.duels.listeners.Game;
 import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.listeners.UpdateListener;
-import net.multylands.duels.placeholders.PAPIDuels;
+import net.multylands.duels.placeholders.PlaceholderAPI;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
@@ -63,7 +63,7 @@ public class ServerUtils {
 
     public static void implementPlaceholderAPI(Duels plugin) {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //
-            new PAPIDuels(plugin).register(); //
+            new PlaceholderAPI(plugin).register(); //
         } else {
             plugin.getLogger().log(Level.WARNING, "Could not find PlaceholderAPI! You wouldn't be able to use plugin's placeholders.");
         }

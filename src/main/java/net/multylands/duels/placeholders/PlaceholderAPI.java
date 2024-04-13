@@ -6,11 +6,11 @@ import net.multylands.duels.utils.Chat;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
-public class PAPIDuels extends PlaceholderExpansion {
+public class PlaceholderAPI extends PlaceholderExpansion {
 
     private final Duels plugin;
 
-    public PAPIDuels(Duels plugin) {
+    public PlaceholderAPI(Duels plugin) {
         this.plugin = plugin;
     }
 
