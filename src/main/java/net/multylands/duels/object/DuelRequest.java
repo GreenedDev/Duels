@@ -254,8 +254,12 @@ public class DuelRequest {
     public UUID getOpponent(UUID someone) {
         if (someone == senderUUID) {
             return targetUUID;
-        } else {
+        } else if (someone == targetUUID) {
             return senderUUID;
+        } else {
+            System.out.println("Plugin tried to get opponent of the player that's " +
+                    "not in that duel object. please report this to the author immediately");
+            return null;
         }
     }
 

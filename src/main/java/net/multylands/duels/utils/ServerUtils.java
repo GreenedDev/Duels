@@ -9,7 +9,7 @@ import net.multylands.duels.listeners.GUI;
 import net.multylands.duels.listeners.Game;
 import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.listeners.UpdateListener;
-import net.multylands.duels.papi.PAPIDuels;
+import net.multylands.duels.placeholders.PAPIDuels;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;

@@ -54,20 +54,20 @@ public class Spectating implements Listener {
         if (!(entity instanceof Player)) {
             return;
         }
-        Player damagedPlayer = ((Player) entity).getPlayer();
-        Entity damagerEntity = event.getDamager();
-        if (!(damagerEntity instanceof Player)) {
+        Player victim = ((Player) entity).getPlayer();
+        Entity attackerEntity = event.getDamager();
+        if (!(attackerEntity instanceof Player)) {
             return;
         }
-        Player damager = ((Player) damagerEntity).getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(damagedPlayer.getUniqueId());
+        Player attacker = ((Player) attackerEntity).getPlayer();
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(victim.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getOpponent(damagedPlayer.getUniqueId()) == damager.getUniqueId()) {
+        if (request.getOpponent(victim.getUniqueId()) == attacker.getUniqueId()) {
             return;
         }
-        Chat.sendMessage(plugin, damager, plugin.languageConfig.getString("duel.cannot-damage-in-duel"));
+        Chat.sendMessage(plugin, attacker, plugin.languageConfig.getString("duel.cannot-damage-in-duel"));
         event.setCancelled(true);
     }
 

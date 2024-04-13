@@ -7,7 +7,6 @@ import java.util.UUID;
 
 public class RequestUtils {
     public static DuelRequest getRequestOfTheDuelPlayerIsIn(UUID playerUUID) {
-        DuelRequest request = null;
         UUID targetUUID = Duels.playerToOpponentInGame.get(playerUUID);
         if (targetUUID == null) {
             return null;
@@ -15,24 +14,19 @@ public class RequestUtils {
         if (Duels.requestsReceiverToSenders.get(playerUUID) == null) {
             return null;
         }
-        for (DuelRequest requests : Duels.requestsReceiverToSenders.get(playerUUID)) {
-            if (!((requests.getSender() == playerUUID || requests.getTarget() == playerUUID) && ((requests.getSender() == targetUUID || requests.getTarget() == targetUUID)))) {
+        for (DuelRequest request : Duels.requestsReceiverToSenders.get(playerUUID)) {
+            if (!((request.getSender() == playerUUID || request.getTarget() == playerUUID) && ((request.getSender() == targetUUID || request.getTarget() == targetUUID)))) {
                 continue;
             }
-            request = requests;
+            return request;
         }
-        if (request == null) {
-            for (DuelRequest requests : Duels.requestsSenderToReceivers.get(playerUUID)) {
-                if (!((requests.getSender() == playerUUID || requests.getTarget() == playerUUID) && ((requests.getSender() == targetUUID || requests.getTarget() == targetUUID)))) {
-                    continue;
-                }
-                request = requests;
+        for (DuelRequest request : Duels.requestsSenderToReceivers.get(playerUUID)) {
+            if (!((request.getSender() == playerUUID || request.getTarget() == playerUUID) && ((request.getSender() == targetUUID || request.getTarget() == targetUUID)))) {
+                continue;
             }
+            return request;
         }
-        if (request == null) {
-            return null;
-        }
-        return request;
+        return null;
     }
 
     public static boolean isInGame(DuelRequest request) {
@@ -43,16 +37,15 @@ public class RequestUtils {
     }
 
     public static DuelRequest getRequestForCommands(UUID receiverUUID, UUID senderUUID) {
-        DuelRequest request = null;
         if (Duels.requestsReceiverToSenders.get(receiverUUID) == null) {
             return null;
         }
-        for (DuelRequest requests : Duels.requestsReceiverToSenders.get(receiverUUID)) {
-            if (!(requests.getSender() == senderUUID && requests.getTarget() == receiverUUID)) {
+        for (DuelRequest request : Duels.requestsReceiverToSenders.get(receiverUUID)) {
+            if (!(request.getSender() == senderUUID && request.getTarget() == receiverUUID)) {
                 continue;
             }
-            request = requests;
+            return request;
         }
-        return request;
+        return null;
     }
 }

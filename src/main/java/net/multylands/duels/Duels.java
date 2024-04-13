@@ -5,6 +5,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
+import net.multylands.duels.placeholders.MiniPlaceholders;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.ConfigUtils;
 import net.multylands.duels.utils.ServerUtils;
@@ -80,6 +81,7 @@ public class Duels extends JavaPlugin {
         }
         checkForUpdates();
         createConfigs();
+        MiniPlaceholders.implementMiniPlaceholders(this);
         ServerUtils.implementBStats(this);
         ServerUtils.implementPlaceholderAPI(this);
         manager = new GUIManager(this);

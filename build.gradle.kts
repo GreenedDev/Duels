@@ -29,6 +29,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     implementation("net.kyori:adventure-platform-bukkit:4.3.2")
     compileOnly("me.clip:placeholderapi:2.11.5")
+    compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.2.3")
 }
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
