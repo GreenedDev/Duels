@@ -18,15 +18,19 @@ public class MiniPlaceholders {
         Expansion.Builder builder = Expansion.builder("duel");
         builder.audiencePlaceholder("opponent", (audience, queue, ctx) -> {
             Player player = (Player) audience;
-            return Tag.selfClosingInserting(Component.text(CalculatePlaceholders.opponent(player)));
+            return Tag.selfClosingInserting(Component.text(CalculatePlaceholders.getOpponent(player)));
         });
         builder.audiencePlaceholder("opponent_ping", (audience, queue, ctx) -> {
             Player player = (Player) audience;
-            return Tag.selfClosingInserting(Component.text(CalculatePlaceholders.opponentPing(player)));
+            return Tag.selfClosingInserting(Component.text(CalculatePlaceholders.getOpponentPing(player)));
         });
         builder.audiencePlaceholder("time_left", (audience, queue, ctx) -> {
             Player player = (Player) audience;
-            return Tag.selfClosingInserting(Component.text(CalculatePlaceholders.timeLeft(player, plugin)));
+            return Tag.selfClosingInserting(Component.text(CalculatePlaceholders.getTimeLeft(player, plugin)));
+        });
+        builder.audiencePlaceholder("spectators", (audience, queue, ctx) -> {
+            Player player = (Player) audience;
+            return Tag.selfClosingInserting(Component.text(CalculatePlaceholders.getNumberOfSpectators(player)));
         });
         builder.build().register();
     }

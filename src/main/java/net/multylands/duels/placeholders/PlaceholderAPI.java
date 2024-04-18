@@ -40,13 +40,16 @@ public class PlaceholderAPI extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         if (params.equalsIgnoreCase("opponent")) {
-            return CalculatePlaceholders.opponent(player);
+            return CalculatePlaceholders.getOpponent(player);
         }
         if (params.equalsIgnoreCase("opponent_ping")) {
-            return CalculatePlaceholders.opponentPing(player);
+            return CalculatePlaceholders.getOpponentPing(player);
         }
         if (params.equalsIgnoreCase("time_left")) {
-            return CalculatePlaceholders.timeLeft(player, plugin);
+            return CalculatePlaceholders.getTimeLeft(player, plugin);
+        }
+        if (params.equalsIgnoreCase("spectators")) {
+            return CalculatePlaceholders.getNumberOfSpectators(player);
         }
         return Chat.color(plugin.getConfig().getString("glowing-wrong-placeholder"));
     }

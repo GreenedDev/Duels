@@ -4,7 +4,7 @@ import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.RequestUtils;
-import org.bukkit.Bukkit;
+import net.multylands.duels.utils.SpectatorUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -12,10 +12,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.UUID;
 
@@ -26,6 +28,7 @@ public class Spectating implements Listener {
         this.plugin = plugin;
     }
 
+    //prevents spectators from moving too far from the arena(actually from spectated players)
     @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
         Player playerWhoMoved = event.getPlayer();
@@ -47,18 +50,18 @@ public class Spectating implements Listener {
         event.setCancelled(true);
     }
 
-    //antidamage for spectators
+    //blocks damage from spectator to spectated player
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
+        Entity attackerEntity = event.getDamager();
         if (!(entity instanceof Player)) {
             return;
         }
-        Player victim = ((Player) entity).getPlayer();
-        Entity attackerEntity = event.getDamager();
         if (!(attackerEntity instanceof Player)) {
             return;
         }
+        Player victim = ((Player) entity).getPlayer();
         Player attacker = ((Player) attackerEntity).getPlayer();
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(victim.getUniqueId());
         if (!RequestUtils.isInGame(request)) {
@@ -79,7 +82,7 @@ public class Spectating implements Listener {
         if (!Duels.spectators.containsKey(playerWhoLeftUUID)) {
             return;
         }
-        endSpectating(playerWhoLeft, plugin);
+        SpectatorUtils.endSpectating(playerWhoLeft, plugin);
     }
 
     //anti command
@@ -98,12 +101,13 @@ public class Spectating implements Listener {
                 break;
             }
         }
+        String blockMessage = plugin.languageConfig.getString("duel.cant-use-that-command-in-spectator");
         if (plugin.getConfig().getBoolean("spectator_whitelist_mode")) {
             //then this command is whitelisted
             if (ifMatchesAny) {
                 return;
             }
-            Chat.sendMessage(plugin, commandSender, plugin.languageConfig.getString("duel.cant-use-that-command-in-spectator"));
+            Chat.sendMessage(plugin, commandSender, blockMessage);
             event.setCancelled(true);
             return;
         }
@@ -111,11 +115,11 @@ public class Spectating implements Listener {
         if (!ifMatchesAny) {
             return;
         }
-        Chat.sendMessage(plugin, commandSender, plugin.languageConfig.getString("duel.cant-use-that-command-in-spectator"));
+        Chat.sendMessage(plugin, commandSender, blockMessage);
         event.setCancelled(true);
     }
 
-    //preventing death
+    //preventing death of spectator
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageEvent event) {
         UUID damagedUUID = event.getEntity().getUniqueId();
@@ -133,55 +137,22 @@ public class Spectating implements Listener {
         if (!Duels.spectators.containsKey(playerUUID)) {
             return;
         }
-        endSpectating(player, plugin);
+        SpectatorUtils.endSpectating(player, plugin);
     }
 
-    public static void endSpectating(Player player, Duels plugin) {
-        Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
-        UUID toSpectateUUID = Duels.spectators.get(player.getUniqueId());
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectateUUID);
-        Duels.spectators.remove(player.getUniqueId());
-        Player firstPlayer = Bukkit.getPlayer(request.getTarget());
-        Player opponent = Bukkit.getPlayer(request.getSender());
-        player.teleport(spawnLoc);
-        player.setAllowFlight(false);
-        if (firstPlayer != null) {
-            firstPlayer.showPlayer(plugin, player);
+    //prevent projectile damage from spectator
+    @EventHandler(ignoreCancelled = true)
+    public void onTeleport(ProjectileLaunchEvent event) {
+        ProjectileSource shooterEntity = event.getEntity().getShooter();
+        if (!(shooterEntity instanceof Player)) {
+            return;
         }
-        if (opponent != null) {
-            firstPlayer.showPlayer(plugin, player);
+        Player player = ((Player) shooterEntity).getPlayer();
+        UUID playerUUID = player.getUniqueId();
+        if (!Duels.spectators.containsKey(playerUUID)) {
+            return;
         }
-        request.removeSpectator(player.getUniqueId());
-        request.storeRequest(false);
-    }
-
-    public static void endSpectatingForEndGame(Player player, Duels plugin) {
-        Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
-        UUID toSpectateUUID = Duels.spectators.get(player.getUniqueId());
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectateUUID);
-        Duels.spectators.remove(player.getUniqueId());
-        Player firstPlayer = Bukkit.getPlayer(request.getTarget());
-        Player opponent = Bukkit.getPlayer(request.getSender());
-        player.teleport(spawnLoc);
-        player.setAllowFlight(false);
-        if (firstPlayer != null) {
-            firstPlayer.showPlayer(plugin, player);
-        }
-        if (opponent != null) {
-            firstPlayer.showPlayer(plugin, player);
-        }
-    }
-
-    public static void startSpectating(Player player, Player toSpectate, Duels plugin) {
-        //the teleport needs to be first here
-        player.teleport(toSpectate);
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectate.getUniqueId());
-        Player opponent = Bukkit.getPlayer(request.getOpponent(toSpectate.getUniqueId()));
-        Duels.spectators.put(player.getUniqueId(), toSpectate.getUniqueId());
-        player.setAllowFlight(true);
-        toSpectate.hidePlayer(plugin, player);
-        opponent.hidePlayer(plugin, player);
-        request.addSpectator(player.getUniqueId());
-        request.storeRequest(false);
+        event.setCancelled(true);
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.cannot-damage-in-duel"));
     }
 }

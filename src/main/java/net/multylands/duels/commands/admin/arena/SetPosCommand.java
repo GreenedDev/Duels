@@ -1,4 +1,4 @@
-package net.multylands.duels.commands.admin;
+package net.multylands.duels.commands.admin.arena;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.Arena;
@@ -37,11 +37,11 @@ public class SetPosCommand implements CommandExecutor {
         String arenaName = args[0];
         String pos = args[1].toLowerCase();
         if (!plugin.arenasConfig.contains(arenaName)) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-pos.pos-no-arena"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-pos.wrong-arena"));
             return false;
         }
         if (!pos.equals("pos1") && !pos.equals("pos2")) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-pos.pos-wrong"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-pos.wrong-pos"));
             return false;
         }
         plugin.arenasConfig.set(arenaName + "." + pos, player.getLocation());

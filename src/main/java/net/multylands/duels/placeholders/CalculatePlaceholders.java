@@ -12,14 +12,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 public class CalculatePlaceholders {
-    public static String opponent(OfflinePlayer player) {
+    public static String getOpponent(OfflinePlayer player) {
         if (!player.isOnline()) {
             return "Error #1";
         }
         UUID playerUUID = player.getUniqueId();
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (!RequestUtils.isInGame(request)) {
-            System.out.println(player.getName() + request);
             return "You aren't in the duel";
         }
         UUID opponentUUID = request.getOpponent(playerUUID);
@@ -30,7 +29,7 @@ public class CalculatePlaceholders {
         return opponent.getName();
     }
 
-    public static String opponentPing(OfflinePlayer player) {
+    public static String getOpponentPing(OfflinePlayer player) {
         if (!player.isOnline()) {
             return "Error #1";
         }
@@ -47,7 +46,28 @@ public class CalculatePlaceholders {
         return String.valueOf(opponent.getPing());
     }
 
-    public static String timeLeft(OfflinePlayer player, Duels plugin) {
+    public static String getNumberOfSpectators(OfflinePlayer player) {
+        if (!player.isOnline()) {
+            return "Error #1";
+        }
+        UUID playerUUID = player.getUniqueId();
+
+        UUID toSpectate = Duels.spectators.get(playerUUID);
+        if (toSpectate == null) {
+            DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
+            if (!RequestUtils.isInGame(request)) {
+                return "You aren't in a duel or spectating someone's duel";
+            }
+            return String.valueOf(request.getNumberOfSpectators());
+        }
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectate);
+        if (!RequestUtils.isInGame(request)) {
+            return "number of spectators error #1";
+        }
+        return String.valueOf(request.getNumberOfSpectators());
+    }
+
+    public static String getTimeLeft(OfflinePlayer player, Duels plugin) {
         if (!player.isOnline()) {
             return "Error #1";
         }

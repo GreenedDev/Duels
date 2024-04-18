@@ -1,10 +1,10 @@
 package net.multylands.duels.commands.player;
 
 import net.multylands.duels.Duels;
-import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.RequestUtils;
+import net.multylands.duels.utils.SpectatorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -46,7 +46,7 @@ public class SpectateCommand implements CommandExecutor {
             return false;
         }
         Player toSpectateOpponent = Bukkit.getPlayer(request.getOpponent(toSpectate.getUniqueId()));
-        Spectating.startSpectating(player, toSpectate, plugin);
+        SpectatorUtils.startSpectating(player, toSpectate, plugin);
         Chat.sendMessage(plugin, toSpectate, plugin.languageConfig.getString("duel.is-spectating").replace("%player%", player.getName()));
         Chat.sendMessage(plugin, toSpectateOpponent, plugin.languageConfig.getString("duel.is-spectating").replace("%player%", player.getName()));
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.spectate-success").replace("%player%", toSpectateName));

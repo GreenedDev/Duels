@@ -1,8 +1,8 @@
 package net.multylands.duels.object;
 
 import net.multylands.duels.Duels;
-import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.SpectatorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -206,7 +206,7 @@ public class DuelRequest {
         storeRequest(false);
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         for (UUID spectatorUUID : spectators) {
-            Spectating.endSpectatingForEndGame(Bukkit.getPlayer(spectatorUUID), plugin);
+            SpectatorUtils.endSpectatingForEndGame(Bukkit.getPlayer(spectatorUUID), plugin);
         }
         spectators.clear();
         Player player = Bukkit.getPlayer(senderUUID);
@@ -269,6 +269,10 @@ public class DuelRequest {
 
     public void setRunOutOfTimeInstant(Instant newValue) {
         runOutOfTime = newValue;
+    }
+
+    public int getNumberOfSpectators() {
+        return spectators.size();
     }
 
     public String getColorForNumber(AtomicInteger countdown) {

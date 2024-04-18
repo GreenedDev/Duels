@@ -1,4 +1,4 @@
-package net.multylands.duels.commands.admin;
+package net.multylands.duels.commands.admin.arena;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;

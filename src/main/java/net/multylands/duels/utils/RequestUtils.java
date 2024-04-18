@@ -11,20 +11,21 @@ public class RequestUtils {
         if (targetUUID == null) {
             return null;
         }
-        if (Duels.requestsReceiverToSenders.get(playerUUID) == null) {
-            return null;
-        }
-        for (DuelRequest request : Duels.requestsReceiverToSenders.get(playerUUID)) {
-            if (!((request.getSender() == playerUUID || request.getTarget() == playerUUID) && ((request.getSender() == targetUUID || request.getTarget() == targetUUID)))) {
-                continue;
+        if (Duels.requestsReceiverToSenders.get(playerUUID) != null) {
+            for (DuelRequest request : Duels.requestsReceiverToSenders.get(playerUUID)) {
+                if (!((request.getSender() == playerUUID || request.getTarget() == playerUUID) && ((request.getSender() == targetUUID || request.getTarget() == targetUUID)))) {
+                    continue;
+                }
+                return request;
             }
-            return request;
         }
-        for (DuelRequest request : Duels.requestsSenderToReceivers.get(playerUUID)) {
-            if (!((request.getSender() == playerUUID || request.getTarget() == playerUUID) && ((request.getSender() == targetUUID || request.getTarget() == targetUUID)))) {
-                continue;
+        if (Duels.requestsSenderToReceivers.get(playerUUID) != null) {
+            for (DuelRequest request : Duels.requestsSenderToReceivers.get(playerUUID)) {
+                if (!((request.getSender() == playerUUID || request.getTarget() == playerUUID) && ((request.getSender() == targetUUID || request.getTarget() == targetUUID)))) {
+                    continue;
+                }
+                return request;
             }
-            return request;
         }
         return null;
     }

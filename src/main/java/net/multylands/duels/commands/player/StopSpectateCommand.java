@@ -1,8 +1,8 @@
 package net.multylands.duels.commands.player;
 
 import net.multylands.duels.Duels;
-import net.multylands.duels.listeners.Spectating;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.SpectatorUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,7 +30,7 @@ public class StopSpectateCommand implements CommandExecutor {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.not-in-spectator"));
             return false;
         }
-        Spectating.endSpectating(player, plugin);
+        SpectatorUtils.endSpectating(player, plugin);
         Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.spectate-end-success"));
         return false;
     }

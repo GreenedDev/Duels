@@ -18,12 +18,12 @@ admin:
     - "&e/dueladmin reload &7- &bReload the configuration."
   arena-list:
     list: "&aList of the arenas:"
-    meaning: "&aGreen &7- &2Active &f| &4RED &7- &cUnactive"
+    meaning: "&aGreen &7- &2Active &f| &4RED &7- &cInactive"
   set-pos:
     success: "&b%pos% &asuccessfully set!"
     arena-loaded: "&aYou have successfully completed the arena setup. &6Arena has been loaded."
-    pos-no-arena: "&cThe arena with that name doesn't exist. Please create one with &6/dueladmin createarena <name>"
-    pos-wrong: "&cWrong position in the command. You need to type pos1 or pos2. (pos1 for one player's position, pos2 for second player's position)"
+    wrong-arena: "&cThe arena with that name doesn't exist. Please create one with &6/dueladmin createarena <name>"
+    wrong-pos: "&cWrong position in the command. You need to type pos1 or pos2. (pos1 for one player's position, pos2 for second player's position)"
   create-arena:
     already-exists: "&cThe arena with that name already exists. If you want to modify it's positions type &6/dueladmin setarenapos&c. If you want to create new arena type &6/dueladmin createarena <name>&c."
     success: "&aArena &b%arena%&a has been successfully created! To set it's positions try &6/dueladmin setarenapos"
