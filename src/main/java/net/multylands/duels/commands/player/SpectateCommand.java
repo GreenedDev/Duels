@@ -38,18 +38,18 @@ public class SpectateCommand implements CommandExecutor {
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectate.getUniqueId());
         //will return null if player is not in game because in the getRequestOfTheDuelPlayerIsIn method we are checking if toSpectate player is in the list of players that are in game.
         if (!RequestUtils.isInGame(request)) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.spectate-is-not-in-duel").replace("%player%", toSpectateName));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.spectate.is-not-in-duel").replace("%player%", toSpectateName));
             return false;
         }
         if (Duels.spectators.containsKey(player.getUniqueId())) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.already-spectating"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.spectate.already-spectating"));
             return false;
         }
         Player toSpectateOpponent = Bukkit.getPlayer(request.getOpponent(toSpectate.getUniqueId()));
         SpectatorUtils.startSpectating(player, toSpectate, plugin);
-        Chat.sendMessage(plugin, toSpectate, plugin.languageConfig.getString("duel.is-spectating").replace("%player%", player.getName()));
-        Chat.sendMessage(plugin, toSpectateOpponent, plugin.languageConfig.getString("duel.is-spectating").replace("%player%", player.getName()));
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.spectate-success").replace("%player%", toSpectateName));
+        Chat.sendMessage(plugin, toSpectate, plugin.languageConfig.getString("duel.commands.spectate.is-spectating").replace("%player%", player.getName()));
+        Chat.sendMessage(plugin, toSpectateOpponent, plugin.languageConfig.getString("duel.commands.spectate.is-spectating").replace("%player%", player.getName()));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.spectate.success").replace("%player%", toSpectateName));
         return false;
     }
 }

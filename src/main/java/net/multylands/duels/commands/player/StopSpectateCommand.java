@@ -27,11 +27,11 @@ public class StopSpectateCommand implements CommandExecutor {
             return false;
         }
         if (!Duels.spectators.containsKey(player.getUniqueId())) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.not-in-spectator"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.spectate.not-in-spectator"));
             return false;
         }
         SpectatorUtils.endSpectating(player, plugin);
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.spectate-end-success"));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.spectate.spectate-end-success"));
         return false;
     }
 }

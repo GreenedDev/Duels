@@ -43,7 +43,7 @@ public class CancelCommand implements CommandExecutor {
             Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.no-request-sent").replace("%player%", target.getName()));
             return false;
         }
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.request-cancelled"));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.cancel.request-cancelled"));
         request.removeStoreRequest(false);
         return false;
     }

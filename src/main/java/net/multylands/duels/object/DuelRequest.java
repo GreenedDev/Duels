@@ -194,7 +194,7 @@ public class DuelRequest {
                 setIsStartingIn5Seconds(false);
                 task.cancel();
             } else {
-                Chat.messagePlayers(plugin, player, target, plugin.languageConfig.getString("duel.duel-countdown").replace("%color+countdown%", color + countdown));
+                Chat.messagePlayers(plugin, player, target, plugin.languageConfig.getString("duel.game.duel-countdown").replace("%color+countdown%", color + countdown));
             }
         }, 0, 20);
         saveAndRunRanOutOfTimeTask();
@@ -218,7 +218,7 @@ public class DuelRequest {
             undoShields(target);
         }
         if (ranOutOfTime) {
-            Chat.messagePlayers(plugin, player, target, plugin.languageConfig.getString("duel.ran-out-of-time"));
+            Chat.messagePlayers(plugin, player, target, plugin.languageConfig.getString("duel.game.ran-out-of-time"));
             target.teleport(spawnLoc);
             player.teleport(spawnLoc);
             return;
@@ -240,9 +240,9 @@ public class DuelRequest {
             plugin.getLogger().log(Level.INFO, "&c&lDUELS SOMETHING WENT SUPER WRONG. CONTACT GREENED ERROR TYPE #3");
         }
         if (loser != null) {
-            Chat.sendMessage(plugin, loser, plugin.languageConfig.getString("duel.lost-duel"));
+            Chat.sendMessage(plugin, loser, plugin.languageConfig.getString("duel.game.lost-duel"));
         }
-        Chat.sendMessage(plugin, winner, plugin.languageConfig.getString("duel.won-duel").replace("%number%", plugin.getConfig().getInt("time_to_pick_up_items") + ""));
+        Chat.sendMessage(plugin, winner, plugin.languageConfig.getString("duel.game.won-duel").replace("%number%", plugin.getConfig().getInt("time_to_pick_up_items") + ""));
         Duels.scheduler.runTaskLater(plugin, () -> {
             winner.teleport(spawnLoc);
             arena.setAvailable(true);

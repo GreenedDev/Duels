@@ -34,54 +34,61 @@ admin:
     success: "&aSpawn location has been set successfully!"
 duel:
   target-is-offline: "&cGiven player is offline."
-  already-in-duel: "&cYou can't accept a duel while playing one."
-  target-already-in-duel: "&b%player% &cis already in duel."
-  target-hasnt-sent-request: "&cGiven player haven't sent you any request."
   no-arenas-available: "&cCurrently, there are no arenas available."
-  you-accepted-request: "&aYou have accepted a duel request of &b%player%"
-  request-accepted: "&b%player% &ahas accepted your duel request."
   no-request-sent: "&cYou haven't sent duel request to &b%player%."
-  request-cancelled: "&aYour duel request has been cancelled."
-  you-denied-request: "&aYou have denied duel request of &b%player%"
-  someone-denied-your-request: "&b%player% &chas denied your duel request."
   cant-duel-yourself: "&cYou can't duel yourself!"
-  request-already-sent: "&cYou have already sent the duel request to &b%player%"
-  player-is-ignoring-requests: "&cGiven player is ignoring your duel requests!"
-  ignoring-on-player-enable: "&aYou are now ignoring duel requests of &b%player%"
-  ignoring-on-player-disable: "&aYou are no longer ignoring duel requests of &b%player%"
-  request-sent: "&aYou have sent duel request to &b%player%&a!"
-  request-received: "&b%player% &ais sending you a duel request."
   no-commands-in-duel: "&cYou cannot use commands while you are in duel."
+  commands:
+    duel:
+      request-sent: "&aYou have sent duel request to &b%player%&a!"
+      click: "$<green>Click</green> <red><b><hover:show_text:'<red>Click to deny this request!</red>'><click:run_command:'/denyduel %player%'>DENY</click></hover></b></red>/<green><b><hover:show_text:'<green>Click to accept this request!</green>'><click:run_command:'/acceptduel %player%'>ACCEPT</click></hover></b></green>"
+      request-received: "&b%player% &ais sending you a duel request."
+      target-already-in-duel: "&b%player% &cis already in duel."
+      request-already-sent: "&cYou have already sent the duel request to &b%player%"
+    accept:
+      you-accepted-request: "&aYou have accepted a duel request of &b%player%"
+      request-accepted: "&b%player% &ahas accepted your duel request."
+      already-in-duel: "&cYou can't accept a duel while playing one."
+      target-hasnt-sent-request: "&cGiven player haven't sent you any request."
+    deny:
+      you-denied-request: "&aYou have denied duel request of &b%player%"
+      someone-denied-your-request: "&b%player% &chas denied your duel request."
+      target-hasnt-sent-request: "&cGiven player haven't sent you any request."
+    cancel:
+      request-cancelled: "&aYour duel request has been cancelled."
+    ignore:
+      player-is-ignoring-requests: "&cGiven player is ignoring your duel requests!"
+      ignoring-on-player-enable: "&aYou are now ignoring duel requests of &b%player%"
+      ignoring-on-player-disable: "&aYou are no longer ignoring duel requests of &b%player%"
+    spectate:
+      is-not-in-duel: "&b%player% &cis not in duel!"
+      success: "&6Spectating &b%player%"
+      is-spectating: "&b%player% &6is now spectating."
+      already-spectating: "&cYou are already in spectator mode. Please leave the spectating mode first with /endspectating"
+      not-in-spectator: "&cYou are not in the spectator mode."
+      spectate-end-success: "&aYou have left the spectator mode."
+  spectating:
+    cannot-damage-in-duel: "&cYou can't damage players when they are in duel."
+    cant-use-that-command-in-spectator: "&cYou cannot use that command in the Spectating mode!"
+  restrictions:
+    restrictions: "&6Restrictions:"
+    enabled-restrictions: " &aEnabled: &b"
+    disabled-restrictions: " &aDisabled: &b"
+    deny-message:
+      arrow: "&cThe use of arrows is not allowed in this duel."
+      potion: "&cUsage of potions is disabled in this duel."
+      golden-apple: "&cUsage of golden apples is disabled in this duel."
+      enchanted-golden-apple: "&cUsage of enchanted golden apples is disabled in this duel."
+      elytra: "&cUsage of elytra is disabled in this duel."
+      ender-pearl: "&cUsage of ender pearl is disabled in this duel."
+  game:
+    duel-started: "&aDuel started. Get ready your weapons and your luck!"
+    duel-countdown: "&aDuel is starting in %color+countdown%s&a."
 
-  restrictions: "&6Restrictions:"
-  enabled-restrictions: " &aEnabled: &b"
-  disabled-restrictions: " &aDisabled: &b"
-  arrows-deny-message: "&cThe use of arrows is not allowed in this duel."
-  shields-deny-message: "&cThe use of shields is not allowed in this duel."
-  potions-deny-message: "&cUsage of potions is disabled in this duel."
-  golden-apples-deny-message: "&cUsage of golden apples is disabled in this duel."
-  enchanted-golden-apples-deny-message: "&cUsage of enchanted golden apples is disabled in this duel."
-  elytra-deny-message: "&cUsage of elytra is disabled in this duel."
-  ender-pearl-deny-message: "&cUsage of ender pearl is disabled in this duel."
+    ran-out-of-time: "&cYou ran out of time so you have teleported to the spawn."
 
-  duel-started: "&aDuel started. Get ready your weapons and your luck!"
-  duel-countdown: "&aDuel is starting in %color+countdown%s&a."
-
-  ran-out-of-time: "&cYou ran out of time so you have teleported to the spawn."
-
-  won-duel: "&aYou won the duel! You will be teleported to spawn in &b%number% &aseconds. Pick up their items."
-  lost-duel: "&cYou lost the duel."
-
-  click: "$<green>Click</green> <red><b><hover:show_text:'<red>Click to deny this request!</red>'><click:run_command:'/denyduel %player%'>DENY</click></hover></b></red>/<green><b><hover:show_text:'<green>Click to accept this request!</green>'><click:run_command:'/acceptduel %player%'>ACCEPT</click></hover></b></green>"
-
-  spectate-is-not-in-duel: "&b%player% &cis not in duel!"
-  spectate-success: "&6Spectating &b%player%"
-  is-spectating: "&b%player% &6is now spectating."
-  cant-use-that-command-in-spectator: "&cYou cannot use that command in the Spectating mode!"
-  already-spectating: "&cYou are already in spectator mode. Please leave the spectating mode first with /endspectating"
-  not-in-spectator: "&cYou are not in the spectator mode."
-  spectate-end-success: "&aYou have left the spectator mode."
-  cannot-damage-in-duel: "&cYou can't damage players when they are in duel."
+    won-duel: "&aYou won the duel! You will be teleported to spawn in &b%number% &aseconds. Pick up their items."
+    lost-duel: "&cYou lost the duel."
 duel-GUI:
   size: 27
   title: "&8Customize Your Duel Restrictions"

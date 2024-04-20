@@ -140,7 +140,7 @@ public class Game implements Listener {
         if (request.getRestrictions().isBowAllowed()) {
             return;
         }
-        Chat.sendMessage(plugin, shooter, (plugin.languageConfig.getString("duel.arrows-deny-message")));
+        Chat.sendMessage(plugin, shooter, (plugin.languageConfig.getString("duel.restrictions.deny-message.arrow")));
         event.setCancelled(true);
     }
 
@@ -179,7 +179,7 @@ public class Game implements Listener {
         if (request.getRestrictions().isElytraAllowed()) {
             return;
         }
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.elytra-deny-message"));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.restrictions.deny-message.elytra"));
         event.setCancelled(true);
     }
 
@@ -201,7 +201,7 @@ public class Game implements Listener {
         if (request.getRestrictions().isEnderPearlAllowed()) {
             return;
         }
-        Chat.sendMessage(plugin, shooter, plugin.languageConfig.getString("duel.ender-pearl-deny-message"));
+        Chat.sendMessage(plugin, shooter, plugin.languageConfig.getString("duel.restrictions.deny-message.ender-pearl"));
         event.setCancelled(true);
     }
 
@@ -219,7 +219,7 @@ public class Game implements Listener {
         if (request.getRestrictions().isPotionsAllowed()) {
             return;
         }
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.potions-deny-message"));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.restrictions.deny-message.potion"));
         event.setCancelled(true);
     }
 
@@ -238,7 +238,7 @@ public class Game implements Listener {
             return;
         }
         player.getWorld().dropItem(player.getLocation(), event.getPotion().getItem());
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.potions-deny-message"));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.restrictions.deny-message.potion"));
         event.setCancelled(true);
     }
 
@@ -256,7 +256,7 @@ public class Game implements Listener {
         if (request.getRestrictions().isGoldenAppleAllowed()) {
             return;
         }
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.golden-apples-deny-message"));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.restrictions.deny-message.golden-apple"));
         event.setCancelled(true);
     }
 
@@ -274,7 +274,7 @@ public class Game implements Listener {
         if (request.getRestrictions().isNotchAllowed()) {
             return;
         }
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.enchanted-golden-apples-deny-message"));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.restrictions.deny-message.enchanted-golden-apple"));
         event.setCancelled(true);
     }
 }

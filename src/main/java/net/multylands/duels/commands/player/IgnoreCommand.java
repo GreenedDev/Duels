@@ -39,7 +39,7 @@ public class IgnoreCommand implements CommandExecutor {
         String targetUUID = target.getUniqueId().toString();
         if (plugin.ignoresConfig.getStringList("Ignores").isEmpty() || !plugin.ignoresConfig.getStringList("Ignores").contains(playerUUID)) {
             List<String> uuids = new ArrayList<>(Collections.emptyList());
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ignoring-on-player-enable").replace("%player%", target.getDisplayName()));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.ignore.ignoring-on-player-enable").replace("%player%", target.getDisplayName()));
             uuids.add(targetUUID);
             plugin.ignoresConfig.set("Ignores." + playerUUID, uuids);
             plugin.saveIgnoresConfig();
@@ -47,13 +47,13 @@ public class IgnoreCommand implements CommandExecutor {
         }
         List<String> uuids = plugin.ignoresConfig.getStringList("Ignores." + playerUUID);
         if (uuids.contains(targetUUID)) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ignoring-on-player-disable").replace("%player%", target.getDisplayName()));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.ignore.ignoring-on-player-disable").replace("%player%", target.getDisplayName()));
             uuids.remove(targetUUID);
             plugin.ignoresConfig.set("Ignores." + playerUUID, null);
             plugin.saveIgnoresConfig();
             return false;
         } else {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.ignoring-on-player-enable").replace("%player%", target.getDisplayName()));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.ignore.ignoring-on-player-enable").replace("%player%", target.getDisplayName()));
             uuids.add(targetUUID);
             plugin.ignoresConfig.set("Ignores." + playerUUID, uuids);
             plugin.saveIgnoresConfig();

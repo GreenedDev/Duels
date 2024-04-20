@@ -1,10 +1,10 @@
 package net.multylands.duels.commands;
 
 
-import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.Duels;
-import net.multylands.duels.utils.Chat;
 import net.multylands.duels.gui.GUIManager;
+import net.multylands.duels.object.DuelRequest;
+import net.multylands.duels.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -49,10 +49,10 @@ public class DuelCommand implements CommandExecutor {
                     continue;
                 }
                 if (request.getIsAboutToTeleportedToSpawn()) {
-                    Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-already-in-duel").replace("%player%", target.getDisplayName()));
+                    Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.duel.target-already-in-duel").replace("%player%", target.getDisplayName()));
                     return false;
                 }
-                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.request-already-sent").replace("%player%", target.getDisplayName()));
+                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.duel.request-already-sent").replace("%player%", target.getDisplayName()));
                 return false;
             }
         }
@@ -62,7 +62,7 @@ public class DuelCommand implements CommandExecutor {
                 if (!request.getIsInGame()) {
                     continue;
                 }
-                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-already-in-duel").replace("%player%", target.getDisplayName()));
+                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.duel.target-already-in-duel").replace("%player%", target.getDisplayName()));
                 return false;
             }
         }
@@ -72,7 +72,7 @@ public class DuelCommand implements CommandExecutor {
                 if (!Objects.equals(loopUUID, player.getUniqueId().toString())) {
                     continue;
                 }
-                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.player-is-ignoring-requests"));
+                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.ignore.player-is-ignoring-requests"));
                 return false;
             }
         }

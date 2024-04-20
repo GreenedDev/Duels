@@ -185,8 +185,8 @@ public class GUI implements Listener {
 
 
             request.storeRequest(false);
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.request-sent").replace("%player%", target.getName()));
-            Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.request-received").replace("%player%", player.getName()));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.duel.request-sent").replace("%player%", target.getName()));
+            Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.commands.duel.request-received").replace("%player%", player.getName()));
             Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.restrictions"));
             if (request.getRestrictions().getEnabled() != null) {
                 Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.enabled-restrictions") + request.getRestrictions().getEnabled());
@@ -194,13 +194,13 @@ public class GUI implements Listener {
             if (request.getRestrictions().getDisabled() != null) {
                 Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.disabled-restrictions") + request.getRestrictions().getDisabled());
             }
-            Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.click").replace("%player%", player.getName()));
+            Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.commands.duel.click").replace("%player%", player.getName()));
             PlayersWhoSentRequest.add(player.getUniqueId());
             player.closeInventory();
         } else if (slot == cancelSlot) {
             player.closeInventory();
             request.removeStoreRequest(false);
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.request-cancelled"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.cancel.request-cancelled"));
         } else if (keepInventorySlot == slot) {
             isKeepInventoryEnabled = !isKeepInventoryEnabled;
             restrictions.setKeepInventoryAllowed(isKeepInventoryEnabled);

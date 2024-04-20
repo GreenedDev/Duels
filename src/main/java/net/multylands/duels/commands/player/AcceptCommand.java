@@ -40,14 +40,14 @@ public class AcceptCommand implements CommandExecutor {
                 continue;
             }
             if (player.getUniqueId().equals(arena.getSenderUUID()) || player.getUniqueId().equals(arena.getTargetUUID())) {
-                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.already-in-duel"));
+                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.accept.already-in-duel"));
                 return false;
             }
         }
         DuelRequest request = RequestUtils.getRequestForCommands(player.getUniqueId(), target.getUniqueId());
 
         if (request == null) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-hasnt-sent-request"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.accept.target-hasnt-sent-request"));
             return false;
         }
         boolean Available = false;
@@ -65,11 +65,11 @@ public class AcceptCommand implements CommandExecutor {
             return false;
         }
         if (!request.getRestrictions().isComplete()) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-hasnt-sent-request"));
+            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.accept.target-hasnt-sent-request"));
             return false;
         }
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.you-accepted-request").replace("%player%", target.getDisplayName()));
-        Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.request-accepted").replace("%player%", player.getDisplayName()));
+        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.accept.you-accepted-request").replace("%player%", target.getDisplayName()));
+        Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.commands.accept.request-accepted").replace("%player%", player.getDisplayName()));
         request.startGame(availableArena);
         return false;
     }
