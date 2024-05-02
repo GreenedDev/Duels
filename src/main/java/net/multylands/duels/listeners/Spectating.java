@@ -37,12 +37,12 @@ public class Spectating implements Listener {
             return;
         }
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(Duels.spectators.get(uuid));
-        Location loc1 = request.getArena().getFirstLocation();
+        Location loc1 = request.getGame().getArena().getFirstLocation();
         if (playerWhoMoved.getLocation().distance(loc1) < 50) {
             return;
         }
         //this is slightly more optimized than getting both loc at the same time
-        Location loc2 = request.getArena().getSecondLocation();
+        Location loc2 = request.getGame().getArena().getSecondLocation();
         if (playerWhoMoved.getLocation().distance(loc2) < 50) {
             return;
         }
@@ -70,7 +70,7 @@ public class Spectating implements Listener {
         if (request.getOpponent(victim.getUniqueId()) == attacker.getUniqueId()) {
             return;
         }
-        Chat.sendMessage(plugin, attacker, plugin.languageConfig.getString("duel.cannot-damage-in-duel"));
+        Chat.sendMessage(attacker, plugin.languageConfig.getString("duel.spectating.cannot-damage-in-duel"));
         event.setCancelled(true);
     }
 
@@ -101,13 +101,13 @@ public class Spectating implements Listener {
                 break;
             }
         }
-        String blockMessage = plugin.languageConfig.getString("duel.cant-use-that-command-in-spectator");
+        String blockMessage = plugin.languageConfig.getString("duel.spectating.no-commands");
         if (plugin.getConfig().getBoolean("spectator_whitelist_mode")) {
             //then this command is whitelisted
             if (ifMatchesAny) {
                 return;
             }
-            Chat.sendMessage(plugin, commandSender, blockMessage);
+            Chat.sendMessage(commandSender, blockMessage);
             event.setCancelled(true);
             return;
         }
@@ -115,7 +115,7 @@ public class Spectating implements Listener {
         if (!ifMatchesAny) {
             return;
         }
-        Chat.sendMessage(plugin, commandSender, blockMessage);
+        Chat.sendMessage(commandSender, blockMessage);
         event.setCancelled(true);
     }
 
@@ -153,6 +153,6 @@ public class Spectating implements Listener {
             return;
         }
         event.setCancelled(true);
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.cannot-damage-in-duel"));
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.spectating.cannot-damage-in-duel"));
     }
 }

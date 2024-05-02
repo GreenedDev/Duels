@@ -47,28 +47,14 @@ public class Duels extends JavaPlugin {
     public String configFileName = "config.yml";
     public File languageFile;
     public String languageFileName = "language.yml";
-    MiniMessage miniMessage;
+    public static MiniMessage miniMessage;
     public FileConfiguration ignoresConfig;
     public FileConfiguration arenasConfig;
     public FileConfiguration languageConfig;
     public static BukkitScheduler scheduler = Bukkit.getScheduler();
     public GUIManager manager;
-    private BukkitAudiences adventure;
+    public static BukkitAudiences adventure;
     public static HashMap<String, CommandExecutor> commandExecutors = new HashMap<>();
-
-    public MiniMessage miniMessage() {
-        if (miniMessage == null) {
-            throw new IllegalStateException("miniMessage is null when getting it from the main class");
-        }
-        return miniMessage;
-    }
-
-    public BukkitAudiences adventure() {
-        if (adventure == null) {
-            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
-        }
-        return this.adventure;
-    }
 
     @Override
     public void onEnable() {
@@ -93,10 +79,10 @@ public class Duels extends JavaPlugin {
     public void onDisable() {
         for (Set<DuelRequest> requestsSet : requestsReceiverToSenders.values()) {
             for (DuelRequest request : requestsSet) {
-                if (!request.getIsInGame()) {
+                if (!request.getGame().getIsInGame()) {
                     continue;
                 }
-                request.endGame(null, false, true);
+                request.getGame().endGame(null, false, true);
             }
         }
         if (this.adventure != null) {
@@ -164,7 +150,7 @@ public class Duels extends JavaPlugin {
         new UpdateChecker(this, 114685).getVersion(version -> {
             if (!getDescription().getVersion().equals(version)) {
                 newVersion = version;
-                Chat.sendMessageSender(this, Bukkit.getConsoleSender(), languageConfig.getString("update-available").replace("%newversion%", version));
+                Chat.sendMessageSender(Bukkit.getConsoleSender(), languageConfig.getString("update-available").replace("%newversion%", version));
             }
         });
     }
@@ -179,10 +165,10 @@ public class Duels extends JavaPlugin {
     public void loadArenas() {
         for (Set<DuelRequest> requestsSet : requestsReceiverToSenders.values()) {
             for (DuelRequest request : requestsSet) {
-                if (!request.getIsInGame()) {
+                if (!request.getGame().getIsInGame()) {
                     continue;
                 }
-                request.endGame(null, false, true);
+                request.getGame().endGame(null, false, true);
             }
         }
         for (String arenaID : arenasConfig.getKeys(false)) {

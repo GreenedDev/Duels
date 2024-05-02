@@ -22,33 +22,33 @@ public class SetPosCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("duels.admin.setpos")) {
-            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("no-perm"));
+            Chat.sendMessageSender(sender, plugin.languageConfig.getString("no-perm"));
             return false;
         }
         if (!(sender instanceof Player)) {
-            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("only-player-command"));
+            Chat.sendMessageSender(sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 2) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " setarenapos arenaName pos1/2");
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " setarenapos arenaName pos1/2");
             return false;
         }
         String arenaName = args[0];
         String pos = args[1].toLowerCase();
         if (!plugin.arenasConfig.contains(arenaName)) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-pos.wrong-arena"));
+            Chat.sendMessage(player, plugin.languageConfig.getString("admin.set-pos.wrong-arena"));
             return false;
         }
         if (!pos.equals("pos1") && !pos.equals("pos2")) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-pos.wrong-pos"));
+            Chat.sendMessage(player, plugin.languageConfig.getString("admin.set-pos.wrong-pos"));
             return false;
         }
         plugin.arenasConfig.set(arenaName + "." + pos, player.getLocation());
         //just removing the temporary value below
         plugin.arenasConfig.set(arenaName + ".isnew", null);
         plugin.saveArenasConfig();
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-pos.success").replace("%pos%", pos));
+        Chat.sendMessage(player, plugin.languageConfig.getString("admin.set-pos.success").replace("%pos%", pos));
 
         if (plugin.arenasConfig.getLocation(arenaName + ".pos1") == null
                 || plugin.arenasConfig.getLocation(arenaName + ".pos2") == null) {
@@ -61,18 +61,18 @@ public class SetPosCommand implements CommandExecutor {
             //to prevent players getting lost when their arena was replaced.
             for (Set<DuelRequest> requestsSet : Duels.requestsReceiverToSenders.values()) {
                 for (DuelRequest request : requestsSet) {
-                    if (!request.getIsInGame()) {
+                    if (!request.getGame().getIsInGame()) {
                         continue;
                     }
-                    if (!request.getArena().getID().equals(arenaName)) {
+                    if (!request.getGame().getArena().getID().equals(arenaName)) {
                         continue;
                     }
-                    request.endGame(null, false, true);
+                    request.getGame().endGame(null, false, true);
                 }
             }
         }
         Duels.Arenas.put(arenaName, arena);
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-pos.arena-loaded"));
+        Chat.sendMessage(player, plugin.languageConfig.getString("admin.set-pos.arena-loaded"));
         return false;
     }
 }

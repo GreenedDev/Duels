@@ -24,7 +24,7 @@ public class SpectatorUtils {
         if (opponent != null) {
             firstPlayer.showPlayer(plugin, player);
         }
-        request.removeSpectator(player.getUniqueId());
+        request.getGame().removeSpectator(player.getUniqueId());
         request.storeRequest(false);
     }
 
@@ -54,7 +54,7 @@ public class SpectatorUtils {
         player.setAllowFlight(true);
         toSpectate.hidePlayer(plugin, player);
         opponent.hidePlayer(plugin, player);
-        request.addSpectator(player.getUniqueId());
+        request.getGame().addSpectator(player.getUniqueId());
         request.storeRequest(false);
     }
 }

@@ -1,4 +1,4 @@
-package net.multylands.duels.commands.player;
+package net.multylands.duels.commands.player.spectate;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
@@ -21,35 +21,35 @@ public class SpectateCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("only-player-command"));
+            Chat.sendMessageSender(sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 1) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
             return false;
         }
         String toSpectateName = args[0];
         Player toSpectate = Bukkit.getPlayer(toSpectateName);
         if (toSpectate == null) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-is-offline"));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
             return false;
         }
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectate.getUniqueId());
         //will return null if player is not in game because in the getRequestOfTheDuelPlayerIsIn method we are checking if toSpectate player is in the list of players that are in game.
         if (!RequestUtils.isInGame(request)) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.spectate.is-not-in-duel").replace("%player%", toSpectateName));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.spectate.is-not-in-duel").replace("%player%", toSpectateName));
             return false;
         }
         if (Duels.spectators.containsKey(player.getUniqueId())) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.spectate.already-spectating"));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.spectate.already-spectating"));
             return false;
         }
         Player toSpectateOpponent = Bukkit.getPlayer(request.getOpponent(toSpectate.getUniqueId()));
         SpectatorUtils.startSpectating(player, toSpectate, plugin);
-        Chat.sendMessage(plugin, toSpectate, plugin.languageConfig.getString("duel.commands.spectate.is-spectating").replace("%player%", player.getName()));
-        Chat.sendMessage(plugin, toSpectateOpponent, plugin.languageConfig.getString("duel.commands.spectate.is-spectating").replace("%player%", player.getName()));
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.spectate.success").replace("%player%", toSpectateName));
+        Chat.sendMessage(toSpectate, plugin.languageConfig.getString("duel.commands.spectate.is-spectating").replace("%player%", player.getName()));
+        Chat.sendMessage(toSpectateOpponent, plugin.languageConfig.getString("duel.commands.spectate.is-spectating").replace("%player%", player.getName()));
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.spectate.success").replace("%player%", toSpectateName));
         return false;
     }
 }

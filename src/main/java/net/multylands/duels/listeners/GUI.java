@@ -37,13 +37,16 @@ public class GUI implements Listener {
         if (!(inv.getHolder() instanceof DuelInventoryHolder)) {
             return;
         }
-        if (PlayersWhoSentRequest.contains(event.getPlayer().getUniqueId())) {
-            PlayersWhoSentRequest.remove(event.getPlayer().getUniqueId());
+        Player player = (Player) event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+        if (PlayersWhoSentRequest.contains(playerUUID)) {
+            PlayersWhoSentRequest.remove(playerUUID);
             return;
         }
         DuelInventoryHolder invHolder = ((DuelInventoryHolder) inv.getHolder());
         DuelRequest request = invHolder.getRequest();
         request.removeStoreRequest(false);
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.cancel.request-cancelled"));
     }
 
     @EventHandler
@@ -67,12 +70,12 @@ public class GUI implements Listener {
         DuelRequest request = invHolder.getRequest();
         Player target = Bukkit.getPlayer(request.getOpponent(player.getUniqueId()));
         if (target == null) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-is-offline"));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
             request.removeStoreRequest(false);
             player.closeInventory();
             return;
         }
-        DuelRestrictions restrictions = request.getRestrictions();
+        DuelRestrictions restrictions = request.getGame().getRestrictions();
         boolean isBowEnabled = restrictions.isBowAllowed();
         boolean isTotemEnabled = restrictions.isTotemsAllowed();
         boolean isGPEnabled = restrictions.isGoldenAppleAllowed();
@@ -180,27 +183,27 @@ public class GUI implements Listener {
             restrictions.setComplete(true);
             //dont change position of player and target below
             request = RequestUtils.getRequestForCommands(target.getUniqueId(), player.getUniqueId());
-            request.setDuelRestrictions(restrictions);
+            request.getGame().setDuelRestrictions(restrictions);
 //          request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin);
 
 
             request.storeRequest(false);
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.duel.request-sent").replace("%player%", target.getName()));
-            Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.commands.duel.request-received").replace("%player%", player.getName()));
-            Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.restrictions"));
-            if (request.getRestrictions().getEnabled() != null) {
-                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.enabled-restrictions") + request.getRestrictions().getEnabled());
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.request-sent").replace("%player%", target.getName()));
+            Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.duel.request-received").replace("%player%", player.getName()));
+            Chat.sendMessage(target, plugin.languageConfig.getString("duel.restrictions.restrictions"));
+            if (request.getGame().getRestrictions().getEnabled() != null) {
+                Chat.sendMessage(target, plugin.languageConfig.getString("duel.restrictions.enabled-restrictions") + request.getGame().getRestrictions().getEnabled());
             }
-            if (request.getRestrictions().getDisabled() != null) {
-                Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.disabled-restrictions") + request.getRestrictions().getDisabled());
+            if (request.getGame().getRestrictions().getDisabled() != null) {
+                Chat.sendMessage(target, plugin.languageConfig.getString("duel.restrictions.disabled-restrictions") + request.getGame().getRestrictions().getDisabled());
             }
-            Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.commands.duel.click").replace("%player%", player.getName()));
+            Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.duel.click").replace("%player%", player.getName()));
             PlayersWhoSentRequest.add(player.getUniqueId());
             player.closeInventory();
         } else if (slot == cancelSlot) {
             player.closeInventory();
             request.removeStoreRequest(false);
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.cancel.request-cancelled"));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.cancel.request-cancelled"));
         } else if (keepInventorySlot == slot) {
             isKeepInventoryEnabled = !isKeepInventoryEnabled;
             restrictions.setKeepInventoryAllowed(isKeepInventoryEnabled);

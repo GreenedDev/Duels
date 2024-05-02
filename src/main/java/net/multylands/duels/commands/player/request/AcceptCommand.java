@@ -1,4 +1,4 @@
-package net.multylands.duels.commands.player;
+package net.multylands.duels.commands.player.request;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.Arena;
@@ -22,17 +22,17 @@ public class AcceptCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("only-player-command"));
+            Chat.sendMessageSender(sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 1) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
             return false;
         }
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-is-offline"));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
             return false;
         }
         for (Arena arena : Duels.Arenas.values()) {
@@ -40,14 +40,14 @@ public class AcceptCommand implements CommandExecutor {
                 continue;
             }
             if (player.getUniqueId().equals(arena.getSenderUUID()) || player.getUniqueId().equals(arena.getTargetUUID())) {
-                Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.accept.already-in-duel"));
+                Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.accept.already-in-duel"));
                 return false;
             }
         }
         DuelRequest request = RequestUtils.getRequestForCommands(player.getUniqueId(), target.getUniqueId());
 
         if (request == null) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.accept.target-hasnt-sent-request"));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.accept.target-hasnt-sent-request"));
             return false;
         }
         boolean Available = false;
@@ -61,16 +61,17 @@ public class AcceptCommand implements CommandExecutor {
             break;
         }
         if (!Available) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.no-arenas-available"));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.no-arenas-available"));
             return false;
         }
-        if (!request.getRestrictions().isComplete()) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.accept.target-hasnt-sent-request"));
+
+        if (!request.getGame().getRestrictions().isComplete()) {
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.accept.target-hasnt-sent-request"));
             return false;
         }
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.accept.you-accepted-request").replace("%player%", target.getDisplayName()));
-        Chat.sendMessage(plugin, target, plugin.languageConfig.getString("duel.commands.accept.request-accepted").replace("%player%", player.getDisplayName()));
-        request.startGame(availableArena);
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.accept.you-accepted-request").replace("%player%", target.getDisplayName()));
+        Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.accept.request-accepted").replace("%player%", player.getDisplayName()));
+        request.getGame().startGame(availableArena);
         return false;
     }
 }

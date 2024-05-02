@@ -23,6 +23,6 @@ public class UpdateListener implements Listener {
         if (plugin.newVersion == null) {
             return;
         }
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("update-available").replace("%newversion%", plugin.newVersion));
+        Chat.sendMessage(player, plugin.languageConfig.getString("update-available").replace("%newversion%", plugin.newVersion));
     }
 }

@@ -17,21 +17,21 @@ public class SetSpawnCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("duels.admin.setspawn")) {
-            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("no-perm"));
+            Chat.sendMessageSender(sender, plugin.languageConfig.getString("no-perm"));
             return false;
         }
         if (!(sender instanceof Player)) {
-            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("only-player-command"));
+            Chat.sendMessageSender(sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 0) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " setspawn");
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " setspawn");
             return false;
         }
         plugin.getConfig().set("spawn_location", player.getLocation());
         plugin.saveConfig();
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("admin.set-spawn.success"));
+        Chat.sendMessage(player, plugin.languageConfig.getString("admin.set-spawn.success"));
         return false;
     }
 }

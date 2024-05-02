@@ -36,14 +36,14 @@ duel:
   target-is-offline: "&cGiven player is offline."
   no-arenas-available: "&cCurrently, there are no arenas available."
   no-request-sent: "&cYou haven't sent duel request to &b%player%."
-  cant-duel-yourself: "&cYou can't duel yourself!"
   no-commands-in-duel: "&cYou cannot use commands while you are in duel."
   commands:
     duel:
-      request-sent: "&aYou have sent duel request to &b%player%&a!"
+      request-sent: "$<green>You have sent duel request to</green> <aqua>%player%</aqua><green>!</green> <red><b><hover:show_text:'<green>Click to cancel this request!</green>'><click:run_command:'/cancelduel %player%'>Cancel</click></hover></b></red>"
       click: "$<green>Click</green> <red><b><hover:show_text:'<red>Click to deny this request!</red>'><click:run_command:'/denyduel %player%'>DENY</click></hover></b></red>/<green><b><hover:show_text:'<green>Click to accept this request!</green>'><click:run_command:'/acceptduel %player%'>ACCEPT</click></hover></b></green>"
       request-received: "&b%player% &ais sending you a duel request."
       target-already-in-duel: "&b%player% &cis already in duel."
+      cant-duel-yourself: "&cYou can't duel yourself!"
       request-already-sent: "&cYou have already sent the duel request to &b%player%"
     accept:
       you-accepted-request: "&aYou have accepted a duel request of &b%player%"
@@ -56,6 +56,7 @@ duel:
       target-hasnt-sent-request: "&cGiven player haven't sent you any request."
     cancel:
       request-cancelled: "&aYour duel request has been cancelled."
+      someone-cancelled-request: "&b%player% &ahas cancelled his request to you."
     ignore:
       player-is-ignoring-requests: "&cGiven player is ignoring your duel requests!"
       ignoring-on-player-enable: "&aYou are now ignoring duel requests of &b%player%"
@@ -69,7 +70,7 @@ duel:
       spectate-end-success: "&aYou have left the spectator mode."
   spectating:
     cannot-damage-in-duel: "&cYou can't damage players when they are in duel."
-    cant-use-that-command-in-spectator: "&cYou cannot use that command in the Spectating mode!"
+    no-commands: "&cYou cannot use that command in the Spectating mode!"
   restrictions:
     restrictions: "&6Restrictions:"
     enabled-restrictions: " &aEnabled: &b"

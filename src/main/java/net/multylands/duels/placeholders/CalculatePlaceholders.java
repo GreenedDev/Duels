@@ -58,13 +58,13 @@ public class CalculatePlaceholders {
             if (!RequestUtils.isInGame(request)) {
                 return "You aren't in a duel or spectating someone's duel";
             }
-            return String.valueOf(request.getNumberOfSpectators());
+            return String.valueOf(request.getGame().getNumberOfSpectators());
         }
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectate);
         if (!RequestUtils.isInGame(request)) {
             return "number of spectators error #1";
         }
-        return String.valueOf(request.getNumberOfSpectators());
+        return String.valueOf(request.getGame().getNumberOfSpectators());
     }
 
     public static String getTimeLeft(OfflinePlayer player, Duels plugin) {
@@ -76,7 +76,7 @@ public class CalculatePlaceholders {
         if (!RequestUtils.isInGame(request)) {
             return "You aren't in the duel";
         }
-        Instant timeWhenDuelRunsOutOfTime = request.getRunOutOfTimeInstant();
+        Instant timeWhenDuelRunsOutOfTime = request.getGame().getRunOutOfTimeInstant();
         Instant now = Instant.now();
 
         long secondsBetween = now.until(timeWhenDuelRunsOutOfTime, ChronoUnit.SECONDS);

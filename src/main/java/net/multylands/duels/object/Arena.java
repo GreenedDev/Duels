@@ -25,11 +25,6 @@ public class Arena {
         return isAvailable;
     }
 
-    public void setAvailable(boolean value) {
-        this.isAvailable = value;
-        Duels.Arenas.put(getID(), this);
-    }
-
     public Location getFirstLocation() {
         return loc1;
     }
@@ -48,5 +43,20 @@ public class Arena {
 
     public UUID getTargetUUID() {
         return target;
+    }
+
+    public void setSenderUUID(UUID uuid) {
+        this.target = uuid;
+        Duels.Arenas.put(getID(), this);
+    }
+
+    public void setTargetUUID(UUID uuid) {
+        this.target = uuid;
+        Duels.Arenas.put(getID(), this);
+    }
+
+    public void setAvailable(boolean value) {
+        this.isAvailable = value;
+        Duels.Arenas.put(getID(), this);
     }
 }

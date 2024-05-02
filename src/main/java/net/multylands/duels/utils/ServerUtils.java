@@ -1,5 +1,7 @@
 package net.multylands.duels.utils;
 
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.multylands.duels.Duels;
 import net.multylands.duels.commands.DuelAdminCommand;
 import net.multylands.duels.commands.DuelCommand;
@@ -9,11 +11,13 @@ import net.multylands.duels.commands.admin.arena.ArenaListCommand;
 import net.multylands.duels.commands.admin.arena.CreateArenaCommand;
 import net.multylands.duels.commands.admin.arena.DeleteArenaCommand;
 import net.multylands.duels.commands.admin.arena.SetPosCommand;
-import net.multylands.duels.commands.player.*;
-import net.multylands.duels.listeners.GUI;
-import net.multylands.duels.listeners.Game;
-import net.multylands.duels.listeners.Spectating;
-import net.multylands.duels.listeners.UpdateListener;
+import net.multylands.duels.commands.player.ignore.IgnoreCommand;
+import net.multylands.duels.commands.player.request.AcceptCommand;
+import net.multylands.duels.commands.player.request.CancelCommand;
+import net.multylands.duels.commands.player.request.DenyCommand;
+import net.multylands.duels.commands.player.spectate.SpectateCommand;
+import net.multylands.duels.commands.player.spectate.StopSpectateCommand;
+import net.multylands.duels.listeners.*;
 import net.multylands.duels.placeholders.PlaceholderAPI;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
@@ -27,6 +31,7 @@ public class ServerUtils {
         plugin.getServer().getPluginManager().registerEvents(new Game(plugin), plugin);
         plugin.getServer().getPluginManager().registerEvents(new Spectating(plugin), plugin);
         plugin.getServer().getPluginManager().registerEvents(new UpdateListener(plugin), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new Restrictions(plugin), plugin);
     }
 
     public static void registerCommands(Duels plugin) {
@@ -72,5 +77,18 @@ public class ServerUtils {
         } else {
             plugin.getLogger().log(Level.WARNING, "Could not find PlaceholderAPI! You wouldn't be able to use plugin's placeholders.");
         }
+    }
+    public static MiniMessage miniMessage() {
+        if (Duels.miniMessage == null) {
+            throw new IllegalStateException("miniMessage is null when getting it from the main class");
+        }
+        return Duels.miniMessage;
+    }
+
+    public static BukkitAudiences adventure() {
+        if (Duels.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return Duels.adventure;
     }
 }

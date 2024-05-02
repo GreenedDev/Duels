@@ -1,4 +1,4 @@
-package net.multylands.duels.commands.player;
+package net.multylands.duels.commands.player.spectate;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
@@ -18,20 +18,20 @@ public class StopSpectateCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("only-player-command"));
+            Chat.sendMessageSender(sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 0) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label));
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label));
             return false;
         }
         if (!Duels.spectators.containsKey(player.getUniqueId())) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.spectate.not-in-spectator"));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.spectate.not-in-spectator"));
             return false;
         }
         SpectatorUtils.endSpectating(player, plugin);
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.spectate.spectate-end-success"));
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.spectate.spectate-end-success"));
         return false;
     }
 }

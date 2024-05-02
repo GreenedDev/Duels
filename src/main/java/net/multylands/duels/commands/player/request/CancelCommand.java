@@ -1,4 +1,4 @@
-package net.multylands.duels.commands.player;
+package net.multylands.duels.commands.player.request;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
@@ -20,30 +20,31 @@ public class CancelCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            Chat.sendMessageSender(plugin, sender, plugin.languageConfig.getString("only-player-command"));
+            Chat.sendMessageSender(sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 1) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
             return false;
         }
         //checking if he has sent any request
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.target-is-offline"));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
             return false;
         }
         DuelRequest request = RequestUtils.getRequestForCommands(target.getUniqueId(), player.getUniqueId());
         if (request == null) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.no-request-sent").replace("%player%", target.getName()));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.no-request-sent").replace("%player%", target.getName()));
             return false;
         }
-        if (request.getIsAboutToTeleportedToSpawn()) {
-            Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.no-request-sent").replace("%player%", target.getName()));
+        if (request.getGame().getIsAboutToTeleportedToSpawn()) {
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.no-request-sent").replace("%player%", target.getName()));
             return false;
         }
-        Chat.sendMessage(plugin, player, plugin.languageConfig.getString("duel.commands.cancel.request-cancelled"));
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.cancel.request-cancelled"));
+        Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.cancel.someone-cancelled-request").replace("%player%", player.getName()));
         request.removeStoreRequest(false);
         return false;
     }
