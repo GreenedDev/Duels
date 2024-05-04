@@ -84,7 +84,7 @@ public class Restrictions implements Listener {
         }
         UUID winner = request.getOpponent(playerWhoUsedTotemUUID);
         event.setCancelled(true);
-        request.getGame().endGame(winner, false, false);
+        request.getGame().endGame(winner);
     }
 
     //antielytra

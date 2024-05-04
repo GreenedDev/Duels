@@ -49,7 +49,7 @@ public class DeleteArenaCommand implements CommandExecutor {
                 if (!request.getGame().getArena().getID().equals(arenaName)) {
                     continue;
                 }
-                request.getGame().endGame(null, false, true);
+                request.getGame().endGameRestart();
             }
         }
         Chat.sendMessage(player, plugin.languageConfig.getString("admin.delete-arena.success").replace("%arena%", arenaName));

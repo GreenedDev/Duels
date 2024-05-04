@@ -37,12 +37,12 @@ public class Spectating implements Listener {
             return;
         }
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(Duels.spectators.get(uuid));
-        Location loc1 = request.getGame().getArena().getFirstLocation();
+        Location loc1 = request.getGame().getArena().getFirstLocation(plugin);
         if (playerWhoMoved.getLocation().distance(loc1) < 50) {
             return;
         }
         //this is slightly more optimized than getting both loc at the same time
-        Location loc2 = request.getGame().getArena().getSecondLocation();
+        Location loc2 = request.getGame().getArena().getSecondLocation(plugin);
         if (playerWhoMoved.getLocation().distance(loc2) < 50) {
             return;
         }
@@ -95,14 +95,14 @@ public class Spectating implements Listener {
         }
         String command = event.getMessage();
         boolean ifMatchesAny = false;
-        for (String whitelisted_or_blacklisted_Command : plugin.getConfig().getStringList("commands_blacklisted_or_whitelisted_in_spectator")) {
+        for (String whitelisted_or_blacklisted_Command : plugin.getConfig().getStringList("spectator.commands.commands")) {
             if (command.equalsIgnoreCase(whitelisted_or_blacklisted_Command)) {
                 ifMatchesAny = true;
                 break;
             }
         }
         String blockMessage = plugin.languageConfig.getString("duel.spectating.no-commands");
-        if (plugin.getConfig().getBoolean("spectator_whitelist_mode")) {
+        if (plugin.getConfig().getBoolean("spectator.commands.mode")) {
             //then this command is whitelisted
             if (ifMatchesAny) {
                 return;

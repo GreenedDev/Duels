@@ -20,13 +20,13 @@ public class DuelAdminCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        CommandExecutor executor = Duels.commandExecutors.get(args[0]);
-        if (executor == null) {
+        if (args.length == 0 || Duels.commandExecutors.get(args[0]) == null) {
             for (String message : plugin.languageConfig.getStringList("admin.help")) {
                 sender.sendMessage(Chat.color(message));
             }
             return false;
         }
+        CommandExecutor executor = Duels.commandExecutors.get(args[0]);
         executor.onCommand(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
         return false;
     }

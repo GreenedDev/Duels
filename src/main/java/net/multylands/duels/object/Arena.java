@@ -4,6 +4,7 @@ import net.multylands.duels.Duels;
 import org.bukkit.Location;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class Arena {
     public boolean isAvailable = true;
@@ -25,11 +26,17 @@ public class Arena {
         return isAvailable;
     }
 
-    public Location getFirstLocation() {
+    public Location getFirstLocation(Duels plugin) {
+        if (loc1 == null) {
+            plugin.getLogger().log(Level.INFO, "Position1 is null (getFirstLocation();)");
+        }
         return loc1;
     }
 
-    public Location getSecondLocation() {
+    public Location getSecondLocation(Duels plugin) {
+        if (loc2 == null) {
+            plugin.getLogger().log(Level.INFO, "Position2 is null (getSecondLocation();)");
+        }
         return loc2;
     }
 

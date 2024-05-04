@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class DuelRequest {
     UUID senderUUID;
@@ -99,7 +100,7 @@ public class DuelRequest {
         } else if (someone == targetUUID) {
             return senderUUID;
         } else {
-            System.out.println("Plugin tried to get opponent of the player that's " +
+            plugin.getLogger().log(Level.INFO, "Plugin tried to get opponent of the player that's " +
                     "not in that duel object. please report this to the author immediately");
             return null;
         }

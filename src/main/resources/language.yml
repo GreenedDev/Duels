@@ -13,7 +13,7 @@ admin:
     - "&e/dueladmin &7- &bDisplays this message."
     - "&e/dueladmin setspawn &7- &bSet the spawn location where players will be TPed after match."
     - "&e/dueladmin createarena <arenaName> &7- &bCreate arena with specific name."
-    - "&e/dueladmin setarenapos <arenaName> pos<1/2> &7- &bSet the arena's corner points."
+    - "&e/dueladmin setarenapos <arenaName> pos<1/2> &7- &bSet the arena's spawn points (where players spawn)."
     - "&e/dueladmin deletearena &7- &bDelete arena with the specific name."
     - "&e/dueladmin reload &7- &bReload the configuration."
   arena-list:

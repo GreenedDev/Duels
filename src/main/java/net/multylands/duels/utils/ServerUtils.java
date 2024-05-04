@@ -50,6 +50,7 @@ public class ServerUtils {
         Duels.commandExecutors.put("createarena", new CreateArenaCommand(plugin));
         Duels.commandExecutors.put("deletearena", new DeleteArenaCommand(plugin));
         Duels.commandExecutors.put("arenalist", new ArenaListCommand(plugin));
+        Duels.commandExecutors.put("help", new DuelAdminCommand(plugin));
     }
 
     public static boolean isPaper(Duels plugin) {
@@ -78,6 +79,7 @@ public class ServerUtils {
             plugin.getLogger().log(Level.WARNING, "Could not find PlaceholderAPI! You wouldn't be able to use plugin's placeholders.");
         }
     }
+
     public static MiniMessage miniMessage() {
         if (Duels.miniMessage == null) {
             throw new IllegalStateException("miniMessage is null when getting it from the main class");

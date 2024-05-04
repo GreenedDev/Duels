@@ -4,15 +4,13 @@ import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.RequestUtils;
+import net.multylands.duels.utils.SavingItems;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 
 import java.util.UUID;
 
@@ -49,7 +47,7 @@ public class Game implements Listener {
         UUID winner = request.getOpponent(playerWhoLeftUUID);
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         playerWhoLeft.teleport(spawnLoc);
-        request.getGame().endGame(winner, false, false);
+        request.getGame().endGame(winner);
         playerWhoLeft.setHealth(0);
     }
 
@@ -100,7 +98,7 @@ public class Game implements Listener {
             event.setDroppedExp(0);
         }
         UUID winnerUUID = request.getOpponent(deadUUID);
-        request.getGame().endGame(winnerUUID, false, false);
+        request.getGame().endGame(winnerUUID);
     }
 
     //anti teleport
@@ -116,5 +114,12 @@ public class Game implements Listener {
             return;
         }
         event.setCancelled(true);
+    }
+
+    //give items back on respawn if its enabled
+    @EventHandler(ignoreCancelled = true)
+    public void onRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        SavingItems.clearInvAndGiveItemsBackIfEnabled(plugin, player);
     }
 }

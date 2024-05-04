@@ -82,7 +82,7 @@ public class Duels extends JavaPlugin {
                 if (!request.getGame().getIsInGame()) {
                     continue;
                 }
-                request.getGame().endGame(null, false, true);
+                request.getGame().endGameRestart();
             }
         }
         if (this.adventure != null) {
@@ -156,7 +156,7 @@ public class Duels extends JavaPlugin {
     }
 
     public void reloadArenaConfig() {
-        arenasFile = new File(getDataFolder(), "arenas.yml");
+        arenasFile = new File(getDataFolder(), arenasFileName);
         arenasConfig = YamlConfiguration.loadConfiguration(arenasFile);
         Arenas.clear();
         loadArenas();
@@ -168,7 +168,7 @@ public class Duels extends JavaPlugin {
                 if (!request.getGame().getIsInGame()) {
                     continue;
                 }
-                request.getGame().endGame(null, false, true);
+                request.getGame().endGameRestart();
             }
         }
         for (String arenaID : arenasConfig.getKeys(false)) {
@@ -184,7 +184,7 @@ public class Duels extends JavaPlugin {
     }
 
     public void reloadLanguageConfig() {
-        languageFile = new File(getDataFolder(), "language.yml");
+        languageFile = new File(getDataFolder(), languageFileName);
         languageConfig = YamlConfiguration.loadConfiguration(languageFile);
     }
 }
